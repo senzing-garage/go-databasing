@@ -36,3 +36,13 @@ func (connector *Sqlite) Connect(_ context.Context) (driver.Conn, error) {
 func (connector *Sqlite) Driver() driver.Driver {
 	return &sqlite.SQLiteDriver{}
 }
+
+// ----------------------------------------------------------------------------
+// Constructor methods
+// ----------------------------------------------------------------------------
+
+func NewConnector(ctx context.Context, filename string) (*Sqlite, error) {
+	return &Sqlite{
+		Filename: filename,
+	}, nil
+}

@@ -7,3 +7,5 @@ require (
 	github.com/senzing/go-logging v1.1.3
 	github.com/senzing/go-observing v0.1.1
 )
+
+require github.com/lib/pq v1.10.7

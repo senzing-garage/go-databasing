@@ -1,4 +1,4 @@
-package connectorsqlite
+package connectorpostgresql
 
 import (
 	"context"
@@ -39,9 +39,9 @@ func teardown() error {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestSqlite_Connect(test *testing.T) {
+func TestPostgresql_Connect(test *testing.T) {
 	ctx := context.TODO()
-	databaseConnector, err := NewConnector(ctx, "/tmp/sqlite/G2C.db")
+	databaseConnector, err := NewConnector(ctx, "")
 	if err != nil {
 		test.Fatal(err)
 
