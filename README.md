@@ -124,8 +124,31 @@
 
     ```
 
-1. View the MsSql database.
+1. Create the `G2` database instance.
    _Caveat:_ The setting of `DATABASE_HOST` may not work in all cases.
+   Example:
+
+    ```console
+    export DATABASE_HOST=$(curl --silent https://raw.githubusercontent.com/Senzing/knowledge-base/main/gists/find-local-ip-address/find-local-ip-address.py | python3 -)
+
+    docker run \
+        --env ACCEPT_EULA=Y \
+        --env MSSQL_PID=Developer \
+        --env MSSQL_SA_PASSWORD=Passw0rd \
+        --name mssql \
+        --publish 1433:1433 \
+        --rm \
+        --tty \
+        mcr.microsoft.com/mssql-tools:latest /opt/mssql-tools/bin/sqlcmd \
+            -P Passw0rd \
+            -Q "CREATE DATABASE G2" \
+            -S ${DATABASE_HOST},1433 \
+            -U sa
+
+    ```
+
+1. View the MsSql database.
+   _Caveat:_ The setting of `ADMINER_DEFAULT_SERVER` may not work in all cases.
    Example:
 
     ```console

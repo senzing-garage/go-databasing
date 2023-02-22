@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	"time"
-
-	"github.com/go-sql-driver/mysql"
 )
 
 // ----------------------------------------------------------------------------
@@ -45,14 +42,8 @@ func teardown() error {
 func TestPostgresql_Connect(test *testing.T) {
 	ctx := context.TODO()
 
-	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-	config := &mysql.Config{
-		Net:     "tcp",
-		Addr:    "1.1.1.1:1234",
-		Timeout: 10 * time.Millisecond,
-	}
-
-	databaseConnector, err := NewConnector(ctx, config)
+	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
+	databaseConnector, err := NewConnector(ctx, "")
 	if err != nil {
 		test.Fatal(err)
 
