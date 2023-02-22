@@ -97,7 +97,10 @@ func (sqlexecutor *SqlExecutorImpl) ProcessFileName(ctx context.Context, filenam
 		return err
 	}
 	defer file.Close()
-	sqlexecutor.ProcessScanner(ctx, bufio.NewScanner(file))
+	err = sqlexecutor.ProcessScanner(ctx, bufio.NewScanner(file))
+	if err != nil {
+		return err
+	}
 
 	// Exit tasks.
 
@@ -136,6 +139,11 @@ func (sqlexecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 
 	database := sql.OpenDB(sqlexecutor.DatabaseConnector)
 	defer database.Close()
+
+	err = database.PingContext(ctx)
+	if err != nil {
+		return err
+	}
 
 	// Process each scanned line.
 

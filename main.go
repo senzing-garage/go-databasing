@@ -28,6 +28,7 @@ func main() {
 	ctx := context.TODO()
 	var err error = nil
 	var databaseConnector driver.Connector = nil
+	var sqlFilename string = ""
 
 	observer1 := &observer.ObserverNull{
 		Id: "Observer 1",
@@ -35,12 +36,14 @@ func main() {
 
 	// Choose among different database connectors.
 
-	databaseNumber := 1
+	databaseNumber := 2
 	switch databaseNumber {
 	case 1:
+		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-sqlite-create.sql"
 		databaseConnector, err = connectorsqlite.NewConnector(ctx, "/tmp/sqlite/G2C.db")
 	case 2:
-		databaseConnector, err = connectorpostgresql.NewConnector(ctx, "")
+		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-postgresql-create.sql"
+		databaseConnector, err = connectorpostgresql.NewConnector(ctx, "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable")
 	default:
 		err = fmt.Errorf("unknown databaseNumber: %d", databaseNumber)
 	}
@@ -56,7 +59,16 @@ func main() {
 	}
 	testObject.RegisterObserver(ctx, observer1)
 	testObject.SetLogLevel(ctx, logger.LevelTrace)
-	testObject.ProcessFileName(ctx, "/opt/senzing/g2/resources/schema/g2core-schema-sqlite-create.sql")
+	err = testObject.ProcessFileName(ctx, sqlFilename)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}
+
+	// PostgreSql only tests.
+
+	if databaseNumber == 2 {
+
+	}
 
 	// Let Observer finish.
 
