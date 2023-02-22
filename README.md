@@ -104,3 +104,40 @@
     ```
 
    Visit [localhost:9173](http://localhost:9173).
+
+### MsSQL
+
+1. Create empty database.
+   See [Configure SQL Server settings with environment variables on Linux](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables).
+   Example:
+
+    ```console
+    docker run \
+        --env ACCEPT_EULA=Y \
+        --env MSSQL_PID=Developer \
+        --env MSSQL_SA_PASSWORD=Passw0rd \
+        --name mssql \
+        --publish 1433:1433 \
+        --rm \
+        --tty \
+        bitnami/mysql:latest
+
+    ```
+
+1. View the MsSql database.
+   _Caveat:_ The setting of `DATABASE_HOST` may not work in all cases.
+   Example:
+
+    ```console
+    export ADMINER_DEFAULT_SERVER=$(curl --silent https://raw.githubusercontent.com/Senzing/knowledge-base/main/gists/find-local-ip-address/find-local-ip-address.py | python3 -)
+
+    docker run \
+        --env ADMINER_DEFAULT_SERVER \
+        --name Adminer \
+        --publish 9177:8080 \
+        --rm \
+        senzing/adminer:latest
+
+    ```
+
+   Visit [localhost:9177](http://localhost:9177).

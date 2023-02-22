@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/senzing/go-databasing/connectormssql"
 	"github.com/senzing/go-databasing/connectormysql"
 	"github.com/senzing/go-databasing/connectorpostgresql"
 	"github.com/senzing/go-databasing/connectorsqlite"
@@ -25,6 +26,7 @@ const (
 	Sqlite int = iota
 	Postgresql
 	Mysql
+	Mssql
 )
 
 // ----------------------------------------------------------------------------
@@ -66,6 +68,12 @@ func main() {
 		}
 		databaseConnector, err = connectormysql.NewConnector(ctx, configuration)
 		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-mysql-create.sql"
+
+	case Mssql:
+		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
+		databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=G2;server=localhost")
+		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-mssql-create.sql"
+
 	default:
 		err = fmt.Errorf("unknown databaseNumber: %d", databaseId)
 	}
