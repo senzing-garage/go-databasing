@@ -120,7 +120,7 @@
         --publish 1433:1433 \
         --rm \
         --tty \
-        bitnami/mysql:latest
+        mcr.microsoft.com/mssql/server:latest
 
     ```
 
