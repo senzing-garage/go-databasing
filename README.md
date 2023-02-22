@@ -82,6 +82,7 @@
         --name mysql \
         --publish 3306:3306 \
         --rm \
+        --tty \
         bitnami/mysql:latest
 
     ```
