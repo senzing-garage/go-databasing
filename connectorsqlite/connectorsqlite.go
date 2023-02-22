@@ -41,7 +41,7 @@ func (connector *Sqlite) Driver() driver.Driver {
 // Constructor methods
 // ----------------------------------------------------------------------------
 
-func NewConnector(ctx context.Context, filename string) (*Sqlite, error) {
+func NewConnector(ctx context.Context, filename string) (driver.Connector, error) {
 	return &Sqlite{
 		Filename: filename,
 	}, nil

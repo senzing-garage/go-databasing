@@ -7,6 +7,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-sql-driver/mysql"
+	"github.com/senzing/go-databasing/connectormysql"
 	"github.com/senzing/go-databasing/connectorpostgresql"
 	"github.com/senzing/go-databasing/connectorsqlite"
 	"github.com/senzing/go-databasing/postgresql"
@@ -40,11 +42,23 @@ func main() {
 	databaseNumber := 2
 	switch databaseNumber {
 	case 1:
-		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-sqlite-create.sql"
 		databaseConnector, err = connectorsqlite.NewConnector(ctx, "/tmp/sqlite/G2C.db")
+		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-sqlite-create.sql"
 	case 2:
-		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-postgresql-create.sql"
+		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 		databaseConnector, err = connectorpostgresql.NewConnector(ctx, "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable")
+		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-postgresql-create.sql"
+	case 3:
+		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
+		configuration := &mysql.Config{
+			User:   "mysql",
+			Passwd: "mysql",
+			Net:    "tcp",
+			Addr:   "localhost",
+			DBName: "G2",
+		}
+		databaseConnector, err = connectormysql.NewConnector(ctx, configuration)
+		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-mysql-create.sql"
 	default:
 		err = fmt.Errorf("unknown databaseNumber: %d", databaseNumber)
 	}
