@@ -38,7 +38,7 @@ func main() {
 	var err error = nil
 	var databaseConnector driver.Connector = nil
 	var sqlFilename string = ""
-	databaseId := Mysql
+	databaseId := Mssql
 
 	observer1 := &observer.ObserverNull{
 		Id: "Observer 1",

@@ -154,7 +154,7 @@
 
     docker run \
         --env ADMINER_DEFAULT_SERVER \
-        --name Adminer \
+        --name adminer \
         --publish 9177:8080 \
         --rm \
         senzing/adminer:latest
