@@ -44,7 +44,7 @@ var IdMessages = map[int]string{
 	9:    "Enter UnregisterObserver(%s).",
 	10:   "Exit  UnregisterObserver(%s) returned (%v).",
 	2000: "Entry: %+v",
-	4001: "SQL.Exec error: %v",
+	3001: "SQL.Exec error: %v",
 	8001: "ProcessFileName",
 	8002: "ProcessScanner.Exec",
 	8003: "ProcessScanner",

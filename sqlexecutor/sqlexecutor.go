@@ -144,7 +144,7 @@ func (sqlexecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 		sqlText := scanner.Text()
 		result, err := database.ExecContext(ctx, sqlText)
 		if err != nil {
-			sqlexecutor.getLogger().Log(4001, result, err)
+			sqlexecutor.getLogger().Log(3001, result, err)
 		}
 		if sqlexecutor.observers != nil {
 			go func() {
