@@ -7,7 +7,6 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"time"
@@ -123,7 +122,7 @@ Input
   - ctx: A context to control lifecycle.
   - scanner: SQL statements to be processed.
 */
-func (sqlexecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner *bufio.Scanner) {
+func (sqlexecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error {
 
 	// Entry tasks.
 
@@ -140,36 +139,43 @@ func (sqlexecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 
 	// Process each scanned line.
 
+	scanLine := 0
+	scanFailure := 0
 	for scanner.Scan() {
+		scanLine += 1
 		sqlText := scanner.Text()
 		result, err := database.ExecContext(ctx, sqlText)
 		if err != nil {
-			sqlexecutor.getLogger().Log(3001, result, err)
+			scanFailure += 1
+			sqlexecutor.getLogger().Log(3001, scanFailure, scanLine, result, err)
 		}
 		if sqlexecutor.observers != nil {
 			go func() {
 				details := map[string]string{
-					"SQL": sqlText,
+					"line": strconv.Itoa(scanLine),
+					"SQL":  sqlText,
 				}
 				sqlexecutor.notify(ctx, 8002, err, details)
 			}()
 		}
 	}
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
+	err = scanner.Err()
 
 	// Exit tasks.
 
 	if sqlexecutor.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"lines":    strconv.Itoa(scanLine),
+				"failures": strconv.Itoa(scanFailure),
+			}
 			sqlexecutor.notify(ctx, 8003, err, details)
 		}()
 	}
 	if sqlexecutor.isTrace {
-		defer sqlexecutor.traceExit(4, err, time.Since(entryTime))
+		defer sqlexecutor.traceExit(4, scanLine, scanFailure, err, time.Since(entryTime))
 	}
+	return err
 }
 
 /*

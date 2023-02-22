@@ -14,7 +14,7 @@ import (
 
 type SqlExecutor interface {
 	ProcessFileName(ctx context.Context, filename string) error
-	ProcessScanner(ctx context.Context, scanner *bufio.Scanner)
+	ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
@@ -36,7 +36,7 @@ var IdMessages = map[int]string{
 	1:    "Enter ProcessFileName(%s).",
 	2:    "Exit  ProcessFileName(%s) returned (%v).",
 	3:    "Enter ProcessScanner().",
-	4:    "Exit  ProcessScanner() returned (%v).",
+	4:    "Exit  ProcessScanner() returned (%d, %d, %v).",
 	5:    "Enter RegisterObserver(%s).",
 	6:    "Exit  RegisterObserver(%s) returned (%v).",
 	7:    "Enter SetLogLevel(%s).",
@@ -44,7 +44,7 @@ var IdMessages = map[int]string{
 	9:    "Enter UnregisterObserver(%s).",
 	10:   "Exit  UnregisterObserver(%s) returned (%v).",
 	2000: "Entry: %+v",
-	3001: "SQL.Exec error: %v",
+	3001: "SQL.Exec failure number %d on line #d. Error: %v",
 	8001: "ProcessFileName",
 	8002: "ProcessScanner.Exec",
 	8003: "ProcessScanner",
