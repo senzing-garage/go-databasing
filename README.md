@@ -65,6 +65,8 @@
 
     ```
 
+   Visit [localhost:9171](http://localhost:9171).
+
 ### MySQL
 
 1. Create empty database.
@@ -95,3 +97,5 @@
         bitnami/phpmyadmin:latest
 
     ```
+
+   Visit [localhost:9173](http://localhost:9173).
