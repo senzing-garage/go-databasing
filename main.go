@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/senzing/go-databasing/examplepackage"
+	"github.com/senzing/go-databasing/connectorsqlite"
+	"github.com/senzing/go-databasing/sqlexecutor"
+	"github.com/senzing/go-logging/logger"
 )
 
 // ----------------------------------------------------------------------------
@@ -41,15 +43,12 @@ func exampleFunction(ctx context.Context, name string, version string, iteration
 func main() {
 	ctx := context.TODO()
 
-	// Calling a function in main.go.
-
-	exampleFunction(ctx, programName, buildVersion, buildIteration)
-
-	// Using a package
-
-	examplePackage := &examplepackage.ExamplePackageImpl{
-		Something: " Main says 'Hi!'",
+	databaseConnector := &connectorsqlite.Sqlite{
+		Filename: "/tmp/sqlite/G2C.db",
 	}
-
-	examplePackage.SaySomething(ctx)
+	testObject := &sqlexecutor.SqlExecutorImpl{
+		LogLevel:          logger.LevelTrace,
+		DatabaseConnector: databaseConnector,
+	}
+	testObject.ProcessFileName(ctx, "/opt/senzing/g2/resources/schema/g2core-schema-sqlite-create.sql")
 }

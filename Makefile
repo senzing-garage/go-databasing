@@ -10,8 +10,8 @@ TARGET_DIRECTORY := $(MAKEFILE_DIRECTORY)/target
 DOCKER_CONTAINER_NAME := $(PROGRAM_NAME)
 DOCKER_IMAGE_NAME := senzing/$(PROGRAM_NAME)
 DOCKER_BUILD_IMAGE_NAME := $(DOCKER_IMAGE_NAME)-build
-BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty)
-BUILD_TAG := $(shell git describe --always --tags --abbrev=0)
+BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty  | sed 's/v//')
+BUILD_TAG := $(shell git describe --always --tags --abbrev=0  | sed 's/v//')
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l | sed 's/^ *//')
 GIT_REMOTE_URL := $(shell git config --get remote.origin.url)
 GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|github.com/|' -e 's|\.git$$||' -e 's|Senzing|senzing|')
@@ -24,7 +24,8 @@ CC = gcc
 # Can be overridden with "export"
 # Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/g2/lib"
 
-LD_LIBRARY_PATH ?= ${SENZING_G2_DIR}/lib
+LD_LIBRARY_PATH ?= /opt/senzing/g2/lib
+SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
 
 # Export environment variables.
 
@@ -70,7 +71,9 @@ build-linux:
 
 .PHONY: test
 test:
-	@go test -v -p 1 ./...
+#	@go test -v -p 1 ./...
+	@go test -v ./sqlfiler
+
 
 # -----------------------------------------------------------------------------
 # docker-build
@@ -148,6 +151,10 @@ clean:
 	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) 2> /dev/null || true
 	@rm -rf $(TARGET_DIRECTORY) || true
 	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
+	@rm -rf /tmp/sqlite
+	@mkdir  /tmp/sqlite
+# 	@cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
+	@touch /tmp/sqlite/G2C.db
 
 
 .PHONY: print-make-variables
