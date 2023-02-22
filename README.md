@@ -136,9 +136,7 @@
         --env MSSQL_PID=Developer \
         --env MSSQL_SA_PASSWORD=Passw0rd \
         --name mssql-tools \
-        --publish 1433:1433 \
         --rm \
-        --tty \
         mcr.microsoft.com/mssql-tools:latest /opt/mssql-tools/bin/sqlcmd \
             -P Passw0rd \
             -Q "CREATE DATABASE G2" \
