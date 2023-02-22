@@ -73,10 +73,10 @@
 
     ```console
     docker run \
-        --env MYSQL_DATABASE=G2
-        --env MYSQL_PASSWORD=mysql
-        --env MYSQL_ROOT_PASSWORD=root
-        --env MYSQL_USER=mysql
+        --env MYSQL_DATABASE=G2 \
+        --env MYSQL_PASSWORD=mysql \
+        --env MYSQL_ROOT_PASSWORD=root \
+        --env MYSQL_USER=mysql \
         --name mysql \
         --publish 3306:3306 \
         --rm \
