@@ -9,6 +9,7 @@ import (
 
 	"github.com/senzing/go-databasing/connectorpostgresql"
 	"github.com/senzing/go-databasing/connectorsqlite"
+	"github.com/senzing/go-databasing/postgresql"
 	"github.com/senzing/go-databasing/sqlexecutor"
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-observing/observer"
@@ -67,7 +68,16 @@ func main() {
 	// PostgreSql only tests.
 
 	if databaseNumber == 2 {
-
+		postgresClient := &postgresql.PostgresqlImpl{
+			DatabaseConnector: databaseConnector,
+		}
+		postgresClient.RegisterObserver(ctx, observer1)
+		postgresClient.SetLogLevel(ctx, logger.LevelTrace)
+		oid, age, err := postgresClient.GetCurrentWatermark(ctx)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+		}
+		fmt.Printf("Postgresql: oid=%s age=%d\n", oid, age)
 	}
 
 	// Let Observer finish.
