@@ -21,7 +21,11 @@ import (
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdTemplate = "senzing-9999%04d"
+const (
+	Sqlite int = iota
+	Postgresql
+	Mysql
+)
 
 // ----------------------------------------------------------------------------
 // Main
@@ -32,6 +36,7 @@ func main() {
 	var err error = nil
 	var databaseConnector driver.Connector = nil
 	var sqlFilename string = ""
+	databaseId := Mysql
 
 	observer1 := &observer.ObserverNull{
 		Id: "Observer 1",
@@ -39,28 +44,30 @@ func main() {
 
 	// Choose among different database connectors.
 
-	databaseNumber := 2
-	switch databaseNumber {
-	case 1:
+	switch databaseId {
+	case Sqlite:
 		databaseConnector, err = connectorsqlite.NewConnector(ctx, "/tmp/sqlite/G2C.db")
 		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-sqlite-create.sql"
-	case 2:
+
+	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 		databaseConnector, err = connectorpostgresql.NewConnector(ctx, "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable")
 		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-postgresql-create.sql"
-	case 3:
+
+	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
 		configuration := &mysql.Config{
-			User:   "mysql",
-			Passwd: "mysql",
-			Net:    "tcp",
-			Addr:   "localhost",
-			DBName: "G2",
+			User:      "root",
+			Passwd:    "root",
+			Net:       "tcp",
+			Addr:      "192.168.1.12",
+			Collation: "utf8mb4_general_ci",
+			DBName:    "G2",
 		}
 		databaseConnector, err = connectormysql.NewConnector(ctx, configuration)
 		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-mysql-create.sql"
 	default:
-		err = fmt.Errorf("unknown databaseNumber: %d", databaseNumber)
+		err = fmt.Errorf("unknown databaseNumber: %d", databaseId)
 	}
 	if err != nil {
 		fmt.Printf("Could not create a database connector. Error: %v", err)
@@ -81,7 +88,7 @@ func main() {
 
 	// PostgreSql only tests.
 
-	if databaseNumber == 2 {
+	if databaseId == Postgresql {
 		postgresClient := &postgresql.PostgresqlImpl{
 			DatabaseConnector: databaseConnector,
 		}

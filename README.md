@@ -20,10 +20,9 @@
     ```console
     docker run \
         --env SQLITE_DATABASE=G2C.db \
-        --interactive \
+        --name SqliteWeb \
         --publish 9174:8080 \
         --rm \
-        --tty \
         --volume /tmp/sqlite:/data \
         coleifer/sqlite-web
 
@@ -58,6 +57,7 @@
         --env PGADMIN_CONFIG_DEFAULT_SERVER='"0.0.0.0"' \
         --env PGADMIN_DEFAULT_EMAIL=postgres@postgres.com \
         --env PGADMIN_DEFAULT_PASSWORD=password \
+        --name pgAdmin \
         --publish 9171:80 \
         --publish 9172:443 \
         --rm \
@@ -87,11 +87,15 @@
     ```
 
 1. View the MySql database.
+   _Caveat:_ The setting of `DATABASE_HOST` may not work in all cases.
    Example:
 
     ```console
+    export DATABASE_HOST=$(curl --silent https://raw.githubusercontent.com/Senzing/knowledge-base/main/gists/find-local-ip-address/find-local-ip-address.py | python3 -)
+
     docker run \
-        --env DATABASE_HOST='"0.0.0.0"' \
+        --env DATABASE_HOST \
+        --name phpMyAdmin \
         --publish 9173:8080 \
         --rm \
         bitnami/phpmyadmin:latest
