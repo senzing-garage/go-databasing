@@ -18,3 +18,5 @@
         coleifer/sqlite-web
 
     ```
+
+   Visit [localhost:9174](http://localhost:9174).
