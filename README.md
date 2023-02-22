@@ -135,7 +135,7 @@
         --env ACCEPT_EULA=Y \
         --env MSSQL_PID=Developer \
         --env MSSQL_SA_PASSWORD=Passw0rd \
-        --name mssql \
+        --name mssql-tools \
         --publish 1433:1433 \
         --rm \
         --tty \
