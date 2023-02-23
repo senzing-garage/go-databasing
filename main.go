@@ -47,13 +47,15 @@ func main() {
 
 	// Get location of test data.
 
-	gitRepositoryDir, found := os.LookupEnv("GITHUB_WORKSPACE") // For GitHub actions.
-	if !found {
-		gitRepositoryDir, found = os.LookupEnv("GIT_REPOSITORY_DIR")
-	}
-	if !found {
-		gitRepositoryDir = "."
-	}
+	// gitRepositoryDir, found := os.LookupEnv("GITHUB_WORKSPACE") // For GitHub actions.
+	// if !found {
+	// 	gitRepositoryDir, found = os.LookupEnv("GIT_REPOSITORY_DIR")
+	// }
+	// if !found {
+	// 	gitRepositoryDir = "."
+	// }
+
+	gitRepositoryDir := "."
 
 	// Choose among different database connectors.
 
