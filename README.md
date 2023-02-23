@@ -194,7 +194,6 @@ The following instructions build the example `main.go` program.
         --publish 50000:50000 \
         --rm \
         --tty \
-        --volumes
         --volume ${GIT_REPOSITORY_DIR}/testdata/db2:/var/custom \
         ibmcom/db2:latest
 
