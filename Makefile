@@ -71,8 +71,8 @@ build-linux:
 
 .PHONY: test
 test:
-	@go test -v -p 1 ./...
-#	@go test -v ./.
+#	@go test -v -p 1 ./...
+	@go test -v ./.
 #	@go test -v ./connectorpostgresql
 #	@go test -v ./connectorsqlite
 #	@go test -v ./sqlexecutor

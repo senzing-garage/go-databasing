@@ -50,7 +50,7 @@ func main() {
 	switch databaseId {
 	case Sqlite:
 		databaseConnector, err = connectorsqlite.NewConnector(ctx, "/tmp/sqlite/G2C.db")
-		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-sqlite-create.sql"
+		sqlFilename = "testdata/sqlite/g2core-schema-sqlite-create.sql"
 
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
