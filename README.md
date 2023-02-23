@@ -133,7 +133,6 @@ The following instructions build the example `main.go` program.
         --env ACCEPT_EULA=Y \
         --env MSSQL_PID=Developer \
         --env MSSQL_SA_PASSWORD=Passw0rd \
-        --interactive \
         --name mssql \
         --publish 1433:1433 \
         --rm \
@@ -191,6 +190,7 @@ The following instructions build the example `main.go` program.
     docker run \
         --env DB2INST1_PASSWORD=db2inst1 \
         --env LICENSE=accept \
+        --interactive \
         --name db2 \
         --publish 50000:50000 \
         --rm \
