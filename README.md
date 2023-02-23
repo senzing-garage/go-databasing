@@ -118,6 +118,7 @@ The following instructions build the example `main.go` program.
         --env MYSQL_PASSWORD=mysql \
         --env MYSQL_ROOT_PASSWORD=root \
         --env MYSQL_USER=mysql \
+        --interactive \
         --name mysql \
         --publish 3306:3306 \
         --rm \

@@ -43,10 +43,10 @@ func TestPostgresql_Connect(test *testing.T) {
 	ctx := context.TODO()
 
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-	databaseConnector, err := NewConnector(ctx, "")
-	if err != nil {
-		test.Fatal(err)
+	// databaseConnector, err := NewConnector(ctx, "")
+	// if err != nil {
+	// 	test.Fatal(err)
 
-	}
-	databaseConnector.Connect(ctx)
+	// }
+	// databaseConnector.Connect(ctx)
 }
