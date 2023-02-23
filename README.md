@@ -1,6 +1,23 @@
 # go-databasing
 
-## Specific databases
+## Development
+
+### Install Git repository
+
+The following instructions build the example `main.go` program.
+
+1. Identify repository.
+   Example:
+
+    ```console
+    export GIT_ACCOUNT=senzing
+    export GIT_REPOSITORY=go-databaseing
+    export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
+    export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
+
+    ```
+
+1. Using the environment variables values just set, follow steps in [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
 
 ### SQLite
 
@@ -162,3 +179,23 @@
     ```
 
    Visit [localhost:9177](http://localhost:9177).
+
+### Db2
+
+1. Create empty database.
+   See [Configure SQL Server settings with environment variables on Linux](https://hub.docker.com/r/ibmcom/db2).
+   Example:
+
+    ```console
+    docker run \
+        --env DB2INST1_PASSWORD=db2inst1 \
+        --env LICENSE=accept \
+        --name db2 \
+        --publish 50000:50000 \
+        --rm \
+        --tty \
+        --volumes
+        --volume ${GIT_REPOSITORY_DIR}/testdata/db2:/var/custom \
+        ibmcom/db2:latest
+
+    ```
