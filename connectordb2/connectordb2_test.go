@@ -1,7 +1,6 @@
 package connectordb2
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"testing"
@@ -40,7 +39,7 @@ func teardown() error {
 // ----------------------------------------------------------------------------
 
 func TestPostgresql_Connect(test *testing.T) {
-	ctx := context.TODO()
+	// ctx := context.TODO()
 
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 	// databaseConnector, err := NewConnector(ctx, "")
