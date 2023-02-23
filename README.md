@@ -192,6 +192,7 @@ The following instructions build the example `main.go` program.
         --env LICENSE=accept \
         --interactive \
         --name db2 \
+        --privileged \
         --publish 50000:50000 \
         --rm \
         --tty \
