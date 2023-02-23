@@ -1,5 +1,21 @@
 # go-databasing
 
+## :warning: WARNING: go-databasing is still in development :warning: _
+
+At the moment, this is "work-in-progress" with Semantic Versions of `0.n.x`.
+Although it can be reviewed and commented on,
+the recommendation is not to use it yet.
+
+## Synopsis
+
+The Senzing `go-databasing` packages provide access to the Senzing database.
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/senzing/go-databasing.svg)](https://pkg.go.dev/github.com/senzing/go-databasing)
+[![Go Report Card](https://goreportcard.com/badge/github.com/senzing/go-databasing)](https://goreportcard.com/report/github.com/senzing/go-databasing)
+[![go-test.yaml](https://github.com/Senzing/go-databasing/actions/workflows/go-test.yaml/badge.svg)](https://github.com/Senzing/go-databasing/actions/workflows/go-test.yaml)
+
+## Overview
+
 ## Development
 
 ### Install Git repository
