@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.0] - 2023-02-24
+
+### Added to 0.2.0
+
+- Added support for Sqlite, Postgresql, MySQL, and MsSQL.
+- All support processing SQL via file/bufio.Scanner (sqlexecutor)
+- For Postgresql, added GetCurrentWatermark() (postgres)
+
 ## [0.1.0] - 2023-02-22
 
 ### Added to 0.1.0

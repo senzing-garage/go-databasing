@@ -1,4 +1,4 @@
-package examplepackage
+package connectormssql
 
 import (
 	"context"
@@ -41,26 +41,27 @@ func teardown() error {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestExamplePackageImpl_SaySomething(test *testing.T) {
+func TestNewConnector(test *testing.T) {
 	ctx := context.TODO()
-	testObject := &ExamplePackageImpl{
-		Something: "I'm here",
+	configuration := "user id=sa;password=Passw0rd;database=G2;server=localhost"
+	databaseConnector, err := NewConnector(ctx, configuration)
+	if err != nil {
+		assert.FailNow(test, err.Error(), databaseConnector)
 	}
-	err := testObject.SaySomething(ctx)
-	assert.Nil(test, err)
 }
 
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
-func ExampleExamplePackageImpl_SaySomething() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/examplepackage/examplepackage_test.go
+func ExampleNewConnector() {
+	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/connectormssql/connectormssql_test.go
 	ctx := context.TODO()
-	examplePackage := &ExamplePackageImpl{
-		Something: "I'm here",
+	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
+	configuration := "user id=sa;password=Passw0rd;database=master;server=localhost"
+	databaseConnector, err := NewConnector(ctx, configuration)
+	if err != nil {
+		fmt.Println(err, databaseConnector)
 	}
-	examplePackage.SaySomething(ctx)
-	//Output:
-	//examplePackage: I'm here
+	// Output:
 }
