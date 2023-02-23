@@ -41,7 +41,8 @@ func main() {
 	databaseId := Sqlite
 
 	observer1 := &observer.ObserverNull{
-		Id: "Observer 1",
+		Id:       "Observer 1",
+		IsSilent: true,
 	}
 
 	// Choose among different database connectors.

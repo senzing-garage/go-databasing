@@ -46,7 +46,8 @@ func teardown() error {
 func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 	ctx := context.TODO()
 	observer1 := &observer.ObserverNull{
-		Id: "Observer 1",
+		Id:       "Observer 1",
+		IsSilent: true,
 	}
 	databaseConnector := &connectorsqlite.Sqlite{
 		Filename: "/tmp/sqlite/G2C.db",
