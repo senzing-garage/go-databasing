@@ -93,6 +93,7 @@ func main() {
 	err = testObject.ProcessFileName(ctx, sqlFilename)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
 	}
 
 	// PostgreSql only tests.
@@ -106,6 +107,7 @@ func main() {
 		oid, age, err := postgresClient.GetCurrentWatermark(ctx)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
 		}
 		fmt.Printf("Postgresql: oid=%s age=%d\n", oid, age)
 	}
