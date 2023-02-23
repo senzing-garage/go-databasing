@@ -133,7 +133,7 @@ func ExampleSqlExecutorImpl_ProcessFileName_postgresql() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
 	sqlFilename := "../testdata/postgresql/g2core-schema-postgresql-create.sql"
-	configuration := "user=postgres password=postgres dbname=master host=localhost sslmode=disable"
+	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
 	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
 	if err != nil {
 		fmt.Printf("%v\n", err)
@@ -152,7 +152,7 @@ func ExampleSqlExecutorImpl_ProcessFileName_mssql() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
 	sqlFilename := "../testdata/mssql/g2core-schema-mssql-create.sql"
-	configuration := "user id=sa;password=Passw0rd;database=G2;server=localhost"
+	configuration := "user id=sa;password=Passw0rd;database=master;server=localhost"
 	databaseConnector, err := connectormssql.NewConnector(ctx, configuration)
 	if err != nil {
 		fmt.Printf("%v\n", err)
