@@ -27,6 +27,15 @@ jobs:
         image: bitnami/postgresql
         ports:
           - 5432:5432
+      mysql:
+        env:
+          MYSQL_DATABASE: G2
+          MYSQL_PASSWORD: mysql
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: mysql
+        image: bitnami/mysql
+        ports:
+          - 3306:3306
     steps:
       - uses: actions/checkout@v3
       - name: Setup go
