@@ -35,5 +35,6 @@ jobs:
           go-version: ${{ matrix.go }}
       - run: pwd
       - run: env
+      - run: touch /tmp/sqlite/G2C.db
       # - run: go test -v -p 1 ./...
       - run: go test -v ./.
