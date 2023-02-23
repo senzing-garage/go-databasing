@@ -80,12 +80,12 @@ func main() {
 			DBName:    "G2",
 		}
 		databaseConnector, err = connectormysql.NewConnector(ctx, configuration)
-		sqlFilename = gitRepositoryDir + "/opt/senzing/g2/resources/schema/g2core-schema-mysql-create.sql"
+		sqlFilename = gitRepositoryDir + "/testdata/mysql/g2core-schema-mysql-create.sql"
 
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 		databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=G2;server=localhost")
-		sqlFilename = gitRepositoryDir + "/opt/senzing/g2/resources/schema/g2core-schema-mssql-create.sql"
+		sqlFilename = gitRepositoryDir + "/testdata/mssql/g2core-schema-mssql-create.sql"
 
 	default:
 		err = fmt.Errorf("unknown databaseNumber: %d", databaseId)
@@ -101,7 +101,7 @@ func main() {
 		DatabaseConnector: databaseConnector,
 	}
 	testObject.RegisterObserver(ctx, observer1)
-	testObject.SetLogLevel(ctx, logger.LevelTrace)
+	// testObject.SetLogLevel(ctx, logger.LevelTrace)
 	err = testObject.ProcessFileName(ctx, sqlFilename)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)

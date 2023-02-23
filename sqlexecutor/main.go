@@ -36,7 +36,7 @@ var IdMessages = map[int]string{
 	1:    "Enter ProcessFileName(%s).",
 	2:    "Exit  ProcessFileName(%s) returned (%v).",
 	3:    "Enter ProcessScanner().",
-	4:    "Exit  ProcessScanner() returned (%d, %d, %v).",
+	4:    "Exit  ProcessScanner() processed %d lines having %d failures. (%v).",
 	5:    "Enter RegisterObserver(%s).",
 	6:    "Exit  RegisterObserver(%s) returned (%v).",
 	7:    "Enter SetLogLevel(%d).",

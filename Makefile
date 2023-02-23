@@ -79,7 +79,7 @@ test:
 #	@go test -v ./connectorpostgresql
 #	@go test -v ./connectorsqlite
 	@go test -v ./postgresql
-#	@go test -v ./sqlexecutor
+	@go test -v ./sqlexecutor
 
 # -----------------------------------------------------------------------------
 # docker-build
