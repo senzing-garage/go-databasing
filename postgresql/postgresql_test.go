@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/senzing/go-databasing/connectorsqlite"
-	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-databasing/connectorpostgresql"
 	"github.com/senzing/go-observing/observer"
+	"github.com/stretchr/testify/assert"
 )
 
 // ----------------------------------------------------------------------------
@@ -46,17 +46,25 @@ func teardown() error {
 func TestPostgresqlImpl_GetCurrentWatermark(test *testing.T) {
 	ctx := context.TODO()
 	observer1 := &observer.ObserverNull{
-		Id: "Observer 1",
+		Id:       "Observer 1",
+		IsSilent: true,
 	}
-	databaseConnector := &connectorsqlite.Sqlite{
-		Filename: "/tmp/sqlite/G2C.db",
+	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
+	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
+	if err != nil {
+		assert.FailNow(test, err.Error(), databaseConnector)
 	}
 	testObject := &PostgresqlImpl{
-		LogLevel:          logger.LevelTrace,
 		DatabaseConnector: databaseConnector,
 	}
-	testObject.RegisterObserver(ctx, observer1)
-	testObject.GetCurrentWatermark(ctx)
+	err = testObject.RegisterObserver(ctx, observer1)
+	if err != nil {
+		assert.FailNow(test, err.Error())
+	}
+	oid, age, err := testObject.GetCurrentWatermark(ctx)
+	if err != nil {
+		assert.FailNow(test, err.Error(), oid, age)
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -64,14 +72,20 @@ func TestPostgresqlImpl_GetCurrentWatermark(test *testing.T) {
 // ----------------------------------------------------------------------------
 
 func ExamplePostgresqlImpl_GetCurrentWatermark() {
+	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/postgresql/postgresql_test.go
 	ctx := context.TODO()
-	databaseConnector := &connectorsqlite.Sqlite{
-		Filename: "/tmp/sqlite/G2C.db",
+	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
+	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
+	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
+	if err != nil {
+		fmt.Println(err)
 	}
-	testObject := &PostgresqlImpl{
-		LogLevel:          logger.LevelTrace,
+	database := &PostgresqlImpl{
 		DatabaseConnector: databaseConnector,
 	}
-	testObject.GetCurrentWatermark(ctx)
+	oid, age, err := database.GetCurrentWatermark(ctx)
+	if err != nil {
+		fmt.Println(err, oid, age)
+	}
 	// Output:
 }

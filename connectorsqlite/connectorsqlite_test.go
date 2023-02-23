@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // ----------------------------------------------------------------------------
@@ -39,12 +41,26 @@ func teardown() error {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestSqlite_Connect(test *testing.T) {
+func TestNewConnector(test *testing.T) {
 	ctx := context.TODO()
-	databaseConnector, err := NewConnector(ctx, "/tmp/sqlite/G2C.db")
+	configuration := "/tmp/sqlite/G2C.db"
+	databaseConnector, err := NewConnector(ctx, configuration)
 	if err != nil {
-		test.Fatal(err)
-
+		assert.FailNow(test, err.Error(), databaseConnector)
 	}
-	databaseConnector.Connect(ctx)
+}
+
+// ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleNewConnector() {
+	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/connectorsqlite/connectorsqlite_test.go
+	ctx := context.TODO()
+	configuration := "/tmp/sqlite/G2C.db"
+	databaseConnector, err := NewConnector(ctx, configuration)
+	if err != nil {
+		fmt.Println(err, databaseConnector)
+	}
+	// Output:
 }

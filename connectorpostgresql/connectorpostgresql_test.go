@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // ----------------------------------------------------------------------------
@@ -39,12 +41,27 @@ func teardown() error {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestPostgresql_Connect(test *testing.T) {
+func TestNewConnector(test *testing.T) {
 	ctx := context.TODO()
-	databaseConnector, err := NewConnector(ctx, "")
+	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
+	databaseConnector, err := NewConnector(ctx, configuration)
 	if err != nil {
-		test.Fatal(err)
-
+		assert.FailNow(test, err.Error(), databaseConnector)
 	}
-	databaseConnector.Connect(ctx)
+}
+
+// ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleNewConnector() {
+	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/connectorpostgresql/connectorpostgresql_test.go
+	ctx := context.TODO()
+	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
+	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
+	databaseConnector, err := NewConnector(ctx, configuration)
+	if err != nil {
+		fmt.Println(err, databaseConnector)
+	}
+	// Output:
 }

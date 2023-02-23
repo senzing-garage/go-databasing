@@ -71,7 +71,7 @@ build-linux:
 
 .PHONY: test
 test:
-#	@go test -v -p 1 ./...
+	@go test -v -p 1 ./...
 #	@go test -v ./.
 #	@go test -v ./connectordb2
 #	@go test -v ./connectormssql
@@ -79,7 +79,7 @@ test:
 #	@go test -v ./connectorpostgresql
 #	@go test -v ./connectorsqlite
 #	@go test -v ./postgresql
-	@go test -v ./sqlexecutor
+#	@go test -v ./sqlexecutor
 
 # -----------------------------------------------------------------------------
 # docker-build

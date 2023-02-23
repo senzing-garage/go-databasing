@@ -84,7 +84,7 @@ func main() {
 
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-		databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=G2;server=localhost")
+		databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=master;server=localhost")
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/g2core-schema-mssql-create.sql"
 
 	default:

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/stretchr/testify/assert"
 )
 
 // ----------------------------------------------------------------------------
@@ -42,20 +42,41 @@ func teardown() error {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestPostgresql_Connect(test *testing.T) {
+func TestNewConnector(test *testing.T) {
 	ctx := context.TODO()
-
-	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-	config := &mysql.Config{
-		Net:     "tcp",
-		Addr:    "1.1.1.1:1234",
-		Timeout: 10 * time.Millisecond,
+	configuration := &mysql.Config{
+		User:      "root",
+		Passwd:    "root",
+		Net:       "tcp",
+		Addr:      "localhost",
+		Collation: "utf8mb4_general_ci",
+		DBName:    "G2",
 	}
-
-	databaseConnector, err := NewConnector(ctx, config)
+	databaseConnector, err := NewConnector(ctx, configuration)
 	if err != nil {
-		test.Fatal(err)
-
+		assert.FailNow(test, err.Error(), databaseConnector)
 	}
-	databaseConnector.Connect(ctx)
+}
+
+// ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleNewConnector() {
+	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/connectormysql/connectormysql_test.go
+	ctx := context.TODO()
+	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
+	configuration := &mysql.Config{
+		User:      "root",
+		Passwd:    "root",
+		Net:       "tcp",
+		Addr:      "localhost",
+		Collation: "utf8mb4_general_ci",
+		DBName:    "G2",
+	}
+	databaseConnector, err := NewConnector(ctx, configuration)
+	if err != nil {
+		fmt.Println(err, databaseConnector)
+	}
+	// Output:
 }
