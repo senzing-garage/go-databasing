@@ -19,6 +19,28 @@ The following instructions build the example `main.go` program.
 
 1. Using the environment variables values just set, follow steps in [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
 
+### Developement for Db2
+
+:warning: Probably going to be deprecated.
+
+1. Prepare environment
+   Example:
+
+    ```console
+    export IBM_DB_HOME=${GOPATH}/src/github.com/ibmdb/clidriver
+    export CGO_CFLAGS=-I${IBM_DB_HOME}/include
+    export CGO_LDFLAGS=-L${IBM_DB_HOME}/lib
+    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${IBM_DB_HOME}/lib
+
+    go get github.com/ibmdb/go_ibm_db/installer
+
+    go run ${GOPATH}/pkg/mod/github.com/ibmdb/go_ibm_db@v0.4.2/installer/setup.go
+
+    go run ${GOPATH}/pkg/mod/github.com/ibmdb/go_ibm_db@v0.4.2/installer/setup.go
+    ```
+
+### Working with specific databases
+
 ### SQLite
 
 1. Create empty database.
@@ -183,7 +205,7 @@ The following instructions build the example `main.go` program.
 ### Db2
 
 1. Create empty database.
-   See [Configure SQL Server settings with environment variables on Linux](https://hub.docker.com/r/ibmcom/db2).
+   See [ibmcom/db2](https://hub.docker.com/r/ibmcom/db2).
    Example:
 
     ```console

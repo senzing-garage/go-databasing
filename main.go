@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/senzing/go-databasing/connectordb2"
 	"github.com/senzing/go-databasing/connectormssql"
 	"github.com/senzing/go-databasing/connectormysql"
 	"github.com/senzing/go-databasing/connectorpostgresql"
@@ -28,7 +27,6 @@ const (
 	Postgresql
 	Mysql
 	Mssql
-	Db2
 )
 
 // ----------------------------------------------------------------------------
@@ -40,7 +38,7 @@ func main() {
 	var err error = nil
 	var databaseConnector driver.Connector = nil
 	var sqlFilename string = ""
-	databaseId := Mssql
+	databaseId := Sqlite
 
 	observer1 := &observer.ObserverNull{
 		Id: "Observer 1",
@@ -75,11 +73,6 @@ func main() {
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 		databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=G2;server=localhost")
 		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-mssql-create.sql"
-
-	case Db2:
-		// See https://github.com/ibmdb/go_ibm_db
-		databaseConnector, err = connectordb2.NewConnector(ctx, "UID=db2inst1;PWD=db2inst1;DATABASE=G2;HOSTNAME=localhost;PORT=50000")
-		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-db2-create.sql"
 
 	default:
 		err = fmt.Errorf("unknown databaseNumber: %d", databaseId)
