@@ -133,6 +133,7 @@ The following instructions build the example `main.go` program.
         --env ACCEPT_EULA=Y \
         --env MSSQL_PID=Developer \
         --env MSSQL_SA_PASSWORD=Passw0rd \
+        --interactive \
         --name mssql \
         --publish 1433:1433 \
         --rm \
