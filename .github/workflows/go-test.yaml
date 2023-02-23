@@ -54,7 +54,7 @@ jobs:
       - run: env
       - run: mkdir /tmp/sqlite
       - run: touch /tmp/sqlite/G2C.db
-      # - run: go test -v -p 1 ./...
-      - run: go test -v ./.
-      - run: go test -v ./postgresql
-      - run: go test -v ./sqlexecutor
+      - run: go test -v -p 1 ./...
+      # - run: go test -v ./.
+      # - run: go test -v ./postgresql
+      # - run: go test -v ./sqlexecutor
