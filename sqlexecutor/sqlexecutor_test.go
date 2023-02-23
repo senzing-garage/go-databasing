@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/senzing/go-databasing/connectormssql"
 	"github.com/senzing/go-databasing/connectormysql"
 	"github.com/senzing/go-databasing/connectorpostgresql"
 	"github.com/senzing/go-databasing/connectorsqlite"
@@ -132,8 +133,27 @@ func ExampleSqlExecutorImpl_ProcessFileName_postgresql() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
 	sqlFilename := "../testdata/postgresql/g2core-schema-postgresql-create.sql"
-	dsn := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
-	databaseConnector, err := connectorpostgresql.NewConnector(ctx, dsn)
+	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
+	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+	sqlExecutor := &SqlExecutorImpl{
+		DatabaseConnector: databaseConnector,
+	}
+	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+	// Output:
+}
+
+func ExampleSqlExecutorImpl_ProcessFileName_mssql() {
+	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
+	ctx := context.TODO()
+	sqlFilename := "../testdata/mssql/g2core-schema-mssql-create.sql"
+	configuration := "user id=sa;password=Passw0rd;database=G2;server=localhost"
+	databaseConnector, err := connectormssql.NewConnector(ctx, configuration)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}

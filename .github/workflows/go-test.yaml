@@ -27,6 +27,14 @@ jobs:
         image: bitnami/postgresql
         ports:
           - 5432:5432
+      mssql:
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_PID: Developer
+          MSSQL_SA_PASSWORD: Passw0rd
+        image: mcr.microsoft.com/mssql/server
+        ports:
+          - 1433:1433
       mysql:
         env:
           MYSQL_DATABASE: G2
