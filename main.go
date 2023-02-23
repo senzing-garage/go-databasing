@@ -45,17 +45,27 @@ func main() {
 		IsSilent: true,
 	}
 
+	// Get location of test data.
+
+	gitRepositoryDir, found := os.LookupEnv("GITHUB_WORKSPACE") // For GitHub actions.
+	if !found {
+		gitRepositoryDir, found = os.LookupEnv("GIT_REPOSITORY_DIR")
+	}
+	if !found {
+		gitRepositoryDir = "."
+	}
+
 	// Choose among different database connectors.
 
 	switch databaseId {
 	case Sqlite:
 		databaseConnector, err = connectorsqlite.NewConnector(ctx, "/tmp/sqlite/G2C.db")
-		sqlFilename = "testdata/sqlite/g2core-schema-sqlite-create.sql"
+		sqlFilename = gitRepositoryDir + "/testdata/sqlite/g2core-schema-sqlite-create.sql"
 
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 		databaseConnector, err = connectorpostgresql.NewConnector(ctx, "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable")
-		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-postgresql-create.sql"
+		sqlFilename = gitRepositoryDir + "/testdata/postgresql/g2core-schema-postgresql-create.sql"
 
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
@@ -68,12 +78,12 @@ func main() {
 			DBName:    "G2",
 		}
 		databaseConnector, err = connectormysql.NewConnector(ctx, configuration)
-		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-mysql-create.sql"
+		sqlFilename = gitRepositoryDir + "/opt/senzing/g2/resources/schema/g2core-schema-mysql-create.sql"
 
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 		databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=G2;server=localhost")
-		sqlFilename = "/opt/senzing/g2/resources/schema/g2core-schema-mssql-create.sql"
+		sqlFilename = gitRepositoryDir + "/opt/senzing/g2/resources/schema/g2core-schema-mssql-create.sql"
 
 	default:
 		err = fmt.Errorf("unknown databaseNumber: %d", databaseId)
