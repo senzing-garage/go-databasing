@@ -71,9 +71,9 @@ build-linux:
 
 .PHONY: test
 test:
-#	@go test -v -p 1 ./...
+	@go test -v -p 1 ./...
 #	@go test -v ./.
-	@go test -v ./connector
+#	@go test -v ./connector
 #	@go test -v ./connectordb2
 #	@go test -v ./connectormssql
 #	@go test -v ./connectormysql

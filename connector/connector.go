@@ -59,7 +59,6 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 	switch scheme {
 	case "sqlite3":
 		configuration := path
-		fmt.Printf("sqlite3: %s\n", configuration)
 		result, err = connectorsqlite.NewConnector(ctx, configuration)
 
 	case "postgresql":
@@ -91,7 +90,6 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 		for key, value := range configurationMap {
 			configuration = configuration + fmt.Sprintf("%s=%s ", key, value)
 		}
-		fmt.Printf("postgresql: %s\n", configuration)
 		result, err = connectorpostgresql.NewConnector(ctx, configuration)
 
 	case "mysql":
@@ -119,7 +117,6 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 			configuration.DBName = schema[0]
 		}
 
-		fmt.Printf("mysql: %v\n", configuration)
 		result, err = connectormysql.NewConnector(ctx, configuration)
 
 	case "mssql":
@@ -149,7 +146,6 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 		for key, value := range configurationMap {
 			configuration = configuration + fmt.Sprintf("%s=%s;", key, value)
 		}
-		fmt.Printf("mssql: %v\n", configuration)
 		result, err = connectormssql.NewConnector(ctx, configuration)
 
 	default:
