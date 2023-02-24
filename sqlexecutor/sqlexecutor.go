@@ -87,7 +87,6 @@ func (sqlexecutor *SqlExecutorImpl) ProcessFileName(ctx context.Context, filenam
 	if sqlexecutor.isTrace {
 		sqlexecutor.traceEntry(1, filename)
 	}
-	var err error = nil
 	entryTime := time.Now()
 
 	// Process file.
@@ -132,7 +131,6 @@ func (sqlexecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 	if sqlexecutor.isTrace {
 		sqlexecutor.traceEntry(3)
 	}
-	var err error = nil
 	entryTime := time.Now()
 
 	// Open a database connection.
@@ -140,7 +138,7 @@ func (sqlexecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 	database := sql.OpenDB(sqlexecutor.DatabaseConnector)
 	defer database.Close()
 
-	err = database.PingContext(ctx)
+	err := database.PingContext(ctx)
 	if err != nil {
 		return err
 	}

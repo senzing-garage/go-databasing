@@ -7,11 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/go-sql-driver/mysql"
-	"github.com/senzing/go-databasing/connectormssql"
-	"github.com/senzing/go-databasing/connectormysql"
-	"github.com/senzing/go-databasing/connectorpostgresql"
-	"github.com/senzing/go-databasing/connectorsqlite"
+	"github.com/senzing/go-databasing/connector"
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-observing/observer"
 )
@@ -67,15 +63,17 @@ func refreshSqliteDatabase(databaseFilename string) error {
 
 func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 	ctx := context.TODO()
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	databaseFilename := "/tmp/sqlite/G2C.db"
+	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	refreshSqliteDatabase(databaseFilename)
 	observer1 := &observer.ObserverNull{
 		Id:       "Observer 1",
 		IsSilent: true,
 	}
-	databaseConnector := &connectorsqlite.Sqlite{
-		Filename: databaseFilename,
+	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
+	if err != nil {
+		test.Error(err)
 	}
 	testObject := &SqlExecutorImpl{
 		LogLevel:          logger.LevelInfo,
@@ -87,16 +85,18 @@ func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 
 func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 	ctx := context.TODO()
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	databaseFilename := "/tmp/sqlite/G2C.db"
+	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	refreshSqliteDatabase(databaseFilename)
 	file, err := os.Open(sqlFilename)
 	if err != nil {
 		test.Error(err)
 	}
 	defer file.Close()
-	databaseConnector := &connectorsqlite.Sqlite{
-		Filename: databaseFilename,
+	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
+	if err != nil {
+		test.Error(err)
 	}
 	testObject := &SqlExecutorImpl{
 		LogLevel:          logger.LevelInfo,
@@ -112,10 +112,11 @@ func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 func ExampleSqlExecutorImpl_ProcessFileName_sqlite() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	databaseFilename := "/tmp/sqlite/G2C.db"
+	databaseUrl := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
-	databaseConnector, err := connectorsqlite.NewConnector(ctx, databaseFilename)
+	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -132,10 +133,10 @@ func ExampleSqlExecutorImpl_ProcessFileName_sqlite() {
 func ExampleSqlExecutorImpl_ProcessFileName_postgresql() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
-	sqlFilename := "../testdata/postgresql/g2core-schema-postgresql-create.sql"
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
-	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
-	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
+	databaseUrl := "postgresql://postgres:postgres@localhost:5432/G2/?sslmode=disable"
+	sqlFilename := "../testdata/postgresql/g2core-schema-postgresql-create.sql"
+	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -152,10 +153,10 @@ func ExampleSqlExecutorImpl_ProcessFileName_postgresql() {
 func ExampleSqlExecutorImpl_ProcessFileName_mssql() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
-	sqlFilename := "../testdata/mssql/g2core-schema-mssql-create.sql"
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-	configuration := "user id=sa;password=Passw0rd;database=master;server=localhost"
-	databaseConnector, err := connectormssql.NewConnector(ctx, configuration)
+	databaseUrl := "mssql://sa:Passw0rd@localhost:1433/master"
+	sqlFilename := "../testdata/mssql/g2core-schema-mssql-create.sql"
+	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -172,17 +173,10 @@ func ExampleSqlExecutorImpl_ProcessFileName_mssql() {
 func ExampleSqlExecutorImpl_ProcessFileName_mysql() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
-	sqlFilename := "../testdata/mysql/g2core-schema-mysql-create.sql"
 	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-	configuration := &mysql.Config{
-		User:      "root",
-		Passwd:    "root",
-		Net:       "tcp",
-		Addr:      "localhost",
-		Collation: "utf8mb4_general_ci",
-		DBName:    "G2",
-	}
-	databaseConnector, err := connectormysql.NewConnector(ctx, configuration)
+	databaseUrl := "mysql://root:root@localhost:3306/G2"
+	sqlFilename := "../testdata/mysql/g2core-schema-mysql-create.sql"
+	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -199,15 +193,16 @@ func ExampleSqlExecutorImpl_ProcessFileName_mysql() {
 func ExampleSqlExecutorImpl_ProcessScanner_sqlite() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	databaseFilename := "/tmp/sqlite/G2C.db"
+	databaseUrl := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
 	file, err := os.Open(sqlFilename)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer file.Close()
-	databaseConnector, err := connectorsqlite.NewConnector(ctx, databaseFilename)
+	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
 		fmt.Println(err)
 	}

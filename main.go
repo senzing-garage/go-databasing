@@ -2,16 +2,11 @@ package main
 
 import (
 	"context"
-	"database/sql/driver"
 	"fmt"
 	"os"
 	"time"
 
-	"github.com/go-sql-driver/mysql"
-	"github.com/senzing/go-databasing/connectormssql"
-	"github.com/senzing/go-databasing/connectormysql"
-	"github.com/senzing/go-databasing/connectorpostgresql"
-	"github.com/senzing/go-databasing/connectorsqlite"
+	"github.com/senzing/go-databasing/connector"
 	"github.com/senzing/go-databasing/postgresql"
 	"github.com/senzing/go-databasing/sqlexecutor"
 	"github.com/senzing/go-logging/logger"
@@ -35,10 +30,11 @@ const (
 
 func main() {
 	ctx := context.TODO()
-	var err error = nil
-	var databaseConnector driver.Connector = nil
 	var sqlFilename string = ""
+	var databaseUrl string = ""
 	databaseId := Sqlite
+
+	// Create a silent observer.
 
 	observer1 := &observer.ObserverNull{
 		Id:       "Observer 1",
@@ -57,39 +53,32 @@ func main() {
 
 	gitRepositoryDir := "."
 
-	// Choose among different database connectors.
+	// Construct database URL and choose SQL file.
 
 	switch databaseId {
 	case Sqlite:
-		databaseConnector, err = connectorsqlite.NewConnector(ctx, "/tmp/sqlite/G2C.db")
+		databaseUrl = "sqlite3://na:na@/tmp/sqlite/G2C.db"
 		sqlFilename = gitRepositoryDir + "/testdata/sqlite/g2core-schema-sqlite-create.sql"
-
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
-		databaseConnector, err = connectorpostgresql.NewConnector(ctx, "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable")
+		databaseUrl = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
 		sqlFilename = gitRepositoryDir + "/testdata/postgresql/g2core-schema-postgresql-create.sql"
-
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-		configuration := &mysql.Config{
-			User:      "root",
-			Passwd:    "root",
-			Net:       "tcp",
-			Addr:      "192.168.1.12",
-			Collation: "utf8mb4_general_ci",
-			DBName:    "G2",
-		}
-		databaseConnector, err = connectormysql.NewConnector(ctx, configuration)
+		databaseUrl = "mysql://root:root@localhost/G2"
 		sqlFilename = gitRepositoryDir + "/testdata/mysql/g2core-schema-mysql-create.sql"
-
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-		databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=master;server=localhost")
+		databaseUrl = "mysql://sa:Passw0rd@localhost/master"
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/g2core-schema-mssql-create.sql"
-
 	default:
-		err = fmt.Errorf("unknown databaseNumber: %d", databaseId)
+		fmt.Printf("Unknown databaseNumber: %d", databaseId)
+		os.Exit(1)
 	}
+
+	// Create database connector.
+
+	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
 		fmt.Printf("Could not create a database connector. Error: %v", err)
 		os.Exit(1)

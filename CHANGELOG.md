@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.1] - 2023-02-25
+
+### Added to 0.2.1
+
+- added `connector.NewConnection(ctx, databaseUrl)
+
 ## [0.2.0] - 2023-02-24
 
 ### Added to 0.2.0
