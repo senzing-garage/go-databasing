@@ -75,9 +75,11 @@ The following instructions build the example `main.go` program.
     ```console
     docker run \
         --env SQLITE_DATABASE=G2C.db \
+        --interactive \
         --name SqliteWeb \
         --publish 9174:8080 \
         --rm \
+        --tty \
         --volume /tmp/sqlite:/data \
         coleifer/sqlite-web
 
