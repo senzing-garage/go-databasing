@@ -35,7 +35,7 @@ The following instructions build the example `main.go` program.
 
 1. Using the environment variables values just set, follow steps in [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
 
-### Developement for Db2
+### Development for Db2
 
 :warning: Probably going to be deprecated.
 

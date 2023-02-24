@@ -30,7 +30,6 @@ const (
 
 func main() {
 	ctx := context.TODO()
-	var err error = nil
 	var sqlFilename string = ""
 	var databaseUrl string = ""
 	databaseId := Sqlite

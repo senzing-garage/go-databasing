@@ -107,5 +107,5 @@ func ExampleNewConnector_sqlite() {
 	if err != nil {
 		fmt.Println(err, databaseConnector)
 	}
-	// Output: sqlite3: /tmp/sqlite/G2C.db
+	// Output:
 }

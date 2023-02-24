@@ -89,7 +89,6 @@ func (sqlexecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (str
 	if sqlexecutor.isTrace {
 		sqlexecutor.traceEntry(1)
 	}
-	var err error = nil
 	entryTime := time.Now()
 	sqlStatement := "SELECT c.oid::regclass, age(c.relfrozenxid), pg_size_pretty(pg_total_relation_size(c.oid)) FROM pg_class c JOIN pg_namespace n on c.relnamespace = n.oid WHERE relkind IN ('r', 't', 'm') AND n.nspname NOT IN ('pg_toast') ORDER BY 2 DESC LIMIT 1;"
 
@@ -97,7 +96,7 @@ func (sqlexecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (str
 
 	database := sql.OpenDB(sqlexecutor.DatabaseConnector)
 	defer database.Close()
-	err = database.PingContext(ctx)
+	err := database.PingContext(ctx)
 	if err != nil {
 		return "", 0, err
 	}

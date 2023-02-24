@@ -154,7 +154,7 @@ func ExampleSqlExecutorImpl_ProcessFileName_mssql() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-	databaseUrl := "mssql://sa:Passw0rd@localhost:3306/master"
+	databaseUrl := "mssql://sa:Passw0rd@localhost:1433/master"
 	sqlFilename := "../testdata/mssql/g2core-schema-mssql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
