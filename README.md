@@ -16,7 +16,28 @@ The Senzing `go-databasing` packages provide access to the Senzing database.
 
 ## Overview
 
+The `go-database` packages support direct access to the Senzing database on the following database engines:
+
+1. Postgresql
+1. Sqlite
+1. MySQL
+1. MsSQL
+
+Specific uses:
+
+1. **connector:**  Used to transform a database URL into a `database/sql/driver.Connector`
+1. **postgresql:**  PostgreSQL-specific calls.  Example: Finding current high-water transaction id.
+1. **sqlexecutor:** Used to read a file of SQL and send to database.
+
+## Use
+
+(TODO:)
+
 ## Development
+
+### Install Go
+
+1. See Go's [Download and install](https://go.dev/doc/install)
 
 ### Install Git repository
 
@@ -35,31 +56,11 @@ The following instructions build the example `main.go` program.
 
 1. Using the environment variables values just set, follow steps in [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
 
-### Development for Db2
+### Test
 
-:warning: Probably going to be deprecated.
+To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases need to be accessable.
 
-1. Prepare environment
-   Example:
-
-    ```console
-    export IBM_DB_HOME=${GOPATH}/src/github.com/ibmdb/clidriver
-    export CGO_CFLAGS=-I${IBM_DB_HOME}/include
-    export CGO_LDFLAGS=-L${IBM_DB_HOME}/lib
-    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${IBM_DB_HOME}/lib
-
-    go get github.com/ibmdb/go_ibm_db/installer
-
-    go run ${GOPATH}/pkg/mod/github.com/ibmdb/go_ibm_db@v0.4.2/installer/setup.go
-
-    go run ${GOPATH}/pkg/mod/github.com/ibmdb/go_ibm_db@v0.4.2/installer/setup.go
-    ```
-
-### Working with specific databases
-
-### SQLite
-
-1. Create empty database.
+1. Create an empty **Sqlite** database.
    Example:
 
     ```console
@@ -68,6 +69,71 @@ The following instructions build the example `main.go` program.
     touch /tmp/sqlite/G2C.db
 
     ```
+
+1. Create an empty **PostgreSQL** database.
+   See [bitnami/postgresql](https://hub.docker.com/r/bitnami/postgresql).
+   Example:
+
+    ```console
+    docker run \
+        --env POSTGRESQL_DATABASE=G2 \
+        --env POSTGRESQL_PASSWORD=senzing \
+        --env POSTGRESQL_POSTGRES_PASSWORD=postgres \
+        --env POSTGRESQL_USERNAME=senzing \
+        --name postgresql \
+        --publish 5432:5432 \
+        --rm \
+        bitnami/postgresql
+
+    ```
+
+1. Create an empty **MySQL** database.
+   See [bitnami/mysql](https://hub.docker.com/r/bitnami/mysql).
+   Example:
+
+    ```console
+    docker run \
+        --env MYSQL_DATABASE=G2 \
+        --env MYSQL_PASSWORD=mysql \
+        --env MYSQL_ROOT_PASSWORD=root \
+        --env MYSQL_USER=mysql \
+        --interactive \
+        --name mysql \
+        --publish 3306:3306 \
+        --rm \
+        --tty \
+        bitnami/mysql
+
+    ```
+
+1. Create an empty **MsSQL** database.
+   See [Configure SQL Server settings with environment variables on Linux](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables).
+   Example:
+
+    ```console
+    docker run \
+        --env ACCEPT_EULA=Y \
+        --env MSSQL_PID=Developer \
+        --env MSSQL_SA_PASSWORD=Passw0rd \
+        --name mssql \
+        --publish 1433:1433 \
+        --rm \
+        --tty \
+        mcr.microsoft.com/mssql/server
+
+    ```
+
+1. Run tests.
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make clean test
+
+    ```
+
+### Viewing databases
+
+### View SQLite
 
 1. View the SQLite database.
    Example:
@@ -87,24 +153,7 @@ The following instructions build the example `main.go` program.
 
    Visit [localhost:9174](http://localhost:9174).
 
-### PostgreSQL
-
-1. Create empty database.
-   See [bitnami/postgresql](https://hub.docker.com/r/bitnami/postgresql).
-   Example:
-
-    ```console
-    docker run \
-        --env POSTGRESQL_DATABASE=G2 \
-        --env POSTGRESQL_PASSWORD=senzing \
-        --env POSTGRESQL_POSTGRES_PASSWORD=postgres \
-        --env POSTGRESQL_USERNAME=senzing \
-        --name postgresql \
-        --publish 5432:5432 \
-        --rm \
-        bitnami/postgresql:latest
-
-    ```
+### View PostgreSQL
 
 1. View the PostgreSql database.
    Example:
@@ -124,26 +173,7 @@ The following instructions build the example `main.go` program.
 
    Visit [localhost:9171](http://localhost:9171).
 
-### MySQL
-
-1. Create empty database.
-   See [bitnami/mysql](https://hub.docker.com/r/bitnami/mysql).
-   Example:
-
-    ```console
-    docker run \
-        --env MYSQL_DATABASE=G2 \
-        --env MYSQL_PASSWORD=mysql \
-        --env MYSQL_ROOT_PASSWORD=root \
-        --env MYSQL_USER=mysql \
-        --interactive \
-        --name mysql \
-        --publish 3306:3306 \
-        --rm \
-        --tty \
-        bitnami/mysql:latest
-
-    ```
+### View MySQL
 
 1. View the MySql database.
    _Caveat:_ The setting of `DATABASE_HOST` may not work in all cases.
@@ -163,24 +193,29 @@ The following instructions build the example `main.go` program.
 
    Visit [localhost:9173](http://localhost:9173).
 
-### MsSQL
+### View MsSQL
 
-1. Create empty database.
-   See [Configure SQL Server settings with environment variables on Linux](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables).
+1. View the MsSql database.
+   _Caveat:_ The setting of `ADMINER_DEFAULT_SERVER` may not work in all cases.
    Example:
 
     ```console
+    export ADMINER_DEFAULT_SERVER=$(curl --silent https://raw.githubusercontent.com/Senzing/knowledge-base/main/gists/find-local-ip-address/find-local-ip-address.py | python3 -)
+
     docker run \
-        --env ACCEPT_EULA=Y \
-        --env MSSQL_PID=Developer \
-        --env MSSQL_SA_PASSWORD=Passw0rd \
-        --name mssql \
-        --publish 1433:1433 \
+        --env ADMINER_DEFAULT_SERVER \
+        --name adminer \
+        --publish 9177:8080 \
         --rm \
-        --tty \
-        mcr.microsoft.com/mssql/server:latest
+        senzing/adminer:latest
 
     ```
+
+   Visit [localhost:9177](http://localhost:9177).
+
+## Misc
+
+### Misc MsSQL
 
 1. Create the `G2` database instance.
    _Caveat:_ The setting of `DATABASE_HOST` may not work in all cases.
@@ -203,25 +238,7 @@ The following instructions build the example `main.go` program.
 
     ```
 
-1. View the MsSql database.
-   _Caveat:_ The setting of `ADMINER_DEFAULT_SERVER` may not work in all cases.
-   Example:
-
-    ```console
-    export ADMINER_DEFAULT_SERVER=$(curl --silent https://raw.githubusercontent.com/Senzing/knowledge-base/main/gists/find-local-ip-address/find-local-ip-address.py | python3 -)
-
-    docker run \
-        --env ADMINER_DEFAULT_SERVER \
-        --name adminer \
-        --publish 9177:8080 \
-        --rm \
-        senzing/adminer:latest
-
-    ```
-
-   Visit [localhost:9177](http://localhost:9177).
-
-### Db2
+### Misc Db2
 
 1. Create empty database.
    See [ibmcom/db2](https://hub.docker.com/r/ibmcom/db2).
