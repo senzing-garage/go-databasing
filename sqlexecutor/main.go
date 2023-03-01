@@ -24,8 +24,8 @@ type SqlExecutor interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-// Identfier of the  package found messages having the format "senzing-6207xxxx".
-const ProductId = 6207
+// Identfier of the  package found messages having the format "senzing-6422xxxx".
+const ProductId = 6422
 
 // ----------------------------------------------------------------------------
 // Variables
