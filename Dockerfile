@@ -10,7 +10,7 @@ ARG IMAGE_FINAL=senzing/senzingapi-runtime:3.4.0
 # -----------------------------------------------------------------------------
 
 FROM ${IMAGE_GO_BUILDER} as go_builder
-ENV REFRESHED_AT 2023-02-06
+ENV REFRESHED_AT=2023-02-06
 LABEL Name="senzing/go-databasing-builder" \
       Maintainer="support@senzing.com" \
       Version="0.0.5"
@@ -50,7 +50,7 @@ RUN mkdir -p /output \
 # -----------------------------------------------------------------------------
 
 FROM ${IMAGE_FINAL} as final
-ENV REFRESHED_AT 2023-02-06
+ENV REFRESHED_AT=2023-02-06
 LABEL Name="senzing/go-databasing" \
       Maintainer="support@senzing.com" \
       Version="0.0.5"
