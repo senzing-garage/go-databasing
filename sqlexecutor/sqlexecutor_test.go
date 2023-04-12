@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/senzing/go-databasing/connector"
-	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-observing/observer"
 )
 
@@ -76,7 +75,6 @@ func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 		test.Error(err)
 	}
 	testObject := &SqlExecutorImpl{
-		LogLevel:          logger.LevelInfo,
 		DatabaseConnector: databaseConnector,
 	}
 	testObject.RegisterObserver(ctx, observer1)
@@ -99,7 +97,6 @@ func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 		test.Error(err)
 	}
 	testObject := &SqlExecutorImpl{
-		LogLevel:          logger.LevelInfo,
 		DatabaseConnector: databaseConnector,
 	}
 	testObject.ProcessScanner(ctx, bufio.NewScanner(file))

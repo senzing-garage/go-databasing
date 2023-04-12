@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"context"
 
-	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-observing/observer"
 )
 
@@ -16,7 +15,7 @@ type SqlExecutor interface {
 	ProcessFileName(ctx context.Context, filename string) error
 	ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	SetLogLevel(ctx context.Context, logLevelName string) error
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 

@@ -9,8 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/logging"
 	"github.com/senzing/go-observing/observer"
 	"github.com/senzing/go-observing/subject"
 )
@@ -23,8 +22,7 @@ import (
 type PostgresqlImpl struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
-	logger            messagelogger.MessageLoggerInterface
-	LogLevel          logger.Level
+	logger            logging.LoggingInterface
 	observers         subject.Subject
 }
 
@@ -32,16 +30,39 @@ type PostgresqlImpl struct {
 // Internal methods
 // ----------------------------------------------------------------------------
 
+// --- Logging -------------------------------------------------------------------------
+
 // Get the Logger singleton.
-func (sqlexecutor *PostgresqlImpl) getLogger() messagelogger.MessageLoggerInterface {
-	if sqlexecutor.logger == nil {
-		sqlexecutor.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
+func (sqlExecutor *PostgresqlImpl) getLogger() logging.LoggingInterface {
+	var err error = nil
+	if sqlExecutor.logger == nil {
+		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ProductId, IdMessages)
+		if err != nil {
+			panic(err)
+		}
 	}
-	return sqlexecutor.logger
+	return sqlExecutor.logger
 }
 
+// Log message.
+func (sqlExecutor *PostgresqlImpl) log(messageNumber int, details ...interface{}) {
+	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
+// Trace method entry.
+func (sqlExecutor *PostgresqlImpl) traceEntry(errorNumber int, details ...interface{}) {
+	sqlExecutor.log(errorNumber, details...)
+}
+
+// Trace method exit.
+func (sqlExecutor *PostgresqlImpl) traceExit(errorNumber int, details ...interface{}) {
+	sqlExecutor.log(errorNumber, details...)
+}
+
+// --- Observing -----------------------------------------------------------------------
+
 // Notify registered observers.
-func (sqlexecutor *PostgresqlImpl) notify(ctx context.Context, messageId int, err error, details map[string]string) {
+func (sqlExecutor *PostgresqlImpl) notify(ctx context.Context, messageId int, err error, details map[string]string) {
 	now := time.Now()
 	details["subjectId"] = strconv.Itoa(ProductId)
 	details["messageId"] = strconv.Itoa(messageId)
@@ -53,18 +74,8 @@ func (sqlexecutor *PostgresqlImpl) notify(ctx context.Context, messageId int, er
 	if err != nil {
 		fmt.Printf("Error: %s", err.Error())
 	} else {
-		sqlexecutor.observers.NotifyObservers(ctx, string(message))
+		sqlExecutor.observers.NotifyObservers(ctx, string(message))
 	}
-}
-
-// Trace method entry.
-func (sqlexecutor *PostgresqlImpl) traceEntry(errorNumber int, details ...interface{}) {
-	sqlexecutor.getLogger().Log(errorNumber, details...)
-}
-
-// Trace method exit.
-func (sqlexecutor *PostgresqlImpl) traceExit(errorNumber int, details ...interface{}) {
-	sqlexecutor.getLogger().Log(errorNumber, details...)
 }
 
 // ----------------------------------------------------------------------------
@@ -77,7 +88,7 @@ The GetCurrentWatermark does a database call for each line scanned.
 Input
   - ctx: A context to control lifecycle.
 */
-func (sqlexecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (string, int, error) {
+func (sqlExecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (string, int, error) {
 	var (
 		oid  string
 		age  int
@@ -86,15 +97,15 @@ func (sqlexecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (str
 
 	// Entry tasks.
 
-	if sqlexecutor.isTrace {
-		sqlexecutor.traceEntry(1)
+	if sqlExecutor.isTrace {
+		sqlExecutor.traceEntry(1)
 	}
 	entryTime := time.Now()
 	sqlStatement := "SELECT c.oid::regclass, age(c.relfrozenxid), pg_size_pretty(pg_total_relation_size(c.oid)) FROM pg_class c JOIN pg_namespace n on c.relnamespace = n.oid WHERE relkind IN ('r', 't', 'm') AND n.nspname NOT IN ('pg_toast') ORDER BY 2 DESC LIMIT 1;"
 
 	// Open a database connection.
 
-	database := sql.OpenDB(sqlexecutor.DatabaseConnector)
+	database := sql.OpenDB(sqlExecutor.DatabaseConnector)
 	defer database.Close()
 	err := database.PingContext(ctx)
 	if err != nil {
@@ -111,17 +122,17 @@ func (sqlexecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (str
 
 	// Exit tasks.
 
-	if sqlexecutor.observers != nil {
+	if sqlExecutor.observers != nil {
 		go func() {
 			details := map[string]string{
 				"oid": oid,
 				"age": strconv.Itoa(age),
 			}
-			sqlexecutor.notify(ctx, 8001, err, details)
+			sqlExecutor.notify(ctx, 8001, err, details)
 		}()
 	}
-	if sqlexecutor.isTrace {
-		defer sqlexecutor.traceExit(2, oid, age, err, time.Since(entryTime))
+	if sqlExecutor.isTrace {
+		defer sqlExecutor.traceExit(2, oid, age, err, time.Since(entryTime))
 	}
 	return oid, age, err
 }
@@ -133,25 +144,25 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (sqlexecutor *PostgresqlImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
-	if sqlexecutor.isTrace {
-		sqlexecutor.traceEntry(3, observer.GetObserverId(ctx))
+func (sqlExecutor *PostgresqlImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	if sqlExecutor.isTrace {
+		sqlExecutor.traceEntry(3, observer.GetObserverId(ctx))
 	}
 	entryTime := time.Now()
-	if sqlexecutor.observers == nil {
-		sqlexecutor.observers = &subject.SubjectImpl{}
+	if sqlExecutor.observers == nil {
+		sqlExecutor.observers = &subject.SubjectImpl{}
 	}
-	err := sqlexecutor.observers.RegisterObserver(ctx, observer)
-	if sqlexecutor.observers != nil {
+	err := sqlExecutor.observers.RegisterObserver(ctx, observer)
+	if sqlExecutor.observers != nil {
 		go func() {
 			details := map[string]string{
 				"observerID": observer.GetObserverId(ctx),
 			}
-			sqlexecutor.notify(ctx, 8002, err, details)
+			sqlExecutor.notify(ctx, 8002, err, details)
 		}()
 	}
-	if sqlexecutor.isTrace {
-		defer sqlexecutor.traceExit(4, observer.GetObserverId(ctx), err, time.Since(entryTime))
+	if sqlExecutor.isTrace {
+		defer sqlExecutor.traceExit(4, observer.GetObserverId(ctx), err, time.Since(entryTime))
 	}
 	return err
 }
@@ -163,24 +174,24 @@ Input
   - ctx: A context to control lifecycle.
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
-func (sqlexecutor *PostgresqlImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
-	if sqlexecutor.isTrace {
-		sqlexecutor.traceEntry(5, logLevel)
+func (sqlExecutor *PostgresqlImpl) SetLogLevel(ctx context.Context, logLevelName string) error {
+	if sqlExecutor.isTrace {
+		sqlExecutor.traceEntry(5, logLevelName)
 	}
 	entryTime := time.Now()
 	var err error = nil
-	sqlexecutor.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-	sqlexecutor.isTrace = (sqlexecutor.getLogger().GetLogLevel() == messagelogger.LevelTrace)
-	if sqlexecutor.observers != nil {
+	sqlExecutor.getLogger().SetLogLevel(logLevelName)
+	sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
+	if sqlExecutor.observers != nil {
 		go func() {
 			details := map[string]string{
-				"logLevel": logger.LevelToTextMap[logLevel],
+				"logLevelName": logLevelName,
 			}
-			sqlexecutor.notify(ctx, 8003, err, details)
+			sqlExecutor.notify(ctx, 8003, err, details)
 		}()
 	}
-	if sqlexecutor.isTrace {
-		defer sqlexecutor.traceExit(6, logLevel, err, time.Since(entryTime))
+	if sqlExecutor.isTrace {
+		defer sqlExecutor.traceExit(6, logLevelName, err, time.Since(entryTime))
 	}
 	return err
 }
@@ -192,13 +203,13 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (sqlexecutor *PostgresqlImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
-	if sqlexecutor.isTrace {
-		sqlexecutor.traceEntry(7, observer.GetObserverId(ctx))
+func (sqlExecutor *PostgresqlImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	if sqlExecutor.isTrace {
+		sqlExecutor.traceEntry(7, observer.GetObserverId(ctx))
 	}
 	entryTime := time.Now()
 	var err error = nil
-	if sqlexecutor.observers != nil {
+	if sqlExecutor.observers != nil {
 		// Tricky code:
 		// client.notify is called synchronously before client.observers is set to nil.
 		// In client.notify, each observer will get notified in a goroutine.
@@ -206,14 +217,14 @@ func (sqlexecutor *PostgresqlImpl) UnregisterObserver(ctx context.Context, obser
 		details := map[string]string{
 			"observerID": observer.GetObserverId(ctx),
 		}
-		sqlexecutor.notify(ctx, 8004, err, details)
+		sqlExecutor.notify(ctx, 8004, err, details)
 	}
-	err = sqlexecutor.observers.UnregisterObserver(ctx, observer)
-	if !sqlexecutor.observers.HasObservers(ctx) {
-		sqlexecutor.observers = nil
+	err = sqlExecutor.observers.UnregisterObserver(ctx, observer)
+	if !sqlExecutor.observers.HasObservers(ctx) {
+		sqlExecutor.observers = nil
 	}
-	if sqlexecutor.isTrace {
-		defer sqlexecutor.traceExit(8, observer.GetObserverId(ctx), err, time.Since(entryTime))
+	if sqlExecutor.isTrace {
+		defer sqlExecutor.traceExit(8, observer.GetObserverId(ctx), err, time.Since(entryTime))
 	}
 	return err
 }
