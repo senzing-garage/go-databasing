@@ -13,6 +13,7 @@ The Senzing `go-databasing` packages provide access to the Senzing database.
 [![Go Reference](https://pkg.go.dev/badge/github.com/senzing/go-databasing.svg)](https://pkg.go.dev/github.com/senzing/go-databasing)
 [![Go Report Card](https://goreportcard.com/badge/github.com/senzing/go-databasing)](https://goreportcard.com/report/github.com/senzing/go-databasing)
 [![go-test.yaml](https://github.com/Senzing/go-databasing/actions/workflows/go-test.yaml/badge.svg)](https://github.com/Senzing/go-databasing/actions/workflows/go-test.yaml)
+[![License](https://img.shields.io/badge/License-Apache2-brightgreen.svg)](https://github.com/Senzing/go-databasing/blob/main/LICENSE)
 
 ## Overview
 
