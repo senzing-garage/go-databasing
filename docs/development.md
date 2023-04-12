@@ -94,7 +94,7 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
     ```
 
-### Viewing databases
+## Viewing databases
 
 ### View SQLite
 
