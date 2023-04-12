@@ -5,13 +5,13 @@ import (
 	"context"
 	"database/sql"
 	"database/sql/driver"
-	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
 	"time"
 
 	"github.com/senzing/go-logging/logging"
+	"github.com/senzing/go-observing/notifier"
 	"github.com/senzing/go-observing/observer"
 	"github.com/senzing/go-observing/subject"
 )
@@ -31,8 +31,6 @@ type SqlExecutorImpl struct {
 // ----------------------------------------------------------------------------
 // Internal methods
 // ----------------------------------------------------------------------------
-
-// --- Logging -------------------------------------------------------------------------
 
 // Get the Logger singleton.
 func (sqlExecutor *SqlExecutorImpl) getLogger() logging.LoggingInterface {
@@ -59,25 +57,6 @@ func (sqlExecutor *SqlExecutorImpl) traceEntry(errorNumber int, details ...inter
 // Trace method exit.
 func (sqlExecutor *SqlExecutorImpl) traceExit(errorNumber int, details ...interface{}) {
 	sqlExecutor.log(errorNumber, details...)
-}
-
-// --- Observing -----------------------------------------------------------------------
-
-// Notify registered observers.
-func (sqlExecutor *SqlExecutorImpl) notify(ctx context.Context, messageId int, err error, details map[string]string) {
-	now := time.Now()
-	details["subjectId"] = strconv.Itoa(ProductId)
-	details["messageId"] = strconv.Itoa(messageId)
-	details["messageTime"] = strconv.FormatInt(now.UnixNano(), 10)
-	if err != nil {
-		details["error"] = err.Error()
-	}
-	message, err := json.Marshal(details)
-	if err != nil {
-		fmt.Printf("Error: %s", err.Error())
-	} else {
-		sqlExecutor.observers.NotifyObservers(ctx, string(message))
-	}
 }
 
 // ----------------------------------------------------------------------------
@@ -119,7 +98,7 @@ func (sqlExecutor *SqlExecutorImpl) ProcessFileName(ctx context.Context, filenam
 			details := map[string]string{
 				"filename": filename,
 			}
-			sqlExecutor.notify(ctx, 8001, err, details)
+			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8001, err, details)
 		}()
 	}
 	if sqlExecutor.isTrace {
@@ -172,7 +151,7 @@ func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 					"line": strconv.Itoa(scanLine),
 					"SQL":  sqlText,
 				}
-				sqlExecutor.notify(ctx, 8002, err, details)
+				notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8002, err, details)
 			}()
 		}
 	}
@@ -186,7 +165,7 @@ func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 				"lines":    strconv.Itoa(scanLine),
 				"failures": strconv.Itoa(scanFailure),
 			}
-			sqlExecutor.notify(ctx, 8003, err, details)
+			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8003, err, details)
 		}()
 	}
 	if sqlExecutor.isTrace {
@@ -216,7 +195,7 @@ func (sqlExecutor *SqlExecutorImpl) RegisterObserver(ctx context.Context, observ
 			details := map[string]string{
 				"observerID": observer.GetObserverId(ctx),
 			}
-			sqlExecutor.notify(ctx, 8004, err, details)
+			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8004, err, details)
 		}()
 	}
 	if sqlExecutor.isTrace {
@@ -238,15 +217,19 @@ func (sqlExecutor *SqlExecutorImpl) SetLogLevel(ctx context.Context, logLevelNam
 	}
 	entryTime := time.Now()
 	var err error = nil
-	sqlExecutor.getLogger().SetLogLevel(logLevelName)
-	sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
-	if sqlExecutor.observers != nil {
-		go func() {
-			details := map[string]string{
-				"logLevelName": logLevelName,
-			}
-			sqlExecutor.notify(ctx, 8005, err, details)
-		}()
+	if logging.IsValidLogLevelName(logLevelName) {
+		sqlExecutor.getLogger().SetLogLevel(logLevelName)
+		sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
+		if sqlExecutor.observers != nil {
+			go func() {
+				details := map[string]string{
+					"logLevelName": logLevelName,
+				}
+				notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8005, err, details)
+			}()
+		}
+	} else {
+		err = fmt.Errorf("invalid error level: %s", logLevelName)
 	}
 	if sqlExecutor.isTrace {
 		defer sqlExecutor.traceExit(8, logLevelName, err, time.Since(entryTime))
@@ -275,7 +258,7 @@ func (sqlExecutor *SqlExecutorImpl) UnregisterObserver(ctx context.Context, obse
 		details := map[string]string{
 			"observerID": observer.GetObserverId(ctx),
 		}
-		sqlExecutor.notify(ctx, 8006, err, details)
+		notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8006, err, details)
 	}
 	err = sqlExecutor.observers.UnregisterObserver(ctx, observer)
 	if !sqlExecutor.observers.HasObservers(ctx) {
