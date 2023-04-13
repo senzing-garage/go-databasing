@@ -143,7 +143,7 @@ func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 		result, err := database.ExecContext(ctx, sqlText)
 		if err != nil {
 			scanFailure += 1
-			sqlExecutor.getLogger().Log(3001, scanFailure, scanLine, result, err)
+			sqlExecutor.log(3001, scanFailure, scanLine, result, err)
 		}
 		if sqlExecutor.observers != nil {
 			go func() {

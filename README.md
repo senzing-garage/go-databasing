@@ -36,6 +36,7 @@ Specific uses:
 
 ## References
 
+- [API documentation](https://pkg.go.dev/github.com/senzing/go-databasing)
 - [Development](docs/development.md)
 - [Errors](docs/errors.md)
 - [Examples](docs/examples.md)
