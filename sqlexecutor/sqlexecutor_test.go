@@ -78,7 +78,6 @@ func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 		DatabaseConnector: databaseConnector,
 	}
 	testObject.RegisterObserver(ctx, observer1)
-	testObject.SetLogLevel(ctx, "TRACE")
 	testObject.ProcessFileName(ctx, sqlFilename)
 }
 
