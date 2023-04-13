@@ -36,7 +36,10 @@ type SqlExecutorImpl struct {
 func (sqlExecutor *SqlExecutorImpl) getLogger() logging.LoggingInterface {
 	var err error = nil
 	if sqlExecutor.logger == nil {
-		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ProductId, IdMessages)
+		options := []interface{}{
+			&logging.OptionCallerSkip{Value: 3},
+		}
+		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ProductId, IdMessages, options...)
 		if err != nil {
 			panic(err)
 		}
@@ -50,13 +53,13 @@ func (sqlExecutor *SqlExecutorImpl) log(messageNumber int, details ...interface{
 }
 
 // Trace method entry.
-func (sqlExecutor *SqlExecutorImpl) traceEntry(errorNumber int, details ...interface{}) {
-	sqlExecutor.log(errorNumber, details...)
+func (sqlExecutor *SqlExecutorImpl) traceEntry(messageNumber int, details ...interface{}) {
+	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method exit.
-func (sqlExecutor *SqlExecutorImpl) traceExit(errorNumber int, details ...interface{}) {
-	sqlExecutor.log(errorNumber, details...)
+func (sqlExecutor *SqlExecutorImpl) traceExit(messageNumber int, details ...interface{}) {
+	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // ----------------------------------------------------------------------------
