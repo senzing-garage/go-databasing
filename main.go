@@ -9,7 +9,7 @@ import (
 	"github.com/senzing/go-databasing/connector"
 	"github.com/senzing/go-databasing/postgresql"
 	"github.com/senzing/go-databasing/sqlexecutor"
-	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/logging"
 	"github.com/senzing/go-observing/observer"
 )
 
@@ -104,7 +104,7 @@ func main() {
 			DatabaseConnector: databaseConnector,
 		}
 		postgresClient.RegisterObserver(ctx, observer1)
-		postgresClient.SetLogLevel(ctx, logger.LevelTrace)
+		postgresClient.SetLogLevel(ctx, logging.LevelTraceName)
 		oid, age, err := postgresClient.GetCurrentWatermark(ctx)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)

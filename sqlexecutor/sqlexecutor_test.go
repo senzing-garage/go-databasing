@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/senzing/go-databasing/connector"
-	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-observing/observer"
 )
 
@@ -76,7 +75,6 @@ func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 		test.Error(err)
 	}
 	testObject := &SqlExecutorImpl{
-		LogLevel:          logger.LevelInfo,
 		DatabaseConnector: databaseConnector,
 	}
 	testObject.RegisterObserver(ctx, observer1)
@@ -99,7 +97,6 @@ func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 		test.Error(err)
 	}
 	testObject := &SqlExecutorImpl{
-		LogLevel:          logger.LevelInfo,
 		DatabaseConnector: databaseConnector,
 	}
 	testObject.ProcessScanner(ctx, bufio.NewScanner(file))
@@ -109,13 +106,12 @@ func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
-func ExampleSqlExecutorImpl_ProcessFileName_sqlite() {
+func ExampleSqlExecutorImpl_ProcessFileName_mysql() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
-	databaseFilename := "/tmp/sqlite/G2C.db"
-	databaseUrl := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
-	refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
+	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
+	databaseUrl := "mysql://root:root@localhost:3306/G2"
+	sqlFilename := "../testdata/mysql/g2core-schema-mysql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
 		fmt.Println(err)
@@ -170,12 +166,13 @@ func ExampleSqlExecutorImpl_ProcessFileName_mssql() {
 	// Output:
 }
 
-func ExampleSqlExecutorImpl_ProcessFileName_mysql() {
+func ExampleSqlExecutorImpl_ProcessFileName_sqlite() {
 	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_test.go
 	ctx := context.TODO()
-	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-	databaseUrl := "mysql://root:root@localhost:3306/G2"
-	sqlFilename := "../testdata/mysql/g2core-schema-mysql-create.sql"
+	databaseFilename := "/tmp/sqlite/G2C.db"
+	databaseUrl := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
 	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
 	if err != nil {
 		fmt.Println(err)
