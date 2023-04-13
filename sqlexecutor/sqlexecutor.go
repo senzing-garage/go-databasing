@@ -37,7 +37,7 @@ func (sqlExecutor *SqlExecutorImpl) getLogger() logging.LoggingInterface {
 	var err error = nil
 	if sqlExecutor.logger == nil {
 		options := []interface{}{
-			&logging.OptionCallerSkip{Value: 3},
+			&logging.OptionCallerSkip{Value: 4},
 		}
 		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ProductId, IdMessages, options...)
 		if err != nil {
