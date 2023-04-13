@@ -174,9 +174,9 @@ func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 
 	// Determine error level to log.
 
-	messageNumber := 2001
+	messageNumber := 2001 // INFO message.
 	if scanFailure > 0 {
-		messageNumber = 3002
+		messageNumber = 3002 // WARN message.
 	}
 	sqlExecutor.log(messageNumber, scanLine, scanFailure)
 
