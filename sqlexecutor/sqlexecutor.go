@@ -32,6 +32,8 @@ type SqlExecutorImpl struct {
 // Internal methods
 // ----------------------------------------------------------------------------
 
+// --- Logging ----------------------------------------------------------------
+
 // Get the Logger singleton.
 func (sqlExecutor *SqlExecutorImpl) getLogger() logging.LoggingInterface {
 	var err error = nil
@@ -201,15 +203,22 @@ func (sqlExecutor *SqlExecutorImpl) RegisterObserver(ctx context.Context, observ
 	if sqlExecutor.observers == nil {
 		sqlExecutor.observers = &subject.SubjectImpl{}
 	}
+
+	// Register observer with sqlExecutor.
+
 	err := sqlExecutor.observers.RegisterObserver(ctx, observer)
-	if sqlExecutor.observers != nil {
-		go func() {
-			details := map[string]string{
-				"observerID": observer.GetObserverId(ctx),
-			}
-			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8004, err, details)
-		}()
-	}
+
+	// Notify observers.
+
+	go func() {
+		details := map[string]string{
+			"observerID": observer.GetObserverId(ctx),
+		}
+		notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8004, err, details)
+	}()
+
+	// Epilog.
+
 	if sqlExecutor.isTrace {
 		defer sqlExecutor.traceExit(6, observer.GetObserverId(ctx), err, time.Since(entryTime))
 	}
@@ -262,7 +271,15 @@ func (sqlExecutor *SqlExecutorImpl) UnregisterObserver(ctx context.Context, obse
 	}
 	entryTime := time.Now()
 	var err error = nil
+
+	// Remove observer from this service.
+
 	if sqlExecutor.observers != nil {
+		err = sqlExecutor.observers.UnregisterObserver(ctx, observer)
+		if err != nil {
+			return err
+		}
+
 		// Tricky code:
 		// client.notify is called synchronously before client.observers is set to nil.
 		// In client.notify, each observer will get notified in a goroutine.
@@ -271,11 +288,14 @@ func (sqlExecutor *SqlExecutorImpl) UnregisterObserver(ctx context.Context, obse
 			"observerID": observer.GetObserverId(ctx),
 		}
 		notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8006, err, details)
+
+		if !sqlExecutor.observers.HasObservers(ctx) {
+			sqlExecutor.observers = nil
+		}
 	}
-	err = sqlExecutor.observers.UnregisterObserver(ctx, observer)
-	if !sqlExecutor.observers.HasObservers(ctx) {
-		sqlExecutor.observers = nil
-	}
+
+	// Epilog.
+
 	if sqlExecutor.isTrace {
 		defer sqlExecutor.traceExit(10, observer.GetObserverId(ctx), err, time.Since(entryTime))
 	}
