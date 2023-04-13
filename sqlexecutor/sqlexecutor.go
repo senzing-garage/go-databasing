@@ -171,6 +171,15 @@ func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8003, err, details)
 		}()
 	}
+
+	// Determine error level to log.
+
+	messageNumber := 2001
+	if scanFailure > 0 {
+		messageNumber = 3002
+	}
+	sqlExecutor.log(messageNumber, scanLine, scanFailure)
+
 	if sqlExecutor.isTrace {
 		defer sqlExecutor.traceExit(4, scanLine, scanFailure, err, time.Since(entryTime))
 	}
