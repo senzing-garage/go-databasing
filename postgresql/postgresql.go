@@ -34,7 +34,10 @@ type PostgresqlImpl struct {
 func (sqlExecutor *PostgresqlImpl) getLogger() logging.LoggingInterface {
 	var err error = nil
 	if sqlExecutor.logger == nil {
-		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ProductId, IdMessages)
+		options := []interface{}{
+			&logging.OptionCallerSkip{Value: 4},
+		}
+		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ProductId, IdMessages, options...)
 		if err != nil {
 			panic(err)
 		}
@@ -48,13 +51,13 @@ func (sqlExecutor *PostgresqlImpl) log(messageNumber int, details ...interface{}
 }
 
 // Trace method entry.
-func (sqlExecutor *PostgresqlImpl) traceEntry(errorNumber int, details ...interface{}) {
-	sqlExecutor.log(errorNumber, details...)
+func (sqlExecutor *PostgresqlImpl) traceEntry(messageNumber int, details ...interface{}) {
+	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method exit.
-func (sqlExecutor *PostgresqlImpl) traceExit(errorNumber int, details ...interface{}) {
-	sqlExecutor.log(errorNumber, details...)
+func (sqlExecutor *PostgresqlImpl) traceExit(messageNumber int, details ...interface{}) {
+	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // ----------------------------------------------------------------------------
