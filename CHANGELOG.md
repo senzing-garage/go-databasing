@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dependencies
   - github.com/go-sql-driver/mysql v1.7.1
   - github.com/lib/pq v1.10.9
-  - github.com/senzing/go-logging v1.2.2
+  - github.com/senzing/go-logging v1.2.3
   - github.com/senzing/go-observing v0.2.2
 
 ## [0.2.3] - 2023-04-14
