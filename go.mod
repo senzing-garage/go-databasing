@@ -7,7 +7,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/microsoft/go-mssqldb v0.21.0
-	github.com/senzing/go-logging v1.2.2
+	github.com/senzing/go-logging v1.2.3
 	github.com/senzing/go-observing v0.2.2
 	github.com/stretchr/testify v1.8.2
 
@@ -19,7 +19,7 @@ require (
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/senzing/go-messaging v0.2.0 // indirect
+	github.com/senzing/go-messaging v0.2.1 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230510235704-dd950f8aeaea // indirect
 	golang.org/x/net v0.10.0 // indirect
