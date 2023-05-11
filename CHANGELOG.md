@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.4] - 2023-05-11
+
+### Changed in 0.2.4
+
+- Added "origin" to observer messages.
+- Updated dependencies
+  - github.com/go-sql-driver/mysql v1.7.1
+  - github.com/lib/pq v1.10.9
+  - github.com/senzing/go-logging v1.2.2
+  - github.com/senzing/go-observing v0.2.2
+
 ## [0.2.3] - 2023-04-14
 
 ### Changed in 0.2.3

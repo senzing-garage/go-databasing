@@ -25,6 +25,7 @@ type SqlExecutorImpl struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
 	logger            logging.LoggingInterface
+	observerOrigin    string
 	observers         subject.Subject
 }
 
@@ -41,7 +42,7 @@ func (sqlExecutor *SqlExecutorImpl) getLogger() logging.LoggingInterface {
 		options := []interface{}{
 			&logging.OptionCallerSkip{Value: 4},
 		}
-		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ProductId, IdMessages, options...)
+		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ComponentId, IdMessages, options...)
 		if err != nil {
 			panic(err)
 		}
@@ -103,7 +104,7 @@ func (sqlExecutor *SqlExecutorImpl) ProcessFileName(ctx context.Context, filenam
 			details := map[string]string{
 				"filename": filename,
 			}
-			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8001, err, details)
+			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8001, err, details)
 		}()
 	}
 	if sqlExecutor.isTrace {
@@ -156,7 +157,7 @@ func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 					"line": strconv.Itoa(scanLine),
 					"SQL":  sqlText,
 				}
-				notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8002, err, details)
+				notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8002, err, details)
 			}()
 		}
 	}
@@ -170,7 +171,7 @@ func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 				"lines":    strconv.Itoa(scanLine),
 				"failures": strconv.Itoa(scanFailure),
 			}
-			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8003, err, details)
+			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8003, err, details)
 		}()
 	}
 
@@ -214,7 +215,7 @@ func (sqlExecutor *SqlExecutorImpl) RegisterObserver(ctx context.Context, observ
 		details := map[string]string{
 			"observerID": observer.GetObserverId(ctx),
 		}
-		notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8004, err, details)
+		notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8004, err, details)
 	}()
 
 	// Epilog.
@@ -246,7 +247,7 @@ func (sqlExecutor *SqlExecutorImpl) SetLogLevel(ctx context.Context, logLevelNam
 				details := map[string]string{
 					"logLevelName": logLevelName,
 				}
-				notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8005, err, details)
+				notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8005, err, details)
 			}()
 		}
 	} else {
@@ -287,7 +288,7 @@ func (sqlExecutor *SqlExecutorImpl) UnregisterObserver(ctx context.Context, obse
 		details := map[string]string{
 			"observerID": observer.GetObserverId(ctx),
 		}
-		notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8006, err, details)
+		notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8006, err, details)
 
 		if !sqlExecutor.observers.HasObservers(ctx) {
 			sqlExecutor.observers = nil

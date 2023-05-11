@@ -23,6 +23,7 @@ type PostgresqlImpl struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
 	logger            logging.LoggingInterface
+	observerOrigin    string
 	observers         subject.Subject
 }
 
@@ -37,7 +38,7 @@ func (sqlExecutor *PostgresqlImpl) getLogger() logging.LoggingInterface {
 		options := []interface{}{
 			&logging.OptionCallerSkip{Value: 4},
 		}
-		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ProductId, IdMessages, options...)
+		sqlExecutor.logger, err = logging.NewSenzingToolsLogger(ComponentId, IdMessages, options...)
 		if err != nil {
 			panic(err)
 		}
@@ -110,7 +111,7 @@ func (sqlExecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (str
 				"oid": oid,
 				"age": strconv.Itoa(age),
 			}
-			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8001, err, details)
+			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8001, err, details)
 		}()
 	}
 	if sqlExecutor.isTrace {
@@ -140,7 +141,7 @@ func (sqlExecutor *PostgresqlImpl) RegisterObserver(ctx context.Context, observe
 			details := map[string]string{
 				"observerID": observer.GetObserverId(ctx),
 			}
-			notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8002, err, details)
+			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8002, err, details)
 		}()
 	}
 	if sqlExecutor.isTrace {
@@ -170,7 +171,7 @@ func (sqlExecutor *PostgresqlImpl) SetLogLevel(ctx context.Context, logLevelName
 				details := map[string]string{
 					"logLevelName": logLevelName,
 				}
-				notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8003, err, details)
+				notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8003, err, details)
 			}()
 		}
 	} else {
@@ -203,7 +204,7 @@ func (sqlExecutor *PostgresqlImpl) UnregisterObserver(ctx context.Context, obser
 		details := map[string]string{
 			"observerID": observer.GetObserverId(ctx),
 		}
-		notifier.Notify(ctx, sqlExecutor.observers, ProductId, 8004, err, details)
+		notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8004, err, details)
 	}
 	err = sqlExecutor.observers.UnregisterObserver(ctx, observer)
 	if !sqlExecutor.observers.HasObservers(ctx) {
