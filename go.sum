@@ -48,8 +48,8 @@ github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8/go.mod h1:HKlIX3XHQyzL
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
-github.com/senzing/go-logging v1.2.1 h1:LAW9DgBr6w/xbtrOH7860RJ7RRLQ7eCtwatbn2DnFSM=
-github.com/senzing/go-logging v1.2.1/go.mod h1:tvI7GUcg9KEMHfMUEZu9abjfNKsptIBxhvVKHs420iI=
+github.com/senzing/go-logging v1.2.2 h1:sForUxtxLZza2sDVIKu9LMV8CVxGR1+o+wIxFY9drq0=
+github.com/senzing/go-logging v1.2.2/go.mod h1:rlDeGudrVPvZqY5/Lgcm8HWPYklEN4ZQAgNSk2BQqEw=
 github.com/senzing/go-messaging v0.2.0 h1:2zl+by4PNbbunwZDLJ8YPpR7Y44INPEAS8nVnP619wA=
 github.com/senzing/go-messaging v0.2.0/go.mod h1:KJ5nBtX95kgWGTGCKn558oCmYy9kTf7Ra4+HsFzIYxA=
 github.com/senzing/go-observing v0.2.2 h1:/4iw8e/TBREbKAfu1PqYCijMH+cPR/3ZHH7KaDLRGrQ=
