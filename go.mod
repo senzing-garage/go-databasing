@@ -8,7 +8,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/microsoft/go-mssqldb v0.21.0
 	github.com/senzing/go-logging v1.2.3
-	github.com/senzing/go-observing v0.2.3
+	github.com/senzing/go-observing v0.2.5
 	github.com/stretchr/testify v1.8.2
 
 )
