@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.5] - 2023-06-16
+
+### Changed in 0.2.5
+
+- Updated dependencies
+  - github.com/mattn/go-sqlite3 v1.14.17
+  - github.com/microsoft/go-mssqldb v1.1.0
+  - github.com/senzing/go-logging v1.2.5
+  - github.com/senzing/go-observing v0.2.5
+  - github.com/stretchr/testify v1.8.4
+
 ## [0.2.4] - 2023-05-11
 
 ### Changed in 0.2.4
