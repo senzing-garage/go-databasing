@@ -16,6 +16,7 @@ type SqlExecutor interface {
 	ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
+	SetObserverOrigin(ctx context.Context, origin string)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 

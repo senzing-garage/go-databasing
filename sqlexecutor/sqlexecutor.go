@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -27,6 +28,18 @@ type SqlExecutorImpl struct {
 	logger            logging.LoggingInterface
 	observerOrigin    string
 	observers         subject.Subject
+}
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var debugOptions []interface{} = []interface{}{
+	&logging.OptionCallerSkip{Value: 5},
+}
+
+var traceOptions []interface{} = []interface{}{
+	&logging.OptionCallerSkip{Value: 5},
 }
 
 // ----------------------------------------------------------------------------
@@ -55,13 +68,21 @@ func (sqlExecutor *SqlExecutorImpl) log(messageNumber int, details ...interface{
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
+// Debug.
+func (sqlExecutor *SqlExecutorImpl) debug(messageNumber int, details ...interface{}) {
+	details = append(details, debugOptions...)
+	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
 // Trace method entry.
 func (sqlExecutor *SqlExecutorImpl) traceEntry(messageNumber int, details ...interface{}) {
+	details = append(details, traceOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method exit.
 func (sqlExecutor *SqlExecutorImpl) traceExit(messageNumber int, details ...interface{}) {
+	details = append(details, traceOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
@@ -257,6 +278,67 @@ func (sqlExecutor *SqlExecutorImpl) SetLogLevel(ctx context.Context, logLevelNam
 		defer sqlExecutor.traceExit(8, logLevelName, err, time.Since(entryTime))
 	}
 	return err
+}
+
+/*
+The SetObserverOrigin method sets the "origin" value in future Observer messages.
+
+Input
+  - ctx: A context to control lifecycle.
+  - origin: The value sent in the Observer's "origin" key/value pair.
+*/
+func (sqlExecutor *SqlExecutorImpl) SetObserverOrigin(ctx context.Context, origin string) {
+	var err error = nil
+
+	// Prolog.
+
+	debugMessageNumber := 0
+	traceExitMessageNumber := 69
+	if sqlExecutor.getLogger().IsDebug() {
+
+		// If DEBUG, log error exit.
+
+		defer func() {
+			if debugMessageNumber > 0 {
+				sqlExecutor.debug(debugMessageNumber, err)
+			}
+		}()
+
+		// If TRACE, Log on entry/exit.
+
+		if sqlExecutor.getLogger().IsTrace() {
+			entryTime := time.Now()
+			sqlExecutor.traceEntry(60, origin)
+			defer func() {
+				sqlExecutor.traceExit(traceExitMessageNumber, origin, err, time.Since(entryTime))
+			}()
+		}
+
+		// If DEBUG, log input parameters. Must be done after establishing DEBUG and TRACE logging.
+
+		asJson, err := json.Marshal(sqlExecutor)
+		if err != nil {
+			traceExitMessageNumber, debugMessageNumber = 61, 1061
+			return
+		}
+		sqlExecutor.log(1004, sqlExecutor, string(asJson))
+	}
+
+	// Set origin.
+
+	sqlExecutor.observerOrigin = origin
+
+	// Notify observers.
+
+	if sqlExecutor.observers != nil {
+		go func() {
+			details := map[string]string{
+				"origin": origin,
+			}
+			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentId, 8005, err, details)
+		}()
+	}
+
 }
 
 /*
