@@ -61,6 +61,7 @@ func TestPostgresqlImpl_GetCurrentWatermark(test *testing.T) {
 	if err != nil {
 		assert.FailNow(test, err.Error())
 	}
+	testObject.SetObserverOrigin(ctx, "Test")
 	oid, age, err := testObject.GetCurrentWatermark(ctx)
 	if err != nil {
 		assert.FailNow(test, err.Error(), oid, age)
