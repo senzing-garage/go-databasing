@@ -14,6 +14,7 @@ type Postgresql interface {
 	GetCurrentWatermark(ctx context.Context) (string, int, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
+	SetObserverOrigin(ctx context.Context, origin string)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 

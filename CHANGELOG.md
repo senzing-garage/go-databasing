@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.6] - 2023-07-13
+
+### Added in 0.2.6
+
+- `SetObserverOrigin()` methods
+
+### Changed in 0.2.6
+
+- Updated dependencies
+  - github.com/microsoft/go-mssqldb v1.3.0
+  - github.com/senzing/go-logging v1.3.1
+
 ## [0.2.5] - 2023-06-16
 
 ### Changed in 0.2.5
