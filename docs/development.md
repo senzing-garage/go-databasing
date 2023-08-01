@@ -33,7 +33,7 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
     ```
 
-1. Start docker-compose formation with 3 databases.
+1. Start docker-compose formation with databases.
    Example:
 
     ```console
@@ -77,6 +77,8 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 1. Visit [localhost:9171](http://localhost:9171).
     1. **Username:** <postgres@postgres.com>
     1. **Password:** password
+1. "Servers" > "senzing"
+    1. **Password:** postgres
 
 ### View MySQL
 
