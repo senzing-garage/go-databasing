@@ -185,7 +185,10 @@ func (sqlExecutor *PostgresqlImpl) SetLogLevel(ctx context.Context, logLevelName
 	entryTime := time.Now()
 	var err error = nil
 	if logging.IsValidLogLevelName(logLevelName) {
-		sqlExecutor.getLogger().SetLogLevel(logLevelName)
+		err = sqlExecutor.getLogger().SetLogLevel(logLevelName)
+		if err != nil {
+			return err
+		}
 		sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
 		if sqlExecutor.observers != nil {
 			go func() {

@@ -1,4 +1,4 @@
-# serve-grpc examples
+# go-databasing examples
 
 ## Command line examples
 

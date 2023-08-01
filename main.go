@@ -89,8 +89,11 @@ func main() {
 	testObject := &sqlexecutor.SqlExecutorImpl{
 		DatabaseConnector: databaseConnector,
 	}
-	testObject.RegisterObserver(ctx, observer1)
-	// testObject.SetLogLevel(ctx, logger.LevelTrace)
+	err = testObject.RegisterObserver(ctx, observer1)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
+	}
 	err = testObject.ProcessFileName(ctx, sqlFilename)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -103,8 +106,16 @@ func main() {
 		postgresClient := &postgresql.PostgresqlImpl{
 			DatabaseConnector: databaseConnector,
 		}
-		postgresClient.RegisterObserver(ctx, observer1)
-		postgresClient.SetLogLevel(ctx, logging.LevelTraceName)
+		err = postgresClient.RegisterObserver(ctx, observer1)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
+		err = postgresClient.SetLogLevel(ctx, logging.LevelTraceName)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
 		oid, age, err := postgresClient.GetCurrentWatermark(ctx)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)

@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -108,11 +109,16 @@ func (sqlExecutor *SqlExecutorImpl) ProcessFileName(ctx context.Context, filenam
 
 	// Process file.
 
+	filename = filepath.Clean(filename)
 	file, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			sqlExecutor.log(9999, file, err)
+		}
+	}()
 	err = sqlExecutor.ProcessScanner(ctx, bufio.NewScanner(file))
 	if err != nil {
 		return err
@@ -261,7 +267,10 @@ func (sqlExecutor *SqlExecutorImpl) SetLogLevel(ctx context.Context, logLevelNam
 	entryTime := time.Now()
 	var err error = nil
 	if logging.IsValidLogLevelName(logLevelName) {
-		sqlExecutor.getLogger().SetLogLevel(logLevelName)
+		err = sqlExecutor.getLogger().SetLogLevel(logLevelName)
+		if err != nil {
+			return err
+		}
 		sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
 		if sqlExecutor.observers != nil {
 			go func() {
