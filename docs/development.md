@@ -74,23 +74,9 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
 ### View PostgreSQL
 
-1. View the PostgreSql database.
-   Example:
-
-    ```console
-    docker run \
-        --env PGADMIN_CONFIG_DEFAULT_SERVER='"0.0.0.0"' \
-        --env PGADMIN_DEFAULT_EMAIL=postgres@postgres.com \
-        --env PGADMIN_DEFAULT_PASSWORD=password \
-        --name pgAdmin \
-        --publish 9171:80 \
-        --publish 9172:443 \
-        --rm \
-        dpage/pgadmin4:latest
-
-    ```
-
-   Visit [localhost:9171](http://localhost:9171).
+1. Visit [localhost:9171](http://localhost:9171).
+    1. **Username:** <postgres@postgres.com>
+    1. **Password:** password
 
 ### View MySQL
 
@@ -135,11 +121,10 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
 1. Visit [localhost:9177](http://localhost:9177).
     1. **System:** MS SQL (beta)
-    1. **Server:** <Value of ADMINER_DEFAULT_SERVER>
+    1. **Server:** [Value of ADMINER_DEFAULT_SERVER]
     1. **Username:** sa
     1. **Password:** Passw0rd
     1. **Database:** G2
-
 
 ## Misc
 
