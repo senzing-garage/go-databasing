@@ -54,6 +54,25 @@ services:
       - 1433:1433
     restart: always
 
+  mssql-create-db:
+    command:
+      - /opt/mssql-tools/bin/sqlcmd
+      - -P
+      - Passw0rd
+      - -Q
+      - "CREATE DATABASE G2"
+      - -S
+      - senzing-mssql,1433
+      - -U
+      - sa
+    container_name: senzing-mssql-create-database
+    depends_on:
+      - mssql
+    image: mcr.microsoft.com/mssql-tools:${SENZING_DOCKER_IMAGE_VERSION_MSSQL_TOOLS:-latest}
+    networks:
+      - senzing
+    restart: on-failure
+
 networks:
   senzing:
     name: ${SENZING_DOCKER_NETWORK:-senzing-network}

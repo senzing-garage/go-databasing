@@ -110,7 +110,9 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
     ```
 
-   Visit [localhost:9173](http://localhost:9173).  Username/password: root/root
+1. Visit [localhost:9173](http://localhost:9173).
+    1. **Username:** root
+    1. **Password:** root
 
 ### View MsSQL
 
@@ -133,7 +135,7 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
 1. Visit [localhost:9177](http://localhost:9177).
     1. **System:** MS SQL (beta)
-    1. **Server:** [Value of ADMINER_DEFAULT_SERVER]
+    1. **Server:** <Value of ADMINER_DEFAULT_SERVER>
     1. **Username:** sa
     1. **Password:** Passw0rd
     1. **Database:** G2
