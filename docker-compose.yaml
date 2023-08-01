@@ -1,0 +1,59 @@
+version: '3'
+services:
+
+  postgres:
+    container_name: senzing-postgres
+    environment:
+      # See https://github.com/bitnami/bitnami-docker-postgresql#configuration
+      POSTGRESQL_DATABASE: G2
+      POSTGRESQL_PASSWORD: senzing
+      POSTGRESQL_POSTGRES_PASSWORD: postgres
+      POSTGRESQL_USERNAME: senzing
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USERNAME:-postgres}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    image: bitnami/postgresql:${SENZING_DOCKER_IMAGE_VERSION_BITNAMI_POSTGRESQL:-latest}
+    networks:
+      - senzing
+    ports:
+      - 5432:5432
+    restart: always
+
+  mysql:
+    container_name: senzing-mysql
+    environment:
+      # See https://hub.docker.com/_/mysql/ "Environment Variables"
+      MYSQL_DATABASE: G2
+      MYSQL_PASSWORD: mysql
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: mysql
+    image: bitnami/mysql:${SENZING_DOCKER_IMAGE_VERSION_BITNAMI_MYSQL:-latest}
+    networks:
+      - senzing
+    ports:
+      - 3306:3306
+    restart: always
+
+  mssql:
+    container_name: senzing-mssql
+    environment:
+      # See https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: Passw0rd
+    image: mcr.microsoft.com/mssql/server:${SENZING_DOCKER_IMAGE_VERSION_MSSQL_SERVER:-latest}
+    networks:
+      - senzing
+    ports:
+      - 1433:1433
+    restart: always
+
+networks:
+  senzing:
+    name: ${SENZING_DOCKER_NETWORK:-senzing-network}

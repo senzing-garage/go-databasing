@@ -33,57 +33,12 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
     ```
 
-1. Create an empty **PostgreSQL** database.
-   See [bitnami/postgresql](https://hub.docker.com/r/bitnami/postgresql).
+1. Start docker-compose formation with 3 databases.
    Example:
 
     ```console
-    docker run \
-        --env POSTGRESQL_DATABASE=G2 \
-        --env POSTGRESQL_PASSWORD=senzing \
-        --env POSTGRESQL_POSTGRES_PASSWORD=postgres \
-        --env POSTGRESQL_USERNAME=senzing \
-        --name postgresql \
-        --publish 5432:5432 \
-        --rm \
-        bitnami/postgresql
-
-    ```
-
-1. Create an empty **MySQL** database.
-   See [bitnami/mysql](https://hub.docker.com/r/bitnami/mysql).
-   Example:
-
-    ```console
-    docker run \
-        --env MYSQL_DATABASE=G2 \
-        --env MYSQL_PASSWORD=mysql \
-        --env MYSQL_ROOT_PASSWORD=root \
-        --env MYSQL_USER=mysql \
-        --interactive \
-        --name mysql \
-        --publish 3306:3306 \
-        --rm \
-        --tty \
-        bitnami/mysql
-
-    ```
-
-1. Create an empty **MsSQL** database.
-   See [Configure SQL Server settings with environment variables on Linux](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables).
-   Example:
-
-    ```console
-    docker run \
-        --env ACCEPT_EULA=Y \
-        --env MSSQL_PID=Developer \
-        --env MSSQL_SA_PASSWORD=Passw0rd \
-        --name mssql \
-        --publish 1433:1433 \
-        --rm \
-        --tty \
-        mcr.microsoft.com/mssql/server
-
+    cd ${GIT_REPOSITORY_DIR}
+    docker-compose up
     ```
 
 1. Run tests.
@@ -230,5 +185,60 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
     ```console
     cd ${GIT_REPOSITORY_DIR}
     make clean
+
+    ```
+
+## Alternatives
+
+1. Create an empty **PostgreSQL** database.
+   See [bitnami/postgresql](https://hub.docker.com/r/bitnami/postgresql).
+   Example:
+
+    ```console
+    docker run \
+        --env POSTGRESQL_DATABASE=G2 \
+        --env POSTGRESQL_PASSWORD=senzing \
+        --env POSTGRESQL_POSTGRES_PASSWORD=postgres \
+        --env POSTGRESQL_USERNAME=senzing \
+        --name postgresql \
+        --publish 5432:5432 \
+        --rm \
+        bitnami/postgresql
+
+    ```
+
+1. Create an empty **MySQL** database.
+   See [bitnami/mysql](https://hub.docker.com/r/bitnami/mysql).
+   Example:
+
+    ```console
+    docker run \
+        --env MYSQL_DATABASE=G2 \
+        --env MYSQL_PASSWORD=mysql \
+        --env MYSQL_ROOT_PASSWORD=root \
+        --env MYSQL_USER=mysql \
+        --interactive \
+        --name mysql \
+        --publish 3306:3306 \
+        --rm \
+        --tty \
+        bitnami/mysql
+
+    ```
+
+1. Create an empty **MsSQL** database.
+   See [Configure SQL Server settings with environment variables on Linux](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables).
+   Example:
+
+    ```console
+    docker run \
+        --env ACCEPT_EULA=Y \
+        --env MSSQL_PID=Developer \
+        --env MSSQL_SA_PASSWORD=Passw0rd \
+        --name mssql \
+        --publish 1433:1433 \
+        --rm \
+        --tty \
+        mcr.microsoft.com/mssql/server
 
     ```
