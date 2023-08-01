@@ -39,6 +39,7 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
     ```console
     cd ${GIT_REPOSITORY_DIR}
     docker-compose up
+
     ```
 
 1. Run tests.
@@ -109,7 +110,7 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
     ```
 
-   Visit [localhost:9173](http://localhost:9173).
+   Visit [localhost:9173](http://localhost:9173).  Username/password: root/root
 
 ### View MsSQL
 
@@ -119,6 +120,7 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
     ```console
     export ADMINER_DEFAULT_SERVER=$(curl --silent https://raw.githubusercontent.com/Senzing/knowledge-base/main/gists/find-local-ip-address/find-local-ip-address.py | python3 -)
+    echo ${ADMINER_DEFAULT_SERVER}
 
     docker run \
         --env ADMINER_DEFAULT_SERVER \
@@ -129,7 +131,13 @@ To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases ne
 
     ```
 
-   Visit [localhost:9177](http://localhost:9177).
+1. Visit [localhost:9177](http://localhost:9177).
+    1. **System:** MS SQL (beta)
+    1. **Server:** [Value of ADMINER_DEFAULT_SERVER]
+    1. **Username:** sa
+    1. **Password:** Passw0rd
+    1. **Database:** G2
+
 
 ## Misc
 
