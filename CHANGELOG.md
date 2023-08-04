@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.7] - 2023-08-04
+
+### Changed in 0.2.7
+
+- Refactor to `template-go`
+- Updated dependencies
+  - github.com/microsoft/go-mssqldb v1.5.0
+  - github.com/senzing/go-logging v1.3.2
+  - github.com/senzing/go-observing v0.2.7
+
 ## [0.2.6] - 2023-07-13
 
 ### Added in 0.2.6
