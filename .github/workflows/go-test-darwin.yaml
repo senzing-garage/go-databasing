@@ -33,13 +33,10 @@ jobs:
       - name: Install Docker
         uses: docker-practice/actions-setup-docker@master
         timeout-minutes: 12
-      - name: Verify Docker
-        run: |
-          set -x
-          docker version
-          docker run --rm hello-world
       - name: PostgreSQL service
-        run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --expose 5432 bitnami/postgresql:latest
+        run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --expose 5432:5432 bitnami/postgresql:latest
+      - name: Sleep 15 seconds
+        run: sleep 15
       - run: mkdir /tmp/sqlite
       - run: touch /tmp/sqlite/G2C.db
       - name: Run go test
