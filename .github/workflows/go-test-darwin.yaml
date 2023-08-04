@@ -45,7 +45,7 @@ jobs:
       - name: MsSQL service
         run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
       - name: MySQL service
-        run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5 --publish 3306:3306 bitnami/mysql
+        run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
       - name: Sleep 15 seconds
         run: sleep 15
       - run: mkdir /tmp/sqlite
