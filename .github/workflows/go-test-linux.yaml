@@ -55,6 +55,6 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - run: mkdir /tmp/sqlite
-      - run: touch /tmp/sqlite/G2C.db          
+      - run: touch /tmp/sqlite/G2C.db
       - name: Run go test
         run: go test -v -p 1 ./...
