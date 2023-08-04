@@ -1,7 +1,7 @@
 # Based on
-# -https://github.com/marketplace/actions/setup-go-environment
+# - https://github.com/marketplace/actions/setup-go-environment
 
-name: go-test.yaml
+name: go-test-darwin.yaml
 
 on: [push]
 
@@ -12,11 +12,11 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         go: ["1.20"]
-    name: Testing with Go ${{ matrix.go }}
+    name: Go ${{ matrix.go }} - darwin
     services:
       postgres:
         env:
@@ -46,13 +46,15 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Setup go
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go }}
-      - run: pwd
-      - run: env
       - run: mkdir /tmp/sqlite
       - run: touch /tmp/sqlite/G2C.db
-      - run: go test -v -p 1 ./...
+      - name: Run go test
+        run: go test -v -p 1 ./...
