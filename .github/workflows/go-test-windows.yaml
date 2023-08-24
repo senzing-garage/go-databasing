@@ -6,6 +6,18 @@ name: go-test-windows.yaml
 on: [push]
 
 env:
+  ACCEPT_EULA: Y
+  MSSQL_PID: Developer
+  MSSQL_SA_PASSWORD: Passw0rd
+  MYSQL_DATABASE: G2
+  MYSQL_PASSWORD: mysql
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_USER: mysql
+  POSTGRESQL_DATABASE: G2
+  POSTGRESQL_PASSWORD: senzing
+  POSTGRESQL_POSTGRES_PASSWORD: postgres
+  POSTGRESQL_USERNAME: senzing
+  SENZING_ACCEPT_EULA: I_ACCEPT_THE_SENZING_EULA
   SENZING_TOOLS_DATABASE_URL: "sqlite3://na:na@/tmp/sqlite/G2C.db"
 
 jobs:
@@ -15,34 +27,6 @@ jobs:
       matrix:
         go: ["1.21"]
     name: Go ${{ matrix.go }} - windows
-    services:
-      postgres:
-        env:
-          POSTGRESQL_DATABASE: G2
-          POSTGRESQL_PASSWORD: senzing
-          POSTGRESQL_POSTGRES_PASSWORD: postgres
-          POSTGRESQL_USERNAME: senzing
-        image: bitnami/postgresql
-        ports:
-          - 5432:5432
-      mssql:
-        env:
-          ACCEPT_EULA: Y
-          MSSQL_PID: Developer
-          MSSQL_SA_PASSWORD: Passw0rd
-        image: mcr.microsoft.com/mssql/server
-        ports:
-          - 1433:1433
-      mysql:
-        env:
-          MYSQL_DATABASE: G2
-          MYSQL_PASSWORD: mysql
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: mysql
-        image: bitnami/mysql
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -52,6 +36,15 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go }}
+      - name: Install Docker
+        uses: docker-practice/actions-setup-docker@master
+        timeout-minutes: 12
+      - name: PostgreSQL service
+        run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
+      - name: MsSQL service
+        run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+      - name: MySQL service
+        run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
       - run: mkdir /tmp/sqlite
       - run: touch /tmp/sqlite/G2C.db
       - name: Run go test
