@@ -1,0 +1,81 @@
+# Based on
+# - https://github.com/marketplace/actions/setup-go-environment
+
+name: go-test-windows.yaml
+
+on: [push]
+
+env:
+  ACCEPT_EULA: Y
+  MSSQL_PID: Developer
+  MSSQL_SA_PASSWORD: Passw0rd
+  MYSQL_DATABASE: G2
+  MYSQL_PASSWORD: mysql
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_USER: mysql
+  POSTGRESQL_DATABASE: G2
+  POSTGRESQL_PASSWORD: senzing
+  POSTGRESQL_POSTGRES_PASSWORD: postgres
+  POSTGRESQL_USERNAME: senzing
+  SENZING_TOOLS_DATABASE_URL: 'sqlite3://na:na@nowhere/C:\Temp\sqlite\G2C.db'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        go: ["1.21"]
+    name: Go ${{ matrix.go }} - windows
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go }}
+      # - name: Install Docker
+      #   uses: docker-practice/actions-setup-docker@master
+      #   timeout-minutes: 12
+
+      # https://github.com/marketplace/actions/setup-postgresql-for-linux-macos-windows
+      - uses: ikalnytskyi/action-setup-postgres@v4
+        with:
+          username: senzing
+          password: senzing
+          database: G2
+          port: 5432
+        id: postgres
+
+      # - name: PostgreSQL service
+      #   run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
+      # - name: MsSQL service
+      #   run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+      # - name: MySQL service
+      #   run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
+
+      - name: Create empty Sqlite database file
+        run: mkdir "C:\Temp\sqlite" && New-Item "C:\Temp\sqlite\G2C.db"
+      # - name: Run go test
+      #   run: go test -v -p 1 ./...
+      - name: Run go test - main
+        run: go test -v -p 1 ./.
+      # - name: Run go test - connector
+      #   run: go test -v -p 1 ./connector
+      - name: Run go test - connectordb2
+        run: go test -v -p 1 ./connectordb2
+      - name: Run go test - connectormssql
+        run: go test -v -p 1 ./connectormssql
+      - name: Run go test - connectormysql
+        run: go test -v -p 1 ./connectormysql
+      # - name: Run go test - connectorpostgresql
+      #   run: go test -v -p 1 ./connectorpostgresql
+      - name: Run go test - connectorsqlite
+        run: go test -v -p 1 ./connectorsqlite
+      # - name: Run go test - postgresql
+      #   run: go test -v -p 1 ./postgresql
+      - name: Run go test - sqlexecutor
+        run: go test -v -p 1 ./sqlexecutor
+      - name: Run go test - main
+        run: go test -v -p 1 ./.

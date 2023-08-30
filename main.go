@@ -57,7 +57,7 @@ func main() {
 
 	switch databaseId {
 	case Sqlite:
-		databaseUrl = "sqlite3://na:na@/tmp/sqlite/G2C.db"
+		databaseUrl = sqliteDatabaseUrl
 		sqlFilename = gitRepositoryDir + "/testdata/sqlite/g2core-schema-sqlite-create.sql"
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters

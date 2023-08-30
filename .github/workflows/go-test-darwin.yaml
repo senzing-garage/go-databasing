@@ -7,7 +7,6 @@ on: [push]
 
 env:
   ACCEPT_EULA: Y
-  LD_LIBRARY_PATH: /opt/senzing/g2/lib
   MSSQL_PID: Developer
   MSSQL_SA_PASSWORD: Passw0rd
   MYSQL_DATABASE: G2
@@ -26,7 +25,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        go: ["1.20"]
+        go: ["1.21"]
     name: Go ${{ matrix.go }} - darwin
     steps:
       - name: Checkout repository
