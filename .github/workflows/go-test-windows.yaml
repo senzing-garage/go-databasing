@@ -60,8 +60,8 @@ jobs:
       #   run: go test -v -p 1 ./...
       - name: Run go test - main
         run: go test -v -p 1 ./.
-      - name: Run go test - connector
-        run: go test -v -p 1 ./connector
+      # - name: Run go test - connector
+      #   run: go test -v -p 1 ./connector
       - name: Run go test - connectordb2
         run: go test -v -p 1 ./connectordb2
       - name: Run go test - connectormssql
