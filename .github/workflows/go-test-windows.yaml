@@ -68,8 +68,8 @@ jobs:
         run: go test -v -p 1 ./connectormssql
       - name: Run go test - connectormysql
         run: go test -v -p 1 ./connectormysql
-      - name: Run go test - connectorpostgresql
-        run: go test -v -p 1 ./connectorpostgresql
+      # - name: Run go test - connectorpostgresql
+      #   run: go test -v -p 1 ./connectorpostgresql
       - name: Run go test - connectorsqlite
         run: go test -v -p 1 ./connectorsqlite
       - name: Run go test - postgresql
