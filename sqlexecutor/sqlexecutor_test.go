@@ -62,14 +62,13 @@ func refreshSqliteDatabase(databaseFilename string) error {
 
 func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 	ctx := context.TODO()
-	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", sqliteDatabaseFilename)
 	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	refreshSqliteDatabase(sqliteDatabaseFilename)
 	observer1 := &observer.ObserverNull{
 		Id:       "Observer 1",
 		IsSilent: true,
 	}
-	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseUrl)
 	if err != nil {
 		test.Error(err)
 	}
@@ -83,7 +82,6 @@ func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 
 func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 	ctx := context.TODO()
-	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", sqliteDatabaseFilename)
 	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	refreshSqliteDatabase(sqliteDatabaseFilename)
 	file, err := os.Open(sqlFilename)
@@ -91,7 +89,7 @@ func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 		test.Error(err)
 	}
 	defer file.Close()
-	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseUrl)
 	if err != nil {
 		test.Error(err)
 	}
