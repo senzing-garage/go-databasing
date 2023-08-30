@@ -115,9 +115,6 @@ clean:
 	@go clean -testcache
 	@rm -rf $(TARGET_DIRECTORY) || true
 	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
-	@rm -rf /tmp/sqlite
-	@mkdir  /tmp/sqlite
-	@touch  /tmp/sqlite/G2C.db
 
 
 .PHONY: help
@@ -132,11 +129,6 @@ print-make-variables:
 	@$(foreach V,$(sort $(.VARIABLES)), \
 		$(if $(filter-out environment% default automatic, \
 		$(origin $V)),$(warning $V=$($V) ($(value $V)))))
-
-
-.PHONY: setup
-setup:
-	@echo "No setup required."
 
 
 .PHONY: update-pkg-cache
