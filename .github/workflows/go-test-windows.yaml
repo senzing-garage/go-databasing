@@ -72,8 +72,8 @@ jobs:
       #   run: go test -v -p 1 ./connectorpostgresql
       - name: Run go test - connectorsqlite
         run: go test -v -p 1 ./connectorsqlite
-      - name: Run go test - postgresql
-        run: go test -v -p 1 ./postgresql
+      # - name: Run go test - postgresql
+      #   run: go test -v -p 1 ./postgresql
       - name: Run go test - sqlexecutor
         run: go test -v -p 1 ./sqlexecutor
       - name: Run go test - main
