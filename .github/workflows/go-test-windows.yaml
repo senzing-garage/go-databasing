@@ -55,7 +55,7 @@ jobs:
       # - name: MySQL service
       #   run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
       - name: Create empty Sqlite database file
-        run: mkdir "C:\Temp\sqlite" && call > "C:\Temp\sqlite\G2C.db"
+        run: mkdir "C:\Temp\sqlite" && New-Item "C:\Temp\sqlite\G2C.db"
       # - name: Run go test
       #   run: go test -v -p 1 ./...
       - name: Run go test - main
