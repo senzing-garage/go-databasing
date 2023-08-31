@@ -58,8 +58,7 @@ var testCasesForMultiPlatform = []testCaseMetadata{
 	},
 }
 
-// var testCases = append(testCasesForMultiPlatform, testCasesForOsArch...)
-var testCases = testCasesForMultiPlatform
+var testCases = append(testCasesForMultiPlatform, testCasesForOsArch...)
 
 // ----------------------------------------------------------------------------
 // Test harness
