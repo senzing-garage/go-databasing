@@ -3,6 +3,7 @@
 package dbhelper
 
 import (
+	"fmt"
 	"net/url"
 	"strings"
 )
@@ -10,7 +11,9 @@ import (
 func extractSqliteDatabaseFilenameForOsArch(parsedDatabaseUrl *url.URL) (string, error) {
 	result := parsedDatabaseUrl.Path
 	if !strings.HasPrefix(result, "/") {
-		result = result[1:]
+		fmt.Printf(">>>>>>>>>>>>>> before: %s", result)
+		result = result[2:]
+		fmt.Printf(">>>>>>>>>>>>>>  after: %s", result)
 	}
 	return result, nil
 }
