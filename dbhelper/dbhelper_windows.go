@@ -8,7 +8,7 @@ import (
 )
 
 func extractSqliteDatabaseFilenameForOsArch(parsedDatabaseUrl *url.URL) (string, error) {
-	result := parsedDatabaseUrl.Parse
+	result := parsedDatabaseUrl.Path
 	if !strings.HasPrefix(result, "/") {
 		result = result[1:]
 	}
