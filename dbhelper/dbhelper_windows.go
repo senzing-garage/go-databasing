@@ -2,8 +2,15 @@
 
 package dbhelper
 
-import "net/url"
+import (
+	"net/url"
+	"strings"
+)
 
 func extractSqliteDatabaseFilenameForOsArch(parsedDatabaseUrl *url.URL) (string, error) {
-	return parsedDatabaseUrl.Path, nil
+	result := parsedDatabaseUrl.Parse
+	if !strings.HasPrefix(result, "/") {
+		result = result[1:]
+	}
+	return result, nil
 }
