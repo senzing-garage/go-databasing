@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.9] - 2023-08-31
+
+### Added in 0.2.8
+
+- `dbhelper.ExtractSqliteDatabaseFilename()`
+
 ## [0.2.8] - 2023-08-30
 
 ### Changed in 0.2.8
