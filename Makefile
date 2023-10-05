@@ -23,7 +23,6 @@ GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|g
 
 # Recursive assignment ('=')
 
-CC = gcc
 GO_OSARCH = $(subst /, ,$@)
 GO_OS = $(word 1, $(GO_OSARCH))
 GO_ARCH = $(word 2, $(GO_OSARCH))
@@ -33,7 +32,6 @@ GO_ARCH = $(word 2, $(GO_OSARCH))
 # Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/g2/lib"
 
 LD_LIBRARY_PATH ?= /opt/senzing/g2/lib
-SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
 
 # Export environment variables.
 
@@ -53,6 +51,10 @@ default: help
 -include Makefile.$(OSTYPE)
 -include Makefile.$(OSTYPE)_$(OSARCH)
 
+
+.PHONY: hello-world
+hello-world: hello-world-osarch-specific
+
 # -----------------------------------------------------------------------------
 # Dependency management
 # -----------------------------------------------------------------------------
@@ -65,15 +67,17 @@ dependencies:
 
 # -----------------------------------------------------------------------------
 # Build
-#  - The "build" target is implemented in Makefile.OS.ARCH files.
 #  - docker-build: https://docs.docker.com/engine/reference/commandline/build/
 # -----------------------------------------------------------------------------
 
 PLATFORMS := darwin/amd64 linux/amd64 windows/amd64
 $(PLATFORMS):
 	@echo Building $(TARGET_DIRECTORY)/$(GO_OS)-$(GO_ARCH)/$(PROGRAM_NAME)
-	@mkdir -p $(TARGET_DIRECTORY)/$(GO_OS)-$(GO_ARCH) || true
 	@GOOS=$(GO_OS) GOARCH=$(GO_ARCH) go build -o $(TARGET_DIRECTORY)/$(GO_OS)-$(GO_ARCH)/$(PROGRAM_NAME)
+
+
+.PHONY: build
+build: build-osarch-specific
 
 
 .PHONY: build-all $(PLATFORMS)
@@ -85,36 +89,23 @@ build-all: $(PLATFORMS)
 # -----------------------------------------------------------------------------
 
 .PHONY: test
-test:
-	@go test -v -p 1 ./...
-#	@go test -v ./.
-#	@go test -v ./connector
-#	@go test -v ./connectordb2
-#	@go test -v ./connectormssql
-#	@go test -v ./connectormysql
-#	@go test -v ./connectorpostgresql
-#	@go test -v ./connectorsqlite
-#	@go test -v ./postgresql
-#	@go test -v ./sqlexecutor
+test: test-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Run
 # -----------------------------------------------------------------------------
 
 .PHONY: run
-run:
-	@go run main.go
+run: run-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
 
 .PHONY: clean
-clean:
+clean: clean-osarch-specific
 	@go clean -cache
 	@go clean -testcache
-	@rm -rf $(TARGET_DIRECTORY) || true
-	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
 .PHONY: help
@@ -129,6 +120,10 @@ print-make-variables:
 	@$(foreach V,$(sort $(.VARIABLES)), \
 		$(if $(filter-out environment% default automatic, \
 		$(origin $V)),$(warning $V=$($V) ($(value $V)))))
+
+
+.PHONY: setup
+setup: setup-osarch-specific
 
 
 .PHONY: update-pkg-cache

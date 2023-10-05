@@ -10,9 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.3.0] - 2023-10-05
+
+### Added to 0.3.0
+
+- `checker.IsSchemaInstalled`
+
+### Changed in 0.3.0
+
+- Updated `.sql` files
+
 ## [0.2.9] - 2023-08-31
 
-### Added in 0.2.8
+### Added in 0.2.9
 
 - `dbhelper.ExtractSqliteDatabaseFilename()`
 
