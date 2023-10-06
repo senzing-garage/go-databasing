@@ -139,6 +139,58 @@ func (schemaChecker *CheckerImpl) IsSchemaInstalled(ctx context.Context) (bool, 
 }
 
 /*
+The IsInstalled verifies that the Senzing schema has been installed.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
+func (schemaChecker *CheckerImpl) RecordCount(ctx context.Context) (int64, error) {
+	var (
+		count int64
+	)
+
+	// Entry tasks.
+
+	if schemaChecker.isTrace {
+		schemaChecker.traceEntry(9)
+	}
+	entryTime := time.Now()
+	sqlStatement := "SELECT count(*) from DSRC_RECORD;"
+
+	// Open a database connection.
+
+	database := sql.OpenDB(schemaChecker.DatabaseConnector)
+	defer database.Close()
+	err := database.PingContext(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	// Get the Row.
+
+	row := database.QueryRowContext(ctx, sqlStatement)
+	err = row.Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	// Exit tasks.
+
+	if schemaChecker.observers != nil {
+		go func() {
+			details := map[string]string{
+				"count": strconv.FormatInt(count, 10),
+			}
+			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentId, 8005, err, details)
+		}()
+	}
+	if schemaChecker.isTrace {
+		defer schemaChecker.traceExit(10, count, err, time.Since(entryTime))
+	}
+	return count, err
+}
+
+/*
 The RegisterObserver method adds the observer to the list of observers notified.
 
 Input

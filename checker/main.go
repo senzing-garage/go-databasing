@@ -12,6 +12,7 @@ import (
 
 type Checker interface {
 	IsSchemaInstalled(ctx context.Context) (bool, error)
+	RecordCount(ctx context.Context) (int64, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
 	SetObserverOrigin(ctx context.Context, origin string)
@@ -39,10 +40,13 @@ var IdMessages = map[int]string{
 	6:    "Exit  SetLogLevel(%s) returned (%v).",
 	7:    "Enter UnregisterObserver(%s).",
 	8:    "Exit  UnregisterObserver(%s) returned (%v).",
+	9:    "Enter RecordCount().",
+	10:   "Exit  RecordCount() returned (%i).",
 	8001: "IsSchemaInstalled",
 	8002: "RegisterObserver",
 	8003: "SetLogLevel",
 	8004: "UnregisterObserver",
+	8005: "RecordCount",
 }
 
 // Status strings for specific messages.
