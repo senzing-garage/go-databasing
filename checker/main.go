@@ -10,7 +10,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-type SchemaChecker interface {
+type Checker interface {
 	IsSchemaInstalled(ctx context.Context) (bool, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevelName string) error

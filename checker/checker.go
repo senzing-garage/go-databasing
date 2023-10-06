@@ -19,8 +19,8 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// SchemaCheckerImpl is the default implementation of the SqlExecutor interface.
-type SchemaCheckerImpl struct {
+// CheckerImpl is the default implementation of the SqlExecutor interface.
+type CheckerImpl struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
 	logger            logging.LoggingInterface
@@ -45,7 +45,7 @@ var traceOptions []interface{} = []interface{}{
 // ----------------------------------------------------------------------------
 
 // Get the Logger singleton.
-func (schemaChecker *SchemaCheckerImpl) getLogger() logging.LoggingInterface {
+func (schemaChecker *CheckerImpl) getLogger() logging.LoggingInterface {
 	var err error = nil
 	if schemaChecker.logger == nil {
 		options := []interface{}{
@@ -60,24 +60,24 @@ func (schemaChecker *SchemaCheckerImpl) getLogger() logging.LoggingInterface {
 }
 
 // Log message.
-func (schemaChecker *SchemaCheckerImpl) log(messageNumber int, details ...interface{}) {
+func (schemaChecker *CheckerImpl) log(messageNumber int, details ...interface{}) {
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
 // Debug.
-func (schemaChecker *SchemaCheckerImpl) debug(messageNumber int, details ...interface{}) {
+func (schemaChecker *CheckerImpl) debug(messageNumber int, details ...interface{}) {
 	details = append(details, debugOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method entry.
-func (schemaChecker *SchemaCheckerImpl) traceEntry(messageNumber int, details ...interface{}) {
+func (schemaChecker *CheckerImpl) traceEntry(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method exit.
-func (schemaChecker *SchemaCheckerImpl) traceExit(messageNumber int, details ...interface{}) {
+func (schemaChecker *CheckerImpl) traceExit(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
@@ -92,7 +92,7 @@ The IsInstalled verifies that the Senzing schema has been installed.
 Input
   - ctx: A context to control lifecycle.
 */
-func (schemaChecker *SchemaCheckerImpl) IsSchemaInstalled(ctx context.Context) (bool, error) {
+func (schemaChecker *CheckerImpl) IsSchemaInstalled(ctx context.Context) (bool, error) {
 	var (
 		count int
 	)
@@ -145,7 +145,7 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (schemaChecker *SchemaCheckerImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+func (schemaChecker *CheckerImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
 	if schemaChecker.isTrace {
 		schemaChecker.traceEntry(3, observer.GetObserverId(ctx))
 	}
@@ -175,7 +175,7 @@ Input
   - ctx: A context to control lifecycle.
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
-func (schemaChecker *SchemaCheckerImpl) SetLogLevel(ctx context.Context, logLevelName string) error {
+func (schemaChecker *CheckerImpl) SetLogLevel(ctx context.Context, logLevelName string) error {
 	if schemaChecker.isTrace {
 		schemaChecker.traceEntry(5, logLevelName)
 	}
@@ -211,7 +211,7 @@ Input
   - ctx: A context to control lifecycle.
   - origin: The value sent in the Observer's "origin" key/value pair.
 */
-func (schemaChecker *SchemaCheckerImpl) SetObserverOrigin(ctx context.Context, origin string) {
+func (schemaChecker *CheckerImpl) SetObserverOrigin(ctx context.Context, origin string) {
 	var err error = nil
 
 	// Prolog.
@@ -272,7 +272,7 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (schemaChecker *SchemaCheckerImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+func (schemaChecker *CheckerImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
 	if schemaChecker.isTrace {
 		schemaChecker.traceEntry(7, observer.GetObserverId(ctx))
 	}

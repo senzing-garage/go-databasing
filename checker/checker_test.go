@@ -60,7 +60,7 @@ func refreshSqliteDatabase(databaseFilename string) error {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestSchemaCheckerImpl_IsSchemaInstalled_True(test *testing.T) {
+func TestCheckerImpl_IsSchemaInstalled_True(test *testing.T) {
 	ctx := context.TODO()
 
 	// Make a fresh database and create Senzing schema.
@@ -78,7 +78,7 @@ func TestSchemaCheckerImpl_IsSchemaInstalled_True(test *testing.T) {
 
 	// Perform test.
 
-	testObject := &SchemaCheckerImpl{
+	testObject := &CheckerImpl{
 		DatabaseConnector: databaseConnector,
 	}
 	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
@@ -93,7 +93,7 @@ func TestSchemaCheckerImpl_IsSchemaInstalled_True(test *testing.T) {
 	}
 }
 
-func TestSchemaCheckerImpl_IsSchemaInstalled_False(test *testing.T) {
+func TestCheckerImpl_IsSchemaInstalled_False(test *testing.T) {
 	ctx := context.TODO()
 
 	// Make a fresh database with no Senzing schema.
@@ -106,7 +106,7 @@ func TestSchemaCheckerImpl_IsSchemaInstalled_False(test *testing.T) {
 	if err != nil {
 		test.Error(err)
 	}
-	testObject := &SchemaCheckerImpl{
+	testObject := &CheckerImpl{
 		DatabaseConnector: databaseConnector,
 	}
 	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
