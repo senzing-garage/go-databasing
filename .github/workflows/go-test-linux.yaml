@@ -9,7 +9,7 @@ env:
   SENZING_TOOLS_DATABASE_URL: "sqlite3://na:na@/tmp/sqlite/G2C.db"
 
 jobs:
-  build:
+  go-test-linux:
     runs-on: ubuntu-latest
     strategy:
       matrix:
