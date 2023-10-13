@@ -65,7 +65,7 @@ func main() {
 		sqlFilename = gitRepositoryDir + "/testdata/postgresql/g2core-schema-postgresql-create.sql"
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-		databaseUrl = "mysql://root:root@localhost/G2"
+		databaseUrl = "mysql://root:root@localhost/G2" // #nosec G101
 		sqlFilename = gitRepositoryDir + "/testdata/mysql/g2core-schema-mysql-create.sql"
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
