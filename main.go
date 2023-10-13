@@ -55,7 +55,6 @@ func main() {
 
 	// Construct database URL and choose SQL file.
 
-	/* #nosec */
 	switch databaseId {
 	case Sqlite:
 		databaseUrl = sqliteDatabaseUrl
@@ -66,6 +65,7 @@ func main() {
 		sqlFilename = gitRepositoryDir + "/testdata/postgresql/g2core-schema-postgresql-create.sql"
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
+		/* #nosec */
 		databaseUrl = "mysql://root:root@localhost/G2"
 		sqlFilename = gitRepositoryDir + "/testdata/mysql/g2core-schema-mysql-create.sql"
 	case Mssql:
