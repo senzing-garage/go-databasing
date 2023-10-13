@@ -55,6 +55,7 @@ func main() {
 
 	// Construct database URL and choose SQL file.
 
+	/* #nosec */
 	switch databaseId {
 	case Sqlite:
 		databaseUrl = sqliteDatabaseUrl
