@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.3.1] - 2023-10-17
+
+### Changed in 0.3.1
+
+- Refactor to [template-go](https://github.com/Senzing/template-go)
+- Update dependencies
+  - github.com/senzing/go-logging v1.3.3
+  - github.com/senzing/go-observing v0.2.8
+
 ## [0.3.0] - 2023-10-06
 
 ### Added to 0.3.0

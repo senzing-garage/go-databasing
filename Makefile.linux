@@ -47,7 +47,6 @@ setup-osarch-specific:
 	@touch  /tmp/sqlite/G2C.db
 
 
-
 .PHONY: test-osarch-specific
 test-osarch-specific:
 	@go test -v -p 1 ./...
