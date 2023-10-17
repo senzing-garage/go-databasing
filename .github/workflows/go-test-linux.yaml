@@ -10,11 +10,12 @@ env:
 
 jobs:
   go-test-linux:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         go: ["1.21"]
-    name: Go ${{ matrix.go }} - linux
+        os: [ubuntu-latest]
+    name: "go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
     services:
       postgres:
         env:
