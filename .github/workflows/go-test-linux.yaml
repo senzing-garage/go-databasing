@@ -50,7 +50,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
       - run: mkdir /tmp/sqlite
