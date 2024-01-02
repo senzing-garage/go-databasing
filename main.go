@@ -6,11 +6,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/senzing/go-databasing/connector"
-	"github.com/senzing/go-databasing/postgresql"
-	"github.com/senzing/go-databasing/sqlexecutor"
-	"github.com/senzing/go-logging/logging"
-	"github.com/senzing/go-observing/observer"
+	"github.com/senzing-garage/go-databasing/connector"
+	"github.com/senzing-garage/go-databasing/postgresql"
+	"github.com/senzing-garage/go-databasing/sqlexecutor"
+	"github.com/senzing-garage/go-logging/logging"
+	"github.com/senzing-garage/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------

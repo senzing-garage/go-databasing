@@ -9,10 +9,10 @@ import (
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/senzing/go-databasing/connectormssql"
-	"github.com/senzing/go-databasing/connectormysql"
-	"github.com/senzing/go-databasing/connectorpostgresql"
-	"github.com/senzing/go-databasing/connectorsqlite"
+	"github.com/senzing-garage/go-databasing/connectormssql"
+	"github.com/senzing-garage/go-databasing/connectormysql"
+	"github.com/senzing-garage/go-databasing/connectorpostgresql"
+	"github.com/senzing-garage/go-databasing/connectorsqlite"
 )
 
 // ----------------------------------------------------------------------------

@@ -3,7 +3,7 @@ package checker
 import (
 	"context"
 
-	"github.com/senzing/go-observing/observer"
+	"github.com/senzing-garage/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
