@@ -9,7 +9,7 @@ import "fmt"
 // ----------------------------------------------------------------------------
 
 func ExampleExtractSqliteDatabaseFilename() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/dbhelper/dbhelper_examples_test.go
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/dbhelper/dbhelper_examples_test.go
 	databaseUrl := "sqlite3://na:na@/var/opt/senzing/sqlite/G2C.db"
 	databaseFilename, err := ExtractSqliteDatabaseFilename(databaseUrl)
 	if err != nil {

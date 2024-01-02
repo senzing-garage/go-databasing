@@ -14,7 +14,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func ExampleNewConnector() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/connectormysql/connectormysql_examples_test.go
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/connectormysql/connectormysql_examples_test.go
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
 	configuration := &mysql.Config{

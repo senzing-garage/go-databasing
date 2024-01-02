@@ -7,8 +7,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/senzing/go-databasing/connector"
-	"github.com/senzing/go-observing/observer"
+	"github.com/senzing-garage/go-databasing/connector"
+	"github.com/senzing-garage/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------

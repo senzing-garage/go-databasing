@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/senzing/go-databasing/connectorpostgresql"
+	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 )
 
 // ----------------------------------------------------------------------------
@@ -14,7 +14,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func ExamplePostgresqlImpl_GetCurrentWatermark() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/postgresql/postgresql_examples_test.go
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/postgresql/postgresql_examples_test.go
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"

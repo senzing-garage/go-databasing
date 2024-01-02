@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/senzing/go-databasing/connector"
+	"github.com/senzing-garage/go-databasing/connector"
 )
 
 // ----------------------------------------------------------------------------
@@ -16,7 +16,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func ExampleSqlExecutorImpl_ProcessFileName_mysql() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
 	databaseUrl := "mysql://root:root@localhost:3306/G2"
@@ -36,7 +36,7 @@ func ExampleSqlExecutorImpl_ProcessFileName_mysql() {
 }
 
 func ExampleSqlExecutorImpl_ProcessFileName_postgresql() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 	databaseUrl := "postgresql://postgres:postgres@localhost:5432/G2/?sslmode=disable"
@@ -56,7 +56,7 @@ func ExampleSqlExecutorImpl_ProcessFileName_postgresql() {
 }
 
 func ExampleSqlExecutorImpl_ProcessFileName_mssql() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 	databaseUrl := "mssql://sa:Passw0rd@localhost:1433/master"
@@ -76,7 +76,7 @@ func ExampleSqlExecutorImpl_ProcessFileName_mssql() {
 }
 
 func ExampleSqlExecutorImpl_ProcessFileName_sqlite() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	databaseFilename := "/tmp/sqlite/G2C.db"
 	databaseUrl := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
@@ -97,7 +97,7 @@ func ExampleSqlExecutorImpl_ProcessFileName_sqlite() {
 }
 
 func ExampleSqlExecutorImpl_ProcessScanner_sqlite() {
-	// For more information, visit https://github.com/Senzing/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	databaseFilename := "/tmp/sqlite/G2C.db"
 	databaseUrl := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)

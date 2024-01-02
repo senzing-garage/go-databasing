@@ -10,14 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.4.0] - 2024-01-02
+
+### Changed in 0.4.0
+
+- Renamed module to `github.com/senzing-garage/go-databasing`
+- Refactor to [template-go](https://github.com/senzing-garage/template-go)
+- Update dependencies
+  - github.com/mattn/go-sqlite3 v1.14.19
+  - github.com/senzing-garage/go-logging v1.4.0
+  - github.com/senzing-garage/go-observing v0.3.0
+
 ## [0.3.1] - 2023-10-17
 
 ### Changed in 0.3.1
 
-- Refactor to [template-go](https://github.com/Senzing/template-go)
+- Refactor to [template-go](https://github.com/senzing-garage/template-go)
 - Update dependencies
-  - github.com/senzing/go-logging v1.3.3
-  - github.com/senzing/go-observing v0.2.8
+  - github.com/senzing-garage/go-logging v1.3.3
+  - github.com/senzing-garage/go-observing v0.2.8
 
 ## [0.3.0] - 2023-10-06
 
@@ -48,8 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactor to `template-go`
 - Updated dependencies
   - github.com/microsoft/go-mssqldb v1.5.0
-  - github.com/senzing/go-logging v1.3.2
-  - github.com/senzing/go-observing v0.2.7
+  - github.com/senzing-garage/go-logging v1.3.2
+  - github.com/senzing-garage/go-observing v0.2.7
 
 ## [0.2.6] - 2023-07-13
 
@@ -61,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated dependencies
   - github.com/microsoft/go-mssqldb v1.3.0
-  - github.com/senzing/go-logging v1.3.1
+  - github.com/senzing-garage/go-logging v1.3.1
 
 ## [0.2.5] - 2023-06-16
 
@@ -70,8 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dependencies
   - github.com/mattn/go-sqlite3 v1.14.17
   - github.com/microsoft/go-mssqldb v1.1.0
-  - github.com/senzing/go-logging v1.2.6
-  - github.com/senzing/go-observing v0.2.6
+  - github.com/senzing-garage/go-logging v1.2.6
+  - github.com/senzing-garage/go-observing v0.2.6
   - github.com/stretchr/testify v1.8.4
 
 ## [0.2.4] - 2023-05-11
@@ -82,8 +93,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dependencies
   - github.com/go-sql-driver/mysql v1.7.1
   - github.com/lib/pq v1.10.9
-  - github.com/senzing/go-logging v1.2.3
-  - github.com/senzing/go-observing v0.2.2
+  - github.com/senzing-garage/go-logging v1.2.3
+  - github.com/senzing-garage/go-observing v0.2.2
 
 ## [0.2.3] - 2023-04-14
 
@@ -95,7 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 0.2.2
 
-- Migrated from `github.com/senzing/go-logging/logger` to `github.com/senzing/go-logging/logging`
+- Migrated from `github.com/senzing-garage/go-logging/logger` to `github.com/senzing-garage/go-logging/logging`
 
 ## [0.2.1] - 2023-02-25
 

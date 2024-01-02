@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/senzing/go-databasing/connector"
-	"github.com/senzing/go-databasing/sqlexecutor"
+	"github.com/senzing-garage/go-databasing/connector"
+	"github.com/senzing-garage/go-databasing/sqlexecutor"
 	"github.com/stretchr/testify/assert"
 )
 
