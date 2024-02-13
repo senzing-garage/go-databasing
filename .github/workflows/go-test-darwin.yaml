@@ -1,7 +1,4 @@
-# Based on
-# - https://github.com/marketplace/actions/setup-go-environment
-
-name: go-test-darwin.yaml
+name: go test darwin
 
 on: [push]
 
@@ -25,31 +22,40 @@ permissions:
 
 jobs:
   go-test-darwin:
+    name: "go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         go: ["1.21"]
         os: [macos-latest]
-    name: "go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
+
     steps:
-      - name: Checkout repository
+      - name: checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup go
+
+      - name: setup go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
-      - name: Install Docker
-        uses: docker-practice/actions-setup-docker@master
+
+      - name: install Docker
+        uses: docker-practice/actions-setup-docker@v1
         timeout-minutes: 12
-      - name: PostgreSQL service
+
+      - name: postgreSQL service
         run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
+      
       - name: MsSQL service
         run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+
       - name: MySQL service
         run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
+
       - run: mkdir /tmp/sqlite
+
       - run: touch /tmp/sqlite/G2C.db
-      - name: Run go test
+
+      - name: run go test
         run: go test -v -p 1 ./...
