@@ -1,7 +1,4 @@
-# Based on
-# - https://github.com/marketplace/actions/setup-go-environment
-
-name: go-test-windows.yaml
+name: go test windows
 
 on: [push]
 
@@ -24,26 +21,28 @@ permissions:
 
 jobs:
   go-test-windows:
+    name: "go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         go: ["1.21"]
         os: [windows-latest]
-    name: "go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
+
     steps:
-      - name: Checkout repository
+      - name: checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup go
+
+      - name: setup go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
-      # - name: Install Docker
-      #   uses: docker-practice/actions-setup-docker@master
+
+      # - name: install Docker
+      #   uses: docker-practice/actions-setup-docker@v1
       #   timeout-minutes: 12
 
-      # https://github.com/marketplace/actions/setup-postgresql-for-linux-macos-windows
       - uses: ikalnytskyi/action-setup-postgres@v5
         with:
           username: senzing
@@ -54,34 +53,48 @@ jobs:
 
       # - name: PostgreSQL service
       #   run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
+
       # - name: MsSQL service
       #   run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+
       # - name: MySQL service
       #   run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
 
-      - name: Create empty Sqlite database file
+      - name: create empty Sqlite database file
         run: mkdir "C:\Temp\sqlite" && New-Item "C:\Temp\sqlite\G2C.db"
-      # - name: Run go test
+
+      # - name: run go test
       #   run: go test -v -p 1 ./...
-      - name: Run go test - main
+
+      - name: run go test - main
         run: go test -v -p 1 ./.
-      # - name: Run go test - connector
+
+      # - name: run go test - connector
       #   run: go test -v -p 1 ./connector
-      - name: Run go test - connectordb2
+
+      - name: run go test - connectordb2
         run: go test -v -p 1 ./connectordb2
-      - name: Run go test - connectormssql
+
+      - name: run go test - connectormssql
         run: go test -v -p 1 ./connectormssql
-      - name: Run go test - connectormysql
+
+      - name: run go test - connectormysql
         run: go test -v -p 1 ./connectormysql
-      # - name: Run go test - connectorpostgresql
+
+      # - name: run go test - connectorpostgresql
       #   run: go test -v -p 1 ./connectorpostgresql
-      - name: Run go test - connectorsqlite
+
+      - name: run go test - connectorsqlite
         run: go test -v -p 1 ./connectorsqlite
-      - name: Run go test - dbhelper
+
+      - name: run go test - dbhelper
         run: go test -v -p 1 ./dbhelper
-      # - name: Run go test - postgresql
+
+      # - name: run go test - postgresql
       #   run: go test -v -p 1 ./postgresql
-      - name: Run go test - sqlexecutor
+
+      - name: run go test - sqlexecutor
         run: go test -v -p 1 ./sqlexecutor
-      - name: Run go test - main
+
+      - name: run go test - main
         run: go test -v -p 1 ./.
