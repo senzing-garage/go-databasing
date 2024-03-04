@@ -9,7 +9,7 @@ require (
 	github.com/microsoft/go-mssqldb v1.7.0
 	github.com/senzing-garage/go-logging v1.4.0
 	github.com/senzing-garage/go-observing v0.3.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 
 )
 
