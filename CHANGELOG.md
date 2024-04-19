@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.4.1] - 2024-04-19
+
+### Changed in 0.4.1
+
+- Update dependencies
+  - github.com/go-sql-driver/mysql v1.8.1
+  - github.com/mattn/go-sqlite3 v1.14.22
+  - github.com/microsoft/go-mssqldb v1.7.1
+  - github.com/stretchr/testify v1.9.0
+
 ## [0.4.0] - 2024-01-02
 
 ### Changed in 0.4.0
