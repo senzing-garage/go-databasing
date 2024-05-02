@@ -40,22 +40,63 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
-      - name: install Docker
-        uses: docker-practice/actions-setup-docker@v1
-        timeout-minutes: 12
+      # - name: install Docker
+      #   uses: docker-practice/actions-setup-docker@master
+      #   timeout-minutes: 12
 
-      - name: postgreSQL service
-        run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
+      - uses: ikalnytskyi/action-setup-postgres@v6
+        with:
+          username: senzing
+          password: senzing
+          database: G2
+          port: 5432
+        id: postgres
 
-      - name: MsSQL service
-        run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+      # - name: postgreSQL service
+      #   run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
 
-      - name: MySQL service
-        run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
+      # - name: MsSQL service
+      #   run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+
+      # - name: MySQL service
+      #   run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
 
       - run: mkdir /tmp/sqlite
 
       - run: touch /tmp/sqlite/G2C.db
 
-      - name: run go test
-        run: go test -v -p 1 ./...
+      # - name: run go test
+      #   run: go test -v -p 1 ./...
+
+      - name: run go test - main
+        run: go test -v -p 1 ./.
+
+      # - name: run go test - connector
+      #   run: go test -v -p 1 ./connector
+
+      - name: run go test - connectordb2
+        run: go test -v -p 1 ./connectordb2
+
+      - name: run go test - connectormssql
+        run: go test -v -p 1 ./connectormssql
+
+      - name: run go test - connectormysql
+        run: go test -v -p 1 ./connectormysql
+
+      # - name: run go test - connectorpostgresql
+      #   run: go test -v -p 1 ./connectorpostgresql
+
+      - name: run go test - connectorsqlite
+        run: go test -v -p 1 ./connectorsqlite
+
+      - name: run go test - dbhelper
+        run: go test -v -p 1 ./dbhelper
+
+      # - name: run go test - postgresql
+      #   run: go test -v -p 1 ./postgresql
+
+      - name: run go test - sqlexecutor
+        run: go test -v -p 1 ./sqlexecutor
+
+      - name: run go test - main
+        run: go test -v -p 1 ./.
