@@ -43,7 +43,7 @@ jobs:
       #   uses: docker-practice/actions-setup-docker@v1
       #   timeout-minutes: 12
 
-      - uses: ikalnytskyi/action-setup-postgres@v5
+      - uses: ikalnytskyi/action-setup-postgres@v6
         with:
           username: senzing
           password: senzing
