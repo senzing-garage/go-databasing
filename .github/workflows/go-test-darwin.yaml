@@ -41,7 +41,7 @@ jobs:
           go-version: ${{ matrix.go }}
 
       - name: install Docker
-        uses: docker-practice/actions-setup-docker@v1
+        uses: docker-practice/actions-setup-docker@master
         timeout-minutes: 12
 
       - name: postgreSQL service
