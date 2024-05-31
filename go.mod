@@ -6,7 +6,7 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.22
-	github.com/microsoft/go-mssqldb v1.7.1
+	github.com/microsoft/go-mssqldb v1.7.2
 	github.com/senzing-garage/go-logging v1.4.1
 	github.com/senzing-garage/go-observing v0.3.1
 	github.com/stretchr/testify v1.9.0
