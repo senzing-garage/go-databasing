@@ -23,7 +23,7 @@ type Postgresql interface {
 // ----------------------------------------------------------------------------
 
 // Identfier of the  package found messages having the format "senzing-6423xxxx".
-const ComponentId = 6423
+const ComponentID = 6423
 
 // ----------------------------------------------------------------------------
 // Variables

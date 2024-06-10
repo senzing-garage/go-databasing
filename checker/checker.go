@@ -9,7 +9,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/senzing-garage/go-databasing/dbhelper"
 	"github.com/senzing-garage/go-logging/logging"
+	"github.com/senzing-garage/go-messaging/messenger"
 	"github.com/senzing-garage/go-observing/notifier"
 	"github.com/senzing-garage/go-observing/observer"
 	"github.com/senzing-garage/go-observing/subject"
@@ -23,10 +25,15 @@ import (
 type CheckerImpl struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
-	logger            logging.LoggingInterface
+	logger            logging.Logging
+	messenger         messenger.Messenger
 	observerOrigin    string
 	observers         subject.Subject
 }
+
+const (
+	baseCallerSkip = 4
+)
 
 // ----------------------------------------------------------------------------
 // Variables
@@ -45,18 +52,23 @@ var traceOptions []interface{} = []interface{}{
 // ----------------------------------------------------------------------------
 
 // Get the Logger singleton.
-func (schemaChecker *CheckerImpl) getLogger() logging.LoggingInterface {
+func (schemaChecker *CheckerImpl) getLogger() logging.Logging {
 	var err error = nil
 	if schemaChecker.logger == nil {
-		options := []interface{}{
-			&logging.OptionCallerSkip{Value: 4},
-		}
-		schemaChecker.logger, err = logging.NewSenzingToolsLogger(ComponentId, IdMessages, options...)
+		schemaChecker.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, baseCallerSkip)
 		if err != nil {
 			panic(err)
 		}
 	}
 	return schemaChecker.logger
+}
+
+// Get the Messenger singleton.
+func (schemaChecker *CheckerImpl) getMessenger() messenger.Messenger {
+	if schemaChecker.messenger == nil {
+		schemaChecker.messenger = dbhelper.GetMessenger(ComponentID, IDMessages, baseCallerSkip)
+	}
+	return schemaChecker.messenger
 }
 
 // Log message.
@@ -95,21 +107,23 @@ Input
 func (schemaChecker *CheckerImpl) IsSchemaInstalled(ctx context.Context) (bool, error) {
 	var (
 		count int
+		err   error
 	)
 
 	// Entry tasks.
 
 	if schemaChecker.isTrace {
+		entryTime := time.Now()
 		schemaChecker.traceEntry(1)
+		defer func() { schemaChecker.traceExit(2, count, err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
 	sqlStatement := "SELECT count(*) from DSRC_RECORD;"
 
 	// Open a database connection.
 
 	database := sql.OpenDB(schemaChecker.DatabaseConnector)
 	defer database.Close()
-	err := database.PingContext(ctx)
+	err = database.PingContext(ctx)
 	if err != nil {
 		return false, err
 	}
@@ -129,11 +143,8 @@ func (schemaChecker *CheckerImpl) IsSchemaInstalled(ctx context.Context) (bool, 
 			details := map[string]string{
 				"count": strconv.Itoa(count),
 			}
-			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentId, 8001, err, details)
+			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8001, err, details)
 		}()
-	}
-	if schemaChecker.isTrace {
-		defer schemaChecker.traceExit(2, count, err, time.Since(entryTime))
 	}
 	return true, err
 }
@@ -147,21 +158,23 @@ Input
 func (schemaChecker *CheckerImpl) RecordCount(ctx context.Context) (int64, error) {
 	var (
 		count int64
+		err   error
 	)
 
 	// Entry tasks.
 
 	if schemaChecker.isTrace {
+		entryTime := time.Now()
 		schemaChecker.traceEntry(9)
+		defer func() { schemaChecker.traceExit(10, count, err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
 	sqlStatement := "SELECT count(*) from DSRC_RECORD;"
 
 	// Open a database connection.
 
 	database := sql.OpenDB(schemaChecker.DatabaseConnector)
 	defer database.Close()
-	err := database.PingContext(ctx)
+	err = database.PingContext(ctx)
 	if err != nil {
 		return 0, err
 	}
@@ -181,11 +194,8 @@ func (schemaChecker *CheckerImpl) RecordCount(ctx context.Context) (int64, error
 			details := map[string]string{
 				"count": strconv.FormatInt(count, 10),
 			}
-			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentId, 8005, err, details)
+			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8005, err, details)
 		}()
-	}
-	if schemaChecker.isTrace {
-		defer schemaChecker.traceExit(10, count, err, time.Since(entryTime))
 	}
 	return count, err
 }
@@ -198,24 +208,23 @@ Input
   - observer: The observer to be added.
 */
 func (schemaChecker *CheckerImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	var err error
 	if schemaChecker.isTrace {
-		schemaChecker.traceEntry(3, observer.GetObserverId(ctx))
+		entryTime := time.Now()
+		schemaChecker.traceEntry(3, observer.GetObserverID(ctx))
+		defer func() { schemaChecker.traceExit(4, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
 	if schemaChecker.observers == nil {
-		schemaChecker.observers = &subject.SubjectImpl{}
+		schemaChecker.observers = &subject.SimpleSubject{}
 	}
-	err := schemaChecker.observers.RegisterObserver(ctx, observer)
+	err = schemaChecker.observers.RegisterObserver(ctx, observer)
 	if schemaChecker.observers != nil {
 		go func() {
 			details := map[string]string{
-				"observerID": observer.GetObserverId(ctx),
+				"observerID": observer.GetObserverID(ctx),
 			}
-			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentId, 8002, err, details)
+			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8002, err, details)
 		}()
-	}
-	if schemaChecker.isTrace {
-		defer schemaChecker.traceExit(4, observer.GetObserverId(ctx), err, time.Since(entryTime))
 	}
 	return err
 }
@@ -228,11 +237,12 @@ Input
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
 func (schemaChecker *CheckerImpl) SetLogLevel(ctx context.Context, logLevelName string) error {
+	var err error
 	if schemaChecker.isTrace {
+		entryTime := time.Now()
 		schemaChecker.traceEntry(5, logLevelName)
+		defer func() { schemaChecker.traceExit(6, logLevelName, err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
-	var err error = nil
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = schemaChecker.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
@@ -244,14 +254,11 @@ func (schemaChecker *CheckerImpl) SetLogLevel(ctx context.Context, logLevelName 
 				details := map[string]string{
 					"logLevelName": logLevelName,
 				}
-				notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentId, 8003, err, details)
+				notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8003, err, details)
 			}()
 		}
 	} else {
 		err = fmt.Errorf("invalid error level: %s", logLevelName)
-	}
-	if schemaChecker.isTrace {
-		defer schemaChecker.traceExit(6, logLevelName, err, time.Since(entryTime))
 	}
 	return err
 }
@@ -311,7 +318,7 @@ func (schemaChecker *CheckerImpl) SetObserverOrigin(ctx context.Context, origin 
 			details := map[string]string{
 				"origin": origin,
 			}
-			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentId, 8005, err, details)
+			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8005, err, details)
 		}()
 	}
 
@@ -325,27 +332,26 @@ Input
   - observer: The observer to be added.
 */
 func (schemaChecker *CheckerImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	var err error
 	if schemaChecker.isTrace {
-		schemaChecker.traceEntry(7, observer.GetObserverId(ctx))
+		entryTime := time.Now()
+		schemaChecker.traceEntry(7, observer.GetObserverID(ctx))
+		defer func() { schemaChecker.traceExit(8, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
-	var err error = nil
 	if schemaChecker.observers != nil {
 		// Tricky code:
 		// client.notify is called synchronously before client.observers is set to nil.
 		// In client.notify, each observer will get notified in a goroutine.
 		// Then client.observers may be set to nil, but observer goroutines will be OK.
 		details := map[string]string{
-			"observerID": observer.GetObserverId(ctx),
+			"observerID": observer.GetObserverID(ctx),
 		}
-		notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentId, 8004, err, details)
+		notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8004, err, details)
 	}
 	err = schemaChecker.observers.UnregisterObserver(ctx, observer)
 	if !schemaChecker.observers.HasObservers(ctx) {
 		schemaChecker.observers = nil
 	}
-	if schemaChecker.isTrace {
-		defer schemaChecker.traceExit(8, observer.GetObserverId(ctx), err, time.Since(entryTime))
-	}
+
 	return err
 }

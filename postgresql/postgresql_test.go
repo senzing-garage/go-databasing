@@ -45,8 +45,8 @@ func teardown() error {
 
 func TestPostgresqlImpl_GetCurrentWatermark(test *testing.T) {
 	ctx := context.TODO()
-	observer1 := &observer.ObserverNull{
-		Id:       "Observer 1",
+	observer1 := &observer.NullObserver{
+		ID:       "Observer 1",
 		IsSilent: true,
 	}
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"

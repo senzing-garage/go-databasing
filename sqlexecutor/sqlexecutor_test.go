@@ -9,6 +9,7 @@ import (
 
 	"github.com/senzing-garage/go-databasing/connector"
 	"github.com/senzing-garage/go-observing/observer"
+	"github.com/stretchr/testify/require"
 )
 
 // ----------------------------------------------------------------------------
@@ -63,21 +64,24 @@ func refreshSqliteDatabase(databaseFilename string) error {
 func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
 	ctx := context.TODO()
 	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
-	refreshSqliteDatabase(sqliteDatabaseFilename)
-	observer1 := &observer.ObserverNull{
-		Id:       "Observer 1",
+	err := refreshSqliteDatabase(sqliteDatabaseFilename)
+	require.NoError(test, err)
+	observer1 := &observer.NullObserver{
+		ID:       "Observer 1",
 		IsSilent: true,
 	}
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseUrl)
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	if err != nil {
 		test.Error(err)
 	}
 	testObject := &SqlExecutorImpl{
 		DatabaseConnector: databaseConnector,
 	}
-	testObject.RegisterObserver(ctx, observer1)
+	err = testObject.RegisterObserver(ctx, observer1)
+	require.NoError(test, err)
 	testObject.SetObserverOrigin(ctx, "Test")
-	testObject.ProcessFileName(ctx, sqlFilename)
+	err = testObject.ProcessFileName(ctx, sqlFilename)
+	require.NoError(test, err)
 }
 
 func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
@@ -85,16 +89,18 @@ func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	refreshSqliteDatabase(sqliteDatabaseFilename)
 	file, err := os.Open(sqlFilename)
-	if err != nil {
-		test.Error(err)
-	}
-	defer file.Close()
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseUrl)
-	if err != nil {
-		test.Error(err)
-	}
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+	require.NoError(test, err)
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	require.NoError(test, err)
 	testObject := &SqlExecutorImpl{
 		DatabaseConnector: databaseConnector,
 	}
-	testObject.ProcessScanner(ctx, bufio.NewScanner(file))
+	err = testObject.ProcessScanner(ctx, bufio.NewScanner(file))
+	require.NoError(test, err)
 }
