@@ -8,7 +8,7 @@ import (
 
 	"github.com/senzing-garage/go-databasing/connector"
 	"github.com/senzing-garage/go-databasing/sqlexecutor"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // ----------------------------------------------------------------------------
@@ -30,12 +30,12 @@ func TestMain(m *testing.M) {
 }
 
 func setup() error {
-	var err error = nil
+	var err error
 	return err
 }
 
 func teardown() error {
-	var err error = nil
+	var err error
 	return err
 }
 
@@ -60,66 +60,44 @@ func refreshSqliteDatabase(databaseFilename string) error {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestCheckerImpl_IsSchemaInstalled_True(test *testing.T) {
+func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 	ctx := context.TODO()
 
 	// Make a fresh database and create Senzing schema.
 
 	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
-	refreshSqliteDatabase(sqliteDatabaseFilename)
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseUrl)
-	if err != nil {
-		test.Error(err)
-	}
-	sqlExecutor := &sqlexecutor.SqlExecutorImpl{
+	err := refreshSqliteDatabase(sqliteDatabaseFilename)
+	require.NoError(test, err)
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	require.NoError(test, err)
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
-	sqlExecutor.ProcessFileName(ctx, sqlFilename)
+	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
+	require.NoError(test, err)
 
 	// Perform test.
 
-	testObject := &CheckerImpl{
+	testObject := &BasicChecker{
 		DatabaseConnector: databaseConnector,
 	}
 	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
 	if isSchemaInstalled {
-		if err != nil {
-			assert.FailNow(test, err.Error())
-		}
+		require.NoError(test, err)
 	} else {
-		if err == nil {
-			assert.FailNow(test, "An error should have been returned")
-		}
+		require.Error(test, err, "An error should have been returned")
 	}
 }
 
-func TestCheckerImpl_IsSchemaInstalled_False(test *testing.T) {
+func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
 	ctx := context.TODO()
-
-	// Make a fresh database with no Senzing schema.
-
-	refreshSqliteDatabase(sqliteDatabaseFilename)
-
-	// Test.
-
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseUrl)
-	if err != nil {
-		test.Error(err)
-	}
-	testObject := &CheckerImpl{
+	err := refreshSqliteDatabase(sqliteDatabaseFilename)
+	require.NoError(test, err)
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	require.NoError(test, err)
+	testObject := &BasicChecker{
 		DatabaseConnector: databaseConnector,
 	}
-	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
-	if isSchemaInstalled {
-		if err != nil {
-			assert.FailNow(test, err.Error())
-		} else {
-			assert.FailNow(test, "Schema is not installed")
-		}
-	} else {
-		if err == nil {
-			assert.FailNow(test, "Error should have been returned")
-		}
-	}
-
+	_, err = testObject.IsSchemaInstalled(ctx)
+	require.Error(test, err, "An error should have been returned")
 }

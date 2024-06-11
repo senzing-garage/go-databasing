@@ -7,6 +7,19 @@ import (
 )
 
 // ----------------------------------------------------------------------------
+// Test interface functions
+// ----------------------------------------------------------------------------
+
+func TestNewConnector(test *testing.T) {
+	_ = test
+	// ctx := context.TODO()
+	// databaseConnector, err := NewConnector(ctx, "")
+	// require.NoError(test, err)
+	// _, err = databaseConnector.Connect(ctx)
+	// require.NoError(test, err)
+}
+
+// ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------
 
@@ -25,27 +38,11 @@ func TestMain(m *testing.M) {
 }
 
 func setup() error {
-	var err error = nil
+	var err error
 	return err
 }
 
 func teardown() error {
-	var err error = nil
+	var err error
 	return err
-}
-
-// ----------------------------------------------------------------------------
-// Test interface functions
-// ----------------------------------------------------------------------------
-
-func TestPostgresql_Connect(test *testing.T) {
-	// ctx := context.TODO()
-
-	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-	// databaseConnector, err := NewConnector(ctx, "")
-	// if err != nil {
-	// 	test.Fatal(err)
-
-	// }
-	// databaseConnector.Connect(ctx)
 }

@@ -7,8 +7,28 @@ import (
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+// ----------------------------------------------------------------------------
+// Test interface functions
+// ----------------------------------------------------------------------------
+
+func TestNewConnector(test *testing.T) {
+	ctx := context.TODO()
+	configuration := &mysql.Config{
+		User:      "root",
+		Passwd:    "root",
+		Net:       "tcp",
+		Addr:      "localhost",
+		Collation: "utf8mb4_general_ci",
+		DBName:    "G2",
+	}
+	databaseConnector, err := NewConnector(ctx, configuration)
+	require.NoError(test, err)
+	_, err = databaseConnector.Connect(ctx)
+	require.NoError(test, err)
+}
 
 // ----------------------------------------------------------------------------
 // Test harness
@@ -29,31 +49,11 @@ func TestMain(m *testing.M) {
 }
 
 func setup() error {
-	var err error = nil
+	var err error
 	return err
 }
 
 func teardown() error {
-	var err error = nil
+	var err error
 	return err
-}
-
-// ----------------------------------------------------------------------------
-// Test interface functions
-// ----------------------------------------------------------------------------
-
-func TestNewConnector(test *testing.T) {
-	ctx := context.TODO()
-	configuration := &mysql.Config{
-		User:      "root",
-		Passwd:    "root",
-		Net:       "tcp",
-		Addr:      "localhost",
-		Collation: "utf8mb4_general_ci",
-		DBName:    "G2",
-	}
-	databaseConnector, err := NewConnector(ctx, configuration)
-	if err != nil {
-		assert.FailNow(test, err.Error(), databaseConnector)
-	}
 }

@@ -9,9 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/senzing-garage/go-databasing/dbhelper"
 	"github.com/senzing-garage/go-logging/logging"
-	"github.com/senzing-garage/go-messaging/messenger"
 	"github.com/senzing-garage/go-observing/notifier"
 	"github.com/senzing-garage/go-observing/observer"
 	"github.com/senzing-garage/go-observing/subject"
@@ -21,12 +19,11 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// CheckerImpl is the default implementation of the SqlExecutor interface.
-type CheckerImpl struct {
+// BasicChecker is the default implementation of the SqlExecutor interface.
+type BasicChecker struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
 	logger            logging.Logging
-	messenger         messenger.Messenger
 	observerOrigin    string
 	observers         subject.Subject
 }
@@ -39,11 +36,11 @@ const (
 // Variables
 // ----------------------------------------------------------------------------
 
-var debugOptions []interface{} = []interface{}{
+var debugOptions = []interface{}{
 	&logging.OptionCallerSkip{Value: 5},
 }
 
-var traceOptions []interface{} = []interface{}{
+var traceOptions = []interface{}{
 	&logging.OptionCallerSkip{Value: 5},
 }
 
@@ -52,8 +49,8 @@ var traceOptions []interface{} = []interface{}{
 // ----------------------------------------------------------------------------
 
 // Get the Logger singleton.
-func (schemaChecker *CheckerImpl) getLogger() logging.Logging {
-	var err error = nil
+func (schemaChecker *BasicChecker) getLogger() logging.Logging {
+	var err error
 	if schemaChecker.logger == nil {
 		schemaChecker.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, baseCallerSkip)
 		if err != nil {
@@ -63,33 +60,25 @@ func (schemaChecker *CheckerImpl) getLogger() logging.Logging {
 	return schemaChecker.logger
 }
 
-// Get the Messenger singleton.
-func (schemaChecker *CheckerImpl) getMessenger() messenger.Messenger {
-	if schemaChecker.messenger == nil {
-		schemaChecker.messenger = dbhelper.GetMessenger(ComponentID, IDMessages, baseCallerSkip)
-	}
-	return schemaChecker.messenger
-}
-
 // Log message.
-func (schemaChecker *CheckerImpl) log(messageNumber int, details ...interface{}) {
+func (schemaChecker *BasicChecker) log(messageNumber int, details ...interface{}) {
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
 // Debug.
-func (schemaChecker *CheckerImpl) debug(messageNumber int, details ...interface{}) {
+func (schemaChecker *BasicChecker) debug(messageNumber int, details ...interface{}) {
 	details = append(details, debugOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method entry.
-func (schemaChecker *CheckerImpl) traceEntry(messageNumber int, details ...interface{}) {
+func (schemaChecker *BasicChecker) traceEntry(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method exit.
-func (schemaChecker *CheckerImpl) traceExit(messageNumber int, details ...interface{}) {
+func (schemaChecker *BasicChecker) traceExit(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
@@ -104,7 +93,7 @@ The IsInstalled verifies that the Senzing schema has been installed.
 Input
   - ctx: A context to control lifecycle.
 */
-func (schemaChecker *CheckerImpl) IsSchemaInstalled(ctx context.Context) (bool, error) {
+func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool, error) {
 	var (
 		count int
 		err   error
@@ -155,7 +144,7 @@ The IsInstalled verifies that the Senzing schema has been installed.
 Input
   - ctx: A context to control lifecycle.
 */
-func (schemaChecker *CheckerImpl) RecordCount(ctx context.Context) (int64, error) {
+func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, error) {
 	var (
 		count int64
 		err   error
@@ -207,7 +196,7 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (schemaChecker *CheckerImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+func (schemaChecker *BasicChecker) RegisterObserver(ctx context.Context, observer observer.Observer) error {
 	var err error
 	if schemaChecker.isTrace {
 		entryTime := time.Now()
@@ -236,7 +225,7 @@ Input
   - ctx: A context to control lifecycle.
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
-func (schemaChecker *CheckerImpl) SetLogLevel(ctx context.Context, logLevelName string) error {
+func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName string) error {
 	var err error
 	if schemaChecker.isTrace {
 		entryTime := time.Now()
@@ -270,8 +259,8 @@ Input
   - ctx: A context to control lifecycle.
   - origin: The value sent in the Observer's "origin" key/value pair.
 */
-func (schemaChecker *CheckerImpl) SetObserverOrigin(ctx context.Context, origin string) {
-	var err error = nil
+func (schemaChecker *BasicChecker) SetObserverOrigin(ctx context.Context, origin string) {
+	var err error
 
 	// Prolog.
 
@@ -299,12 +288,12 @@ func (schemaChecker *CheckerImpl) SetObserverOrigin(ctx context.Context, origin 
 
 		// If DEBUG, log input parameters. Must be done after establishing DEBUG and TRACE logging.
 
-		asJson, err := json.Marshal(schemaChecker)
+		asJSON, err := json.Marshal(schemaChecker)
 		if err != nil {
 			traceExitMessageNumber, debugMessageNumber = 61, 1061
 			return
 		}
-		schemaChecker.log(1004, schemaChecker, string(asJson))
+		schemaChecker.log(1004, schemaChecker, string(asJSON))
 	}
 
 	// Set origin.
@@ -331,7 +320,7 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (schemaChecker *CheckerImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+func (schemaChecker *BasicChecker) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
 	var err error
 	if schemaChecker.isTrace {
 		entryTime := time.Now()

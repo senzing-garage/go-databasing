@@ -19,8 +19,8 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// PostgresqlImpl is the default implementation of the SqlExecutor interface.
-type PostgresqlImpl struct {
+// BasicPostgresql is the default implementation of the SqlExecutor interface.
+type BasicPostgresql struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
 	logger            logging.Logging
@@ -32,11 +32,11 @@ type PostgresqlImpl struct {
 // Variables
 // ----------------------------------------------------------------------------
 
-var debugOptions []interface{} = []interface{}{
+var debugOptions = []interface{}{
 	&logging.OptionCallerSkip{Value: 5},
 }
 
-var traceOptions []interface{} = []interface{}{
+var traceOptions = []interface{}{
 	&logging.OptionCallerSkip{Value: 5},
 }
 
@@ -45,13 +45,13 @@ var traceOptions []interface{} = []interface{}{
 // ----------------------------------------------------------------------------
 
 // Get the Logger singleton.
-func (sqlExecutor *PostgresqlImpl) getLogger() logging.Logging {
-	var err error = nil
+func (sqlExecutor *BasicPostgresql) getLogger() logging.Logging {
+	var err error
 	if sqlExecutor.logger == nil {
 		options := []interface{}{
 			&logging.OptionCallerSkip{Value: 4},
 		}
-		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IdMessages, options...)
+		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
 		if err != nil {
 			panic(err)
 		}
@@ -60,24 +60,24 @@ func (sqlExecutor *PostgresqlImpl) getLogger() logging.Logging {
 }
 
 // Log message.
-func (sqlExecutor *PostgresqlImpl) log(messageNumber int, details ...interface{}) {
+func (sqlExecutor *BasicPostgresql) log(messageNumber int, details ...interface{}) {
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Debug.
-func (sqlExecutor *PostgresqlImpl) debug(messageNumber int, details ...interface{}) {
+func (sqlExecutor *BasicPostgresql) debug(messageNumber int, details ...interface{}) {
 	details = append(details, debugOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method entry.
-func (sqlExecutor *PostgresqlImpl) traceEntry(messageNumber int, details ...interface{}) {
+func (sqlExecutor *BasicPostgresql) traceEntry(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method exit.
-func (sqlExecutor *PostgresqlImpl) traceExit(messageNumber int, details ...interface{}) {
+func (sqlExecutor *BasicPostgresql) traceExit(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
@@ -92,26 +92,28 @@ The GetCurrentWatermark does a database call for each line scanned.
 Input
   - ctx: A context to control lifecycle.
 */
-func (sqlExecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (string, int, error) {
+func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (string, int, error) {
 	var (
 		oid  string
 		age  int
 		size string
+		err  error
 	)
 
 	// Entry tasks.
 
 	if sqlExecutor.isTrace {
+		entryTime := time.Now()
 		sqlExecutor.traceEntry(1)
+		defer func() { sqlExecutor.traceExit(2, oid, age, err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
 	sqlStatement := "SELECT c.oid::regclass, age(c.relfrozenxid), pg_size_pretty(pg_total_relation_size(c.oid)) FROM pg_class c JOIN pg_namespace n on c.relnamespace = n.oid WHERE relkind IN ('r', 't', 'm') AND n.nspname NOT IN ('pg_toast') ORDER BY 2 DESC LIMIT 1;"
 
 	// Open a database connection.
 
 	database := sql.OpenDB(sqlExecutor.DatabaseConnector)
 	defer database.Close()
-	err := database.PingContext(ctx)
+	err = database.PingContext(ctx)
 	if err != nil {
 		return "", 0, err
 	}
@@ -135,9 +137,7 @@ func (sqlExecutor *PostgresqlImpl) GetCurrentWatermark(ctx context.Context) (str
 			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8001, err, details)
 		}()
 	}
-	if sqlExecutor.isTrace {
-		defer sqlExecutor.traceExit(2, oid, age, err, time.Since(entryTime))
-	}
+
 	return oid, age, err
 }
 
@@ -148,15 +148,18 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (sqlExecutor *PostgresqlImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+func (sqlExecutor *BasicPostgresql) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	var err error
+
 	if sqlExecutor.isTrace {
+		entryTime := time.Now()
 		sqlExecutor.traceEntry(3, observer.GetObserverID(ctx))
+		defer func() { sqlExecutor.traceExit(4, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
 	if sqlExecutor.observers == nil {
 		sqlExecutor.observers = &subject.SimpleSubject{}
 	}
-	err := sqlExecutor.observers.RegisterObserver(ctx, observer)
+	err = sqlExecutor.observers.RegisterObserver(ctx, observer)
 	if sqlExecutor.observers != nil {
 		go func() {
 			details := map[string]string{
@@ -165,9 +168,7 @@ func (sqlExecutor *PostgresqlImpl) RegisterObserver(ctx context.Context, observe
 			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8002, err, details)
 		}()
 	}
-	if sqlExecutor.isTrace {
-		defer sqlExecutor.traceExit(4, observer.GetObserverID(ctx), err, time.Since(entryTime))
-	}
+
 	return err
 }
 
@@ -178,12 +179,14 @@ Input
   - ctx: A context to control lifecycle.
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
-func (sqlExecutor *PostgresqlImpl) SetLogLevel(ctx context.Context, logLevelName string) error {
+func (sqlExecutor *BasicPostgresql) SetLogLevel(ctx context.Context, logLevelName string) error {
+	var err error
+
 	if sqlExecutor.isTrace {
+		entryTime := time.Now()
 		sqlExecutor.traceEntry(5, logLevelName)
+		defer func() { sqlExecutor.traceExit(6, logLevelName, err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
-	var err error = nil
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = sqlExecutor.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
@@ -201,9 +204,7 @@ func (sqlExecutor *PostgresqlImpl) SetLogLevel(ctx context.Context, logLevelName
 	} else {
 		err = fmt.Errorf("invalid error level: %s", logLevelName)
 	}
-	if sqlExecutor.isTrace {
-		defer sqlExecutor.traceExit(6, logLevelName, err, time.Since(entryTime))
-	}
+
 	return err
 }
 
@@ -214,8 +215,8 @@ Input
   - ctx: A context to control lifecycle.
   - origin: The value sent in the Observer's "origin" key/value pair.
 */
-func (sqlExecutor *PostgresqlImpl) SetObserverOrigin(ctx context.Context, origin string) {
-	var err error = nil
+func (sqlExecutor *BasicPostgresql) SetObserverOrigin(ctx context.Context, origin string) {
+	var err error
 
 	// Prolog.
 
@@ -243,12 +244,12 @@ func (sqlExecutor *PostgresqlImpl) SetObserverOrigin(ctx context.Context, origin
 
 		// If DEBUG, log input parameters. Must be done after establishing DEBUG and TRACE logging.
 
-		asJson, err := json.Marshal(sqlExecutor)
+		asJSON, err := json.Marshal(sqlExecutor)
 		if err != nil {
 			traceExitMessageNumber, debugMessageNumber = 61, 1061
 			return
 		}
-		sqlExecutor.log(1004, sqlExecutor, string(asJson))
+		sqlExecutor.log(1004, sqlExecutor, string(asJSON))
 	}
 
 	// Set origin.
@@ -275,12 +276,14 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (sqlExecutor *PostgresqlImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+func (sqlExecutor *BasicPostgresql) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	var err error
+
 	if sqlExecutor.isTrace {
+		entryTime := time.Now()
 		sqlExecutor.traceEntry(7, observer.GetObserverID(ctx))
+		defer func() { sqlExecutor.traceExit(8, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
-	entryTime := time.Now()
-	var err error = nil
 	if sqlExecutor.observers != nil {
 		// Tricky code:
 		// client.notify is called synchronously before client.observers is set to nil.
@@ -295,8 +298,6 @@ func (sqlExecutor *PostgresqlImpl) UnregisterObserver(ctx context.Context, obser
 	if !sqlExecutor.observers.HasObservers(ctx) {
 		sqlExecutor.observers = nil
 	}
-	if sqlExecutor.isTrace {
-		defer sqlExecutor.traceExit(8, observer.GetObserverID(ctx), err, time.Since(entryTime))
-	}
+
 	return err
 }

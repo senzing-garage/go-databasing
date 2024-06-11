@@ -13,6 +13,53 @@ import (
 )
 
 // ----------------------------------------------------------------------------
+// Test interface functions
+// ----------------------------------------------------------------------------
+
+func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
+	ctx := context.TODO()
+	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	err := refreshSqliteDatabase(sqliteDatabaseFilename)
+	require.NoError(test, err)
+	observer1 := &observer.NullObserver{
+		ID:       "Observer 1",
+		IsSilent: true,
+	}
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	require.NoError(test, err)
+	testObject := &BasicSQLExecutor{
+		DatabaseConnector: databaseConnector,
+	}
+	err = testObject.RegisterObserver(ctx, observer1)
+	require.NoError(test, err)
+	testObject.SetObserverOrigin(ctx, "Test")
+	err = testObject.ProcessFileName(ctx, sqlFilename)
+	require.NoError(test, err)
+}
+
+func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
+	ctx := context.TODO()
+	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	err := refreshSqliteDatabase(sqliteDatabaseFilename)
+	require.NoError(test, err)
+	file, err := os.Open(sqlFilename)
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+	require.NoError(test, err)
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	require.NoError(test, err)
+	testObject := &BasicSQLExecutor{
+		DatabaseConnector: databaseConnector,
+	}
+	err = testObject.ProcessScanner(ctx, bufio.NewScanner(file))
+	require.NoError(test, err)
+}
+
+// ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------
 
@@ -31,12 +78,12 @@ func TestMain(m *testing.M) {
 }
 
 func setup() error {
-	var err error = nil
+	var err error
 	return err
 }
 
 func teardown() error {
-	var err error = nil
+	var err error
 	return err
 }
 
@@ -55,52 +102,4 @@ func refreshSqliteDatabase(databaseFilename string) error {
 	}
 	file.Close()
 	return nil
-}
-
-// ----------------------------------------------------------------------------
-// Test interface functions
-// ----------------------------------------------------------------------------
-
-func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
-	ctx := context.TODO()
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
-	err := refreshSqliteDatabase(sqliteDatabaseFilename)
-	require.NoError(test, err)
-	observer1 := &observer.NullObserver{
-		ID:       "Observer 1",
-		IsSilent: true,
-	}
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
-	if err != nil {
-		test.Error(err)
-	}
-	testObject := &SqlExecutorImpl{
-		DatabaseConnector: databaseConnector,
-	}
-	err = testObject.RegisterObserver(ctx, observer1)
-	require.NoError(test, err)
-	testObject.SetObserverOrigin(ctx, "Test")
-	err = testObject.ProcessFileName(ctx, sqlFilename)
-	require.NoError(test, err)
-}
-
-func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
-	ctx := context.TODO()
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
-	refreshSqliteDatabase(sqliteDatabaseFilename)
-	file, err := os.Open(sqlFilename)
-	defer func() {
-		err = file.Close()
-		if err != nil {
-			panic(err)
-		}
-	}()
-	require.NoError(test, err)
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
-	require.NoError(test, err)
-	testObject := &SqlExecutorImpl{
-		DatabaseConnector: databaseConnector,
-	}
-	err = testObject.ProcessScanner(ctx, bufio.NewScanner(file))
-	require.NoError(test, err)
 }

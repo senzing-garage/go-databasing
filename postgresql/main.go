@@ -30,7 +30,7 @@ const ComponentID = 6423
 // ----------------------------------------------------------------------------
 
 // Message templates for sqlfiler implementation.
-var IdMessages = map[int]string{
+var IDMessages = map[int]string{
 	1:    "Enter GetCurrentWatermark().",
 	2:    "Exit  GetCurrentWatermark() returned (%s, %d, %v).",
 	3:    "Enter RegisterObserver(%s).",
@@ -46,4 +46,4 @@ var IdMessages = map[int]string{
 }
 
 // Status strings for specific messages.
-var IdStatuses = map[int]string{}
+var IDStatuses = map[int]string{}

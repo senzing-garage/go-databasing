@@ -13,7 +13,7 @@ import (
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
-func ExamplePostgresqlImpl_GetCurrentWatermark() {
+func ExampleBasicPostgresql_GetCurrentWatermark() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/postgresql/postgresql_examples_test.go
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
@@ -22,7 +22,7 @@ func ExamplePostgresqlImpl_GetCurrentWatermark() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	database := &PostgresqlImpl{
+	database := &BasicPostgresql{
 		DatabaseConnector: databaseConnector,
 	}
 	oid, age, err := database.GetCurrentWatermark(ctx)

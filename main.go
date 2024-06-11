@@ -30,9 +30,9 @@ const (
 
 func main() {
 	ctx := context.TODO()
-	var sqlFilename string = ""
-	var databaseUrl string = ""
-	databaseId := Sqlite
+	var sqlFilename string
+	var databaseURL string
+	databaseID := Sqlite
 
 	// Create a silent observer.
 
@@ -55,30 +55,30 @@ func main() {
 
 	// Construct database URL and choose SQL file.
 
-	switch databaseId {
+	switch databaseID {
 	case Sqlite:
-		databaseUrl = sqliteDatabaseUrl
+		databaseURL = sqliteDatabaseURL
 		sqlFilename = gitRepositoryDir + "/testdata/sqlite/g2core-schema-sqlite-create.sql"
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
-		databaseUrl = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
+		databaseURL = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
 		sqlFilename = gitRepositoryDir + "/testdata/postgresql/g2core-schema-postgresql-create.sql"
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-		databaseUrl = "mysql://root:root@localhost/G2" // #nosec G101
+		databaseURL = "mysql://root:root@localhost/G2" // #nosec G101
 		sqlFilename = gitRepositoryDir + "/testdata/mysql/g2core-schema-mysql-create.sql"
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-		databaseUrl = "mysql://sa:Passw0rd@localhost/master"
+		databaseURL = "mysql://sa:Passw0rd@localhost/master"
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/g2core-schema-mssql-create.sql"
 	default:
-		fmt.Printf("Unknown databaseNumber: %d", databaseId)
+		fmt.Printf("Unknown databaseNumber: %d", databaseID)
 		os.Exit(1)
 	}
 
 	// Create database connector.
 
-	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
+	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	if err != nil {
 		fmt.Printf("Could not create a database connector. Error: %v", err)
 		os.Exit(1)
@@ -86,7 +86,7 @@ func main() {
 
 	// Process file of SQL.
 
-	testObject := &sqlexecutor.SqlExecutorImpl{
+	testObject := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = testObject.RegisterObserver(ctx, observer1)
@@ -102,8 +102,8 @@ func main() {
 
 	// PostgreSql only tests.
 
-	if databaseId == Postgresql {
-		postgresClient := &postgresql.PostgresqlImpl{
+	if databaseID == Postgresql {
+		postgresClient := &postgresql.BasicPostgresql{
 			DatabaseConnector: databaseConnector,
 		}
 		err = postgresClient.RegisterObserver(ctx, observer1)

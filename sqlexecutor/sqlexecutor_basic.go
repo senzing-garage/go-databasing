@@ -22,9 +22,9 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// SqlExecutorImpl is the default implementation of the SqlExecutor interface.
-type SqlExecutorImpl struct {
-	DatabaseConnector driver.Connector
+// BasicSQLExecutor is the default implementation of the SqlExecutor interface.
+type BasicSQLExecutor struct {
+	DatabaseConnector driver.Connector `json:"databaseConnector,omitempty"`
 	isTrace           bool
 	logger            logging.Logging
 	observerOrigin    string
@@ -35,11 +35,11 @@ type SqlExecutorImpl struct {
 // Variables
 // ----------------------------------------------------------------------------
 
-var debugOptions []interface{} = []interface{}{
+var debugOptions = []interface{}{
 	&logging.OptionCallerSkip{Value: 5},
 }
 
-var traceOptions []interface{} = []interface{}{
+var traceOptions = []interface{}{
 	&logging.OptionCallerSkip{Value: 5},
 }
 
@@ -50,13 +50,13 @@ var traceOptions []interface{} = []interface{}{
 // --- Logging ----------------------------------------------------------------
 
 // Get the Logger singleton.
-func (sqlExecutor *SqlExecutorImpl) getLogger() logging.Logging {
-	var err error = nil
+func (sqlExecutor *BasicSQLExecutor) getLogger() logging.Logging {
+	var err error
 	if sqlExecutor.logger == nil {
 		options := []interface{}{
 			&logging.OptionCallerSkip{Value: 4},
 		}
-		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IdMessages, options...)
+		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
 		if err != nil {
 			panic(err)
 		}
@@ -65,24 +65,24 @@ func (sqlExecutor *SqlExecutorImpl) getLogger() logging.Logging {
 }
 
 // Log message.
-func (sqlExecutor *SqlExecutorImpl) log(messageNumber int, details ...interface{}) {
+func (sqlExecutor *BasicSQLExecutor) log(messageNumber int, details ...interface{}) {
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Debug.
-func (sqlExecutor *SqlExecutorImpl) debug(messageNumber int, details ...interface{}) {
+func (sqlExecutor *BasicSQLExecutor) debug(messageNumber int, details ...interface{}) {
 	details = append(details, debugOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method entry.
-func (sqlExecutor *SqlExecutorImpl) traceEntry(messageNumber int, details ...interface{}) {
+func (sqlExecutor *BasicSQLExecutor) traceEntry(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
 
 // Trace method exit.
-func (sqlExecutor *SqlExecutorImpl) traceExit(messageNumber int, details ...interface{}) {
+func (sqlExecutor *BasicSQLExecutor) traceExit(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
 }
@@ -98,7 +98,7 @@ Input
   - ctx: A context to control lifecycle.
   - filename: A fully qualified path to a file of SQL statements.
 */
-func (sqlExecutor *SqlExecutorImpl) ProcessFileName(ctx context.Context, filename string) error {
+func (sqlExecutor *BasicSQLExecutor) ProcessFileName(ctx context.Context, filename string) error {
 
 	var err error
 
@@ -147,7 +147,7 @@ Input
   - ctx: A context to control lifecycle.
   - scanner: SQL statements to be processed.
 */
-func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error {
+func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error {
 
 	var (
 		err         error
@@ -175,11 +175,11 @@ func (sqlExecutor *SqlExecutorImpl) ProcessScanner(ctx context.Context, scanner 
 	// Process each scanned line.
 
 	for scanner.Scan() {
-		scanLine += 1
+		scanLine++
 		sqlText := scanner.Text()
 		result, err := database.ExecContext(ctx, sqlText)
 		if err != nil {
-			scanFailure += 1
+			scanFailure++
 			sqlExecutor.log(3001, scanFailure, scanLine, result, err)
 		}
 		if sqlExecutor.observers != nil {
@@ -224,7 +224,7 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (sqlExecutor *SqlExecutorImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+func (sqlExecutor *BasicSQLExecutor) RegisterObserver(ctx context.Context, observer observer.Observer) error {
 	var err error
 
 	if sqlExecutor.isTrace {
@@ -261,7 +261,7 @@ Input
   - ctx: A context to control lifecycle.
   - logLevelName: The desired log level as string: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL" or "PANIC".
 */
-func (sqlExecutor *SqlExecutorImpl) SetLogLevel(ctx context.Context, logLevelName string) error {
+func (sqlExecutor *BasicSQLExecutor) SetLogLevel(ctx context.Context, logLevelName string) error {
 	var err error
 
 	if sqlExecutor.isTrace {
@@ -297,8 +297,8 @@ Input
   - ctx: A context to control lifecycle.
   - origin: The value sent in the Observer's "origin" key/value pair.
 */
-func (sqlExecutor *SqlExecutorImpl) SetObserverOrigin(ctx context.Context, origin string) {
-	var err error = nil
+func (sqlExecutor *BasicSQLExecutor) SetObserverOrigin(ctx context.Context, origin string) {
+	var err error
 
 	// Prolog.
 
@@ -326,12 +326,12 @@ func (sqlExecutor *SqlExecutorImpl) SetObserverOrigin(ctx context.Context, origi
 
 		// If DEBUG, log input parameters. Must be done after establishing DEBUG and TRACE logging.
 
-		asJson, err := json.Marshal(sqlExecutor)
+		asJSON, err := json.Marshal(sqlExecutor)
 		if err != nil {
 			traceExitMessageNumber, debugMessageNumber = 61, 1061
 			return
 		}
-		sqlExecutor.log(1004, sqlExecutor, string(asJson))
+		sqlExecutor.log(1004, sqlExecutor, string(asJSON))
 	}
 
 	// Set origin.
@@ -358,8 +358,8 @@ Input
   - ctx: A context to control lifecycle.
   - observer: The observer to be added.
 */
-func (sqlExecutor *SqlExecutorImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
-	var err error = nil
+func (sqlExecutor *BasicSQLExecutor) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	var err error
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()

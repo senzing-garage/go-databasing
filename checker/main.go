@@ -50,4 +50,4 @@ var IDMessages = map[int]string{
 }
 
 // Status strings for specific messages.
-var IdStatuses = map[int]string{}
+var IDStatuses = map[int]string{}
