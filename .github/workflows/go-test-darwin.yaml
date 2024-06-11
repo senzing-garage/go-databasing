@@ -40,9 +40,9 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
-      # - name: install Docker
-      #   uses: docker-practice/actions-setup-docker@master
-      #   timeout-minutes: 12
+      - name: install Docker
+        uses: docker-practice/actions-setup-docker@master
+        timeout-minutes: 12
 
       - uses: ikalnytskyi/action-setup-postgres@v6
         with:
@@ -55,11 +55,11 @@ jobs:
       # - name: postgreSQL service
       #   run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
 
-      # - name: MsSQL service
-      #   run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+      - name: MsSQL service
+        run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
 
-      # - name: MySQL service
-      #   run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
+      - name: MySQL service
+        run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
 
       - run: mkdir /tmp/sqlite
 
@@ -68,11 +68,11 @@ jobs:
       # - name: run go test
       #   run: go test -v -p 1 ./...
 
-      # - name: run go test - main
-      #   run: go test -v -p 1 ./.
+      - name: run go test - main
+        run: go test -v -p 1 ./.
 
-      # - name: run go test - connector
-      #   run: go test -v -p 1 ./connector
+      - name: run go test - connector
+        run: go test -v -p 1 ./connector
 
       - name: run go test - connectordb2
         run: go test -v -p 1 ./connectordb2
@@ -83,8 +83,8 @@ jobs:
       - name: run go test - connectormysql
         run: go test -v -p 1 ./connectormysql
 
-      # - name: run go test - connectorpostgresql
-      #   run: go test -v -p 1 ./connectorpostgresql
+      - name: run go test - connectorpostgresql
+        run: go test -v -p 1 ./connectorpostgresql
 
       - name: run go test - connectorsqlite
         run: go test -v -p 1 ./connectorsqlite
@@ -92,8 +92,8 @@ jobs:
       - name: run go test - dbhelper
         run: go test -v -p 1 ./dbhelper
 
-      # - name: run go test - postgresql
-      #   run: go test -v -p 1 ./postgresql
+      - name: run go test - postgresql
+        run: go test -v -p 1 ./postgresql
 
       - name: run go test - sqlexecutor
         run: go test -v -p 1 ./sqlexecutor
