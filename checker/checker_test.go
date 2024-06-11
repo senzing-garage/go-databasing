@@ -12,51 +12,6 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-// Test harness
-// ----------------------------------------------------------------------------
-
-func TestMain(m *testing.M) {
-	err := setup()
-	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
-	}
-	code := m.Run()
-	err = teardown()
-	if err != nil {
-		fmt.Print(err)
-	}
-	os.Exit(code)
-}
-
-func setup() error {
-	var err error
-	return err
-}
-
-func teardown() error {
-	var err error
-	return err
-}
-
-// ----------------------------------------------------------------------------
-// Utility functions
-// ----------------------------------------------------------------------------
-
-func refreshSqliteDatabase(databaseFilename string) error {
-	err := os.Remove(databaseFilename)
-	if err != nil {
-		fmt.Printf("When removing %s got error: %v\n", databaseFilename, err)
-	}
-	file, err := os.Create(databaseFilename)
-	if err != nil {
-		fmt.Printf("When creating %s got error: %v\n", databaseFilename, err)
-	}
-	file.Close()
-	return nil
-}
-
-// ----------------------------------------------------------------------------
 // Test interface functions
 // ----------------------------------------------------------------------------
 
@@ -100,4 +55,49 @@ func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
 	}
 	_, err = testObject.IsSchemaInstalled(ctx)
 	require.Error(test, err, "An error should have been returned")
+}
+
+// ----------------------------------------------------------------------------
+// Test harness
+// ----------------------------------------------------------------------------
+
+func TestMain(m *testing.M) {
+	err := setup()
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
+	code := m.Run()
+	err = teardown()
+	if err != nil {
+		fmt.Print(err)
+	}
+	os.Exit(code)
+}
+
+func setup() error {
+	var err error
+	return err
+}
+
+func teardown() error {
+	var err error
+	return err
+}
+
+// ----------------------------------------------------------------------------
+// Utility functions
+// ----------------------------------------------------------------------------
+
+func refreshSqliteDatabase(databaseFilename string) error {
+	err := os.Remove(databaseFilename)
+	if err != nil {
+		fmt.Printf("When removing %s got error: %v\n", databaseFilename, err)
+	}
+	file, err := os.Create(databaseFilename)
+	if err != nil {
+		fmt.Printf("When creating %s got error: %v\n", databaseFilename, err)
+	}
+	file.Close()
+	return nil
 }

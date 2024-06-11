@@ -27,8 +27,7 @@ func ExampleBasicChecker_IsSchemaInstalled() {
 	testObject := &BasicChecker{
 		DatabaseConnector: databaseConnector,
 	}
-	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
-	printErr(err)
+	isSchemaInstalled, _ := testObject.IsSchemaInstalled(ctx)
 	fmt.Printf("isSchemaInstalled: %t", isSchemaInstalled)
 	// Output: isSchemaInstalled: false
 }
