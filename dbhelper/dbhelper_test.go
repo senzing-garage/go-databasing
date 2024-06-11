@@ -1,11 +1,10 @@
 package dbhelper
 
 import (
-	"fmt"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type testCaseMetadata struct {
@@ -56,6 +55,11 @@ var testCasesForMultiPlatform = []testCaseMetadata{
 		databaseURL: "postgresql://username:password@hostname:5432/G2/?schema=schemaname",
 		succeeds:    false,
 	},
+	{
+		name:        "sqlite-001",
+		databaseURL: "sqlite3://na:na@/tmp/sqlite/G2C.db",
+		succeeds:    true,
+	},
 }
 
 var testCases = append(testCasesForMultiPlatform, testCasesForOsArch...)
@@ -68,7 +72,11 @@ func TestExtractSqliteDatabaseFilename(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			result, err := ExtractSqliteDatabaseFilename(testCase.databaseURL)
-			testError(test, err, testCase.succeeds)
+			if testCase.succeeds {
+				require.NoError(test, err)
+			} else {
+				require.Error(test, err)
+			}
 			if len(testCase.databaseFilename) > 0 {
 				assert.Equal(test, testCase.databaseFilename, result)
 			}
@@ -76,47 +84,8 @@ func TestExtractSqliteDatabaseFilename(test *testing.T) {
 	}
 }
 
-// ----------------------------------------------------------------------------
-// Test harness
-// ----------------------------------------------------------------------------
-
-func TestMain(m *testing.M) {
-	err := setup()
-	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
-	}
-	code := m.Run()
-	err = teardown()
-	if err != nil {
-		fmt.Print(err)
-	}
-	os.Exit(code)
-}
-
-func setup() error {
-	var err error
-	return err
-}
-
-func teardown() error {
-	var err error
-	return err
-}
-
-// ----------------------------------------------------------------------------
-// Internal functions
-// ----------------------------------------------------------------------------
-
-func testError(test *testing.T, err error, succeeds bool) {
-	if succeeds {
-		if err != nil {
-			assert.FailNow(test, err.Error())
-		}
-	} else {
-		if err == nil {
-			assert.FailNow(test, "failure was expected")
-		}
-	}
-
+func TestGetMessenger(test *testing.T) {
+	_ = test
+	options := []interface{}{}
+	_ = GetMessenger(1, map[int]string{}, 0, options...)
 }

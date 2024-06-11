@@ -54,7 +54,8 @@ func (sqlExecutor *BasicSQLExecutor) getLogger() logging.Logging {
 	var err error
 	if sqlExecutor.logger == nil {
 		options := []interface{}{
-			&logging.OptionCallerSkip{Value: 4},
+			logging.OptionCallerSkip{Value: 4},
+			logging.OptionMessageFields{Value: []string{"id", "text"}},
 		}
 		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
 		if err != nil {

@@ -12,32 +12,28 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	observerSingleton = &observer.NullObserver{
+		ID:       "Observer 1",
+		IsSilent: true,
+	}
+)
+
 // ----------------------------------------------------------------------------
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestSqlExecutorImpl_ProcessFileName(test *testing.T) {
+func TestBasicSQLExecutor_ProcessFileName(test *testing.T) {
 	ctx := context.TODO()
 	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(sqliteDatabaseFilename)
 	require.NoError(test, err)
-	observer1 := &observer.NullObserver{
-		ID:       "Observer 1",
-		IsSilent: true,
-	}
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
-	require.NoError(test, err)
-	testObject := &BasicSQLExecutor{
-		DatabaseConnector: databaseConnector,
-	}
-	err = testObject.RegisterObserver(ctx, observer1)
-	require.NoError(test, err)
-	testObject.SetObserverOrigin(ctx, "Test")
+	testObject := getTestObject(ctx, test)
 	err = testObject.ProcessFileName(ctx, sqlFilename)
 	require.NoError(test, err)
 }
 
-func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
+func TestBasicSQLExecutor_ProcessScanner(test *testing.T) {
 	ctx := context.TODO()
 	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(sqliteDatabaseFilename)
@@ -50,46 +46,65 @@ func TestSqlExecutorImpl_ProcessScanner(test *testing.T) {
 		}
 	}()
 	require.NoError(test, err)
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
-	require.NoError(test, err)
-	testObject := &BasicSQLExecutor{
-		DatabaseConnector: databaseConnector,
-	}
+	testObject := getTestObject(ctx, test)
 	err = testObject.ProcessScanner(ctx, bufio.NewScanner(file))
 	require.NoError(test, err)
 }
 
+func TestBasicSQLExecutor_RegisterObserver(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.RegisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+}
+
+func TestBasicSQLExecutor_SetLogLevel(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.SetLogLevel(ctx, "DEBUG")
+	require.NoError(test, err)
+}
+
+func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
+	require.Error(test, err)
+}
+
+func TestBasicSQLExecutor_SetObserverOrigin(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	testObject.SetObserverOrigin(ctx, "Test observer origin")
+}
+
+func TestBasicSQLExecutor_UnregisterObserver(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.UnregisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+}
+
 // ----------------------------------------------------------------------------
-// Test harness
+// Internal functions
 // ----------------------------------------------------------------------------
 
-func TestMain(m *testing.M) {
-	err := setup()
-	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
+func getBasicSQLExecutor(ctx context.Context, test *testing.T) *BasicSQLExecutor {
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	require.NoError(test, err)
+	result := &BasicSQLExecutor{
+		DatabaseConnector: databaseConnector,
 	}
-	code := m.Run()
-	err = teardown()
-	if err != nil {
-		fmt.Print(err)
-	}
-	os.Exit(code)
+	err = result.RegisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+	err = result.SetLogLevel(ctx, "TRACE")
+	require.NoError(test, err)
+	return result
 }
 
-func setup() error {
-	var err error
-	return err
+func getTestObject(ctx context.Context, test *testing.T) SQLExecutor {
+	return getBasicSQLExecutor(ctx, test)
 }
-
-func teardown() error {
-	var err error
-	return err
-}
-
-// ----------------------------------------------------------------------------
-// Utility functions
-// ----------------------------------------------------------------------------
 
 func refreshSqliteDatabase(databaseFilename string) error {
 	err := os.Remove(databaseFilename)

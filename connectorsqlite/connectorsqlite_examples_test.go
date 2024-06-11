@@ -5,6 +5,12 @@ import (
 	"fmt"
 )
 
+func printErr(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
@@ -14,8 +20,7 @@ func ExampleNewConnector() {
 	ctx := context.TODO()
 	configuration := "/tmp/sqlite/G2C.db"
 	databaseConnector, err := NewConnector(ctx, configuration)
-	if err != nil {
-		fmt.Println(err, databaseConnector)
-	}
+	printErr(err)
+	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
 }
