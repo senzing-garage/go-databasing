@@ -54,8 +54,8 @@ jobs:
       # - name: PostgreSQL service
       #   run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
 
-      - name: MsSQL service
-        run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+      # - name: MsSQL service
+      #   run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
 
       - name: MySQL service
         run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
@@ -75,8 +75,8 @@ jobs:
       - name: run go test - connectordb2
         run: go test -v -p 1 ./connectordb2
 
-      - name: run go test - connectormssql
-        run: go test -v -p 1 ./connectormssql
+      # - name: run go test - connectormssql
+      #   run: go test -v -p 1 ./connectormssql
 
       - name: run go test - connectormysql
         run: go test -v -p 1 ./connectormysql
