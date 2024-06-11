@@ -44,51 +44,6 @@ var traceOptions = []interface{}{
 }
 
 // ----------------------------------------------------------------------------
-// Internal methods
-// ----------------------------------------------------------------------------
-
-// --- Logging ----------------------------------------------------------------
-
-// Get the Logger singleton.
-func (sqlExecutor *BasicSQLExecutor) getLogger() logging.Logging {
-	var err error
-	if sqlExecutor.logger == nil {
-		options := []interface{}{
-			logging.OptionCallerSkip{Value: 4},
-			logging.OptionMessageFields{Value: []string{"id", "text"}},
-		}
-		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
-		if err != nil {
-			panic(err)
-		}
-	}
-	return sqlExecutor.logger
-}
-
-// Log message.
-func (sqlExecutor *BasicSQLExecutor) log(messageNumber int, details ...interface{}) {
-	sqlExecutor.getLogger().Log(messageNumber, details...)
-}
-
-// Debug.
-func (sqlExecutor *BasicSQLExecutor) debug(messageNumber int, details ...interface{}) {
-	details = append(details, debugOptions...)
-	sqlExecutor.getLogger().Log(messageNumber, details...)
-}
-
-// Trace method entry.
-func (sqlExecutor *BasicSQLExecutor) traceEntry(messageNumber int, details ...interface{}) {
-	details = append(details, traceOptions...)
-	sqlExecutor.getLogger().Log(messageNumber, details...)
-}
-
-// Trace method exit.
-func (sqlExecutor *BasicSQLExecutor) traceExit(messageNumber int, details ...interface{}) {
-	details = append(details, traceOptions...)
-	sqlExecutor.getLogger().Log(messageNumber, details...)
-}
-
-// ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
@@ -393,4 +348,49 @@ func (sqlExecutor *BasicSQLExecutor) UnregisterObserver(ctx context.Context, obs
 	// Epilog.
 
 	return err
+}
+
+// ----------------------------------------------------------------------------
+// Internal methods
+// ----------------------------------------------------------------------------
+
+// --- Logging ----------------------------------------------------------------
+
+// Get the Logger singleton.
+func (sqlExecutor *BasicSQLExecutor) getLogger() logging.Logging {
+	var err error
+	if sqlExecutor.logger == nil {
+		options := []interface{}{
+			logging.OptionCallerSkip{Value: 4},
+			logging.OptionMessageFields{Value: []string{"id", "text"}},
+		}
+		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return sqlExecutor.logger
+}
+
+// Log message.
+func (sqlExecutor *BasicSQLExecutor) log(messageNumber int, details ...interface{}) {
+	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
+// Debug.
+func (sqlExecutor *BasicSQLExecutor) debug(messageNumber int, details ...interface{}) {
+	details = append(details, debugOptions...)
+	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
+// Trace method entry.
+func (sqlExecutor *BasicSQLExecutor) traceEntry(messageNumber int, details ...interface{}) {
+	details = append(details, traceOptions...)
+	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
+// Trace method exit.
+func (sqlExecutor *BasicSQLExecutor) traceExit(messageNumber int, details ...interface{}) {
+	details = append(details, traceOptions...)
+	sqlExecutor.getLogger().Log(messageNumber, details...)
 }

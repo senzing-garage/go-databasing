@@ -31,3 +31,16 @@ func ExampleBasicChecker_IsSchemaInstalled() {
 	fmt.Printf("isSchemaInstalled: %t", isSchemaInstalled)
 	// Output: isSchemaInstalled: false
 }
+
+func ExampleBasicChecker_RecordCount() {
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/checker/checker_examples_test.go
+	ctx := context.TODO()
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	printErr(err)
+	testObject := &BasicChecker{
+		DatabaseConnector: databaseConnector,
+	}
+	recordCount, err := testObject.RecordCount(ctx)
+	printErr(err)
+	_ = recordCount // Faux use of recordCount
+}

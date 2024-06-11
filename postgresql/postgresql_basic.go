@@ -41,48 +41,6 @@ var traceOptions = []interface{}{
 }
 
 // ----------------------------------------------------------------------------
-// Internal methods
-// ----------------------------------------------------------------------------
-
-// Get the Logger singleton.
-func (sqlExecutor *BasicPostgresql) getLogger() logging.Logging {
-	var err error
-	if sqlExecutor.logger == nil {
-		options := []interface{}{
-			&logging.OptionCallerSkip{Value: 4},
-		}
-		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
-		if err != nil {
-			panic(err)
-		}
-	}
-	return sqlExecutor.logger
-}
-
-// Log message.
-func (sqlExecutor *BasicPostgresql) log(messageNumber int, details ...interface{}) {
-	sqlExecutor.getLogger().Log(messageNumber, details...)
-}
-
-// Debug.
-func (sqlExecutor *BasicPostgresql) debug(messageNumber int, details ...interface{}) {
-	details = append(details, debugOptions...)
-	sqlExecutor.getLogger().Log(messageNumber, details...)
-}
-
-// Trace method entry.
-func (sqlExecutor *BasicPostgresql) traceEntry(messageNumber int, details ...interface{}) {
-	details = append(details, traceOptions...)
-	sqlExecutor.getLogger().Log(messageNumber, details...)
-}
-
-// Trace method exit.
-func (sqlExecutor *BasicPostgresql) traceExit(messageNumber int, details ...interface{}) {
-	details = append(details, traceOptions...)
-	sqlExecutor.getLogger().Log(messageNumber, details...)
-}
-
-// ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
@@ -300,4 +258,46 @@ func (sqlExecutor *BasicPostgresql) UnregisterObserver(ctx context.Context, obse
 	}
 
 	return err
+}
+
+// ----------------------------------------------------------------------------
+// Internal methods
+// ----------------------------------------------------------------------------
+
+// Get the Logger singleton.
+func (sqlExecutor *BasicPostgresql) getLogger() logging.Logging {
+	var err error
+	if sqlExecutor.logger == nil {
+		options := []interface{}{
+			&logging.OptionCallerSkip{Value: 4},
+		}
+		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return sqlExecutor.logger
+}
+
+// Log message.
+func (sqlExecutor *BasicPostgresql) log(messageNumber int, details ...interface{}) {
+	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
+// Debug.
+func (sqlExecutor *BasicPostgresql) debug(messageNumber int, details ...interface{}) {
+	details = append(details, debugOptions...)
+	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
+// Trace method entry.
+func (sqlExecutor *BasicPostgresql) traceEntry(messageNumber int, details ...interface{}) {
+	details = append(details, traceOptions...)
+	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
+// Trace method exit.
+func (sqlExecutor *BasicPostgresql) traceExit(messageNumber int, details ...interface{}) {
+	details = append(details, traceOptions...)
+	sqlExecutor.getLogger().Log(messageNumber, details...)
 }

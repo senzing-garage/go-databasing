@@ -45,45 +45,6 @@ var traceOptions = []interface{}{
 }
 
 // ----------------------------------------------------------------------------
-// Internal methods
-// ----------------------------------------------------------------------------
-
-// Get the Logger singleton.
-func (schemaChecker *BasicChecker) getLogger() logging.Logging {
-	var err error
-	if schemaChecker.logger == nil {
-		schemaChecker.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, baseCallerSkip)
-		if err != nil {
-			panic(err)
-		}
-	}
-	return schemaChecker.logger
-}
-
-// Log message.
-func (schemaChecker *BasicChecker) log(messageNumber int, details ...interface{}) {
-	schemaChecker.getLogger().Log(messageNumber, details...)
-}
-
-// Debug.
-func (schemaChecker *BasicChecker) debug(messageNumber int, details ...interface{}) {
-	details = append(details, debugOptions...)
-	schemaChecker.getLogger().Log(messageNumber, details...)
-}
-
-// Trace method entry.
-func (schemaChecker *BasicChecker) traceEntry(messageNumber int, details ...interface{}) {
-	details = append(details, traceOptions...)
-	schemaChecker.getLogger().Log(messageNumber, details...)
-}
-
-// Trace method exit.
-func (schemaChecker *BasicChecker) traceExit(messageNumber int, details ...interface{}) {
-	details = append(details, traceOptions...)
-	schemaChecker.getLogger().Log(messageNumber, details...)
-}
-
-// ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
@@ -343,4 +304,43 @@ func (schemaChecker *BasicChecker) UnregisterObserver(ctx context.Context, obser
 	}
 
 	return err
+}
+
+// ----------------------------------------------------------------------------
+// Internal methods
+// ----------------------------------------------------------------------------
+
+// Get the Logger singleton.
+func (schemaChecker *BasicChecker) getLogger() logging.Logging {
+	var err error
+	if schemaChecker.logger == nil {
+		schemaChecker.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, baseCallerSkip)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return schemaChecker.logger
+}
+
+// Log message.
+func (schemaChecker *BasicChecker) log(messageNumber int, details ...interface{}) {
+	schemaChecker.getLogger().Log(messageNumber, details...)
+}
+
+// Debug.
+func (schemaChecker *BasicChecker) debug(messageNumber int, details ...interface{}) {
+	details = append(details, debugOptions...)
+	schemaChecker.getLogger().Log(messageNumber, details...)
+}
+
+// Trace method entry.
+func (schemaChecker *BasicChecker) traceEntry(messageNumber int, details ...interface{}) {
+	details = append(details, traceOptions...)
+	schemaChecker.getLogger().Log(messageNumber, details...)
+}
+
+// Trace method exit.
+func (schemaChecker *BasicChecker) traceExit(messageNumber int, details ...interface{}) {
+	details = append(details, traceOptions...)
+	schemaChecker.getLogger().Log(messageNumber, details...)
 }

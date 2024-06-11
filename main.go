@@ -29,7 +29,7 @@ const (
 // ----------------------------------------------------------------------------
 
 func main() {
-	databaseIDs := []int{Sqlite, Postgresql, Mysql}
+	databaseIDs := []int{Sqlite, Postgresql, Mysql, Mssql}
 	printStatementTemplate := "\n==== %11s ==========================\n\n"
 	for _, databaseID := range databaseIDs {
 		switch databaseID {
@@ -86,7 +86,7 @@ func demonstrateDatabase(databaseID int) {
 		sqlFilename = gitRepositoryDir + "/testdata/mysql/g2core-schema-mysql-create.sql"
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-		databaseURL = "mysql://sa:Passw0rd@localhost/master"
+		databaseURL = "mssql://sa:Passw0rd@localhost/master"
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/g2core-schema-mssql-create.sql"
 	default:
 		exitOnError(fmt.Errorf("unknown databaseNumber: %d", databaseID))
