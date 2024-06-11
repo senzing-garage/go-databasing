@@ -244,7 +244,7 @@ func (sqlExecutor *BasicPostgresql) SetObserverOrigin(ctx context.Context, origi
 
 		// If DEBUG, log input parameters. Must be done after establishing DEBUG and TRACE logging.
 
-		asJSON, err := json.Marshal(sqlExecutor)
+		asJSON, err := json.Marshal(sqlExecutor) //nolint:musttag
 		if err != nil {
 			traceExitMessageNumber, debugMessageNumber = 61, 1061
 			return

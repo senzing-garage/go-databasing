@@ -288,7 +288,7 @@ func (schemaChecker *BasicChecker) SetObserverOrigin(ctx context.Context, origin
 
 		// If DEBUG, log input parameters. Must be done after establishing DEBUG and TRACE logging.
 
-		asJSON, err := json.Marshal(schemaChecker)
+		asJSON, err := json.Marshal(schemaChecker) //nolint:musttag
 		if err != nil {
 			traceExitMessageNumber, debugMessageNumber = 61, 1061
 			return
