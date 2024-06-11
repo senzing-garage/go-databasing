@@ -76,4 +76,3 @@ jobs:
     name: coverage
     needs: go-test-linux
     uses: senzing-factory/build-resources/.github/workflows/go-coverage.yaml@v2
-        

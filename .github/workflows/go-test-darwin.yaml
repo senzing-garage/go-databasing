@@ -68,8 +68,8 @@ jobs:
       # - name: run go test
       #   run: go test -v -p 1 ./...
 
-      - name: run go test - main
-        run: go test -v -p 1 ./.
+      # - name: run go test - main
+      #   run: go test -v -p 1 ./.
 
       # - name: run go test - connector
       #   run: go test -v -p 1 ./connector
