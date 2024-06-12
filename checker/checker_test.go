@@ -8,40 +8,123 @@ import (
 
 	"github.com/senzing-garage/go-databasing/connector"
 	"github.com/senzing-garage/go-databasing/sqlexecutor"
-	"github.com/stretchr/testify/assert"
+	"github.com/senzing-garage/go-observing/observer"
+	"github.com/stretchr/testify/require"
+)
+
+var (
+	observerSingleton = &observer.NullObserver{
+		ID:       "Observer 1",
+		IsSilent: true,
+	}
 )
 
 // ----------------------------------------------------------------------------
-// Test harness
+// Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestMain(m *testing.M) {
-	err := setup()
-	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
+func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
+	ctx := context.TODO()
+
+	// Make a fresh database and create Senzing schema.
+
+	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	err := refreshSqliteDatabase(sqliteDatabaseFilename)
+	require.NoError(test, err)
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	require.NoError(test, err)
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
+		DatabaseConnector: databaseConnector,
 	}
-	code := m.Run()
-	err = teardown()
-	if err != nil {
-		fmt.Print(err)
+	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
+	require.NoError(test, err)
+
+	// Perform test.
+
+	testObject := getTestObject(ctx, test)
+	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
+	if isSchemaInstalled {
+		require.NoError(test, err)
+	} else {
+		require.Error(test, err, "An error should have been returned")
 	}
-	os.Exit(code)
 }
 
-func setup() error {
-	var err error = nil
-	return err
+func TestBasicChecker_RecordCount(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	_, err := testObject.RecordCount(ctx)
+	require.NoError(test, err)
 }
 
-func teardown() error {
-	var err error = nil
-	return err
+func TestBasicChecker_RegisterObserver(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.RegisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+}
+
+func TestBasicChecker_SetLogLevel(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.SetLogLevel(ctx, "DEBUG")
+	require.NoError(test, err)
+}
+
+func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
+	require.Error(test, err)
+}
+
+func TestBasicChecker_SetObserverOrigin(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	testObject.SetObserverOrigin(ctx, "Test observer origin")
+}
+
+func TestBasicChecker_UnregisterObserver(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+
+	// TODO:  This needs to be removed.
+	err := testObject.RegisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+
+	err = testObject.UnregisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+}
+
+func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
+	ctx := context.TODO()
+	err := refreshSqliteDatabase(sqliteDatabaseFilename)
+	require.NoError(test, err)
+	testObject := getTestObject(ctx, test)
+	_, err = testObject.IsSchemaInstalled(ctx)
+	require.Error(test, err, "An error should have been returned")
 }
 
 // ----------------------------------------------------------------------------
-// Utility functions
+// Internal functions
 // ----------------------------------------------------------------------------
+
+func getBasicChecker(ctx context.Context, test *testing.T) *BasicChecker {
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	require.NoError(test, err)
+	result := &BasicChecker{
+		DatabaseConnector: databaseConnector,
+	}
+	err = result.RegisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+	err = result.SetLogLevel(ctx, "TRACE")
+	require.NoError(test, err)
+	return result
+}
+
+func getTestObject(ctx context.Context, test *testing.T) Checker {
+	return getBasicChecker(ctx, test)
+}
 
 func refreshSqliteDatabase(databaseFilename string) error {
 	err := os.Remove(databaseFilename)
@@ -54,72 +137,4 @@ func refreshSqliteDatabase(databaseFilename string) error {
 	}
 	file.Close()
 	return nil
-}
-
-// ----------------------------------------------------------------------------
-// Test interface functions
-// ----------------------------------------------------------------------------
-
-func TestCheckerImpl_IsSchemaInstalled_True(test *testing.T) {
-	ctx := context.TODO()
-
-	// Make a fresh database and create Senzing schema.
-
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
-	refreshSqliteDatabase(sqliteDatabaseFilename)
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseUrl)
-	if err != nil {
-		test.Error(err)
-	}
-	sqlExecutor := &sqlexecutor.SqlExecutorImpl{
-		DatabaseConnector: databaseConnector,
-	}
-	sqlExecutor.ProcessFileName(ctx, sqlFilename)
-
-	// Perform test.
-
-	testObject := &CheckerImpl{
-		DatabaseConnector: databaseConnector,
-	}
-	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
-	if isSchemaInstalled {
-		if err != nil {
-			assert.FailNow(test, err.Error())
-		}
-	} else {
-		if err == nil {
-			assert.FailNow(test, "An error should have been returned")
-		}
-	}
-}
-
-func TestCheckerImpl_IsSchemaInstalled_False(test *testing.T) {
-	ctx := context.TODO()
-
-	// Make a fresh database with no Senzing schema.
-
-	refreshSqliteDatabase(sqliteDatabaseFilename)
-
-	// Test.
-
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseUrl)
-	if err != nil {
-		test.Error(err)
-	}
-	testObject := &CheckerImpl{
-		DatabaseConnector: databaseConnector,
-	}
-	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
-	if isSchemaInstalled {
-		if err != nil {
-			assert.FailNow(test, err.Error())
-		} else {
-			assert.FailNow(test, "Schema is not installed")
-		}
-	} else {
-		if err == nil {
-			assert.FailNow(test, "Error should have been returned")
-		}
-	}
-
 }

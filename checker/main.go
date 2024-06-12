@@ -24,14 +24,14 @@ type Checker interface {
 // ----------------------------------------------------------------------------
 
 // Identfier of the  package found messages having the format "senzing-6423xxxx".
-const ComponentId = 6424
+const ComponentID = 6424
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
 // Message templates for sqlfiler implementation.
-var IdMessages = map[int]string{
+var IDMessages = map[int]string{
 	1:    "Enter IsSchemaInstalled().",
 	2:    "Exit  IsSchemaInstalled() returned (%i).",
 	3:    "Enter RegisterObserver(%s).",
@@ -50,4 +50,4 @@ var IdMessages = map[int]string{
 }
 
 // Status strings for specific messages.
-var IdStatuses = map[int]string{}
+var IDStatuses = map[int]string{}

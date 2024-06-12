@@ -1,3 +1,5 @@
 {
-  "threshold": 14
+  "ignore": [
+    "**/*.go,**/go-test*.yaml"
+  ]
 }

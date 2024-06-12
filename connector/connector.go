@@ -26,16 +26,16 @@ Input
   - databaseUrl: A properly formed URL containing database connection information
     For acceptable database URLs, see https://....
 */
-func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, error) {
-	var result driver.Connector = nil
+func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
+	var result driver.Connector
 
-	parsedUrl, err := url.Parse(databaseUrl)
+	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 
-		if strings.HasPrefix(databaseUrl, "postgresql") {
-			index := strings.LastIndex(databaseUrl, ":")
-			newDatabaseUrl := databaseUrl[:index] + "/" + databaseUrl[index+1:]
-			parsedUrl, err = url.Parse(newDatabaseUrl)
+		if strings.HasPrefix(databaseURL, "postgresql") {
+			index := strings.LastIndex(databaseURL, ":")
+			newDatabaseURL := databaseURL[:index] + "/" + databaseURL[index+1:]
+			parsedURL, err = url.Parse(newDatabaseURL)
 		}
 
 		if err != nil {
@@ -45,13 +45,13 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 
 	// Parse URL: https://pkg.go.dev/net/url#URL
 
-	scheme := parsedUrl.Scheme
-	username := parsedUrl.User.Username()
-	password, isPasswordSet := parsedUrl.User.Password()
-	path := parsedUrl.Path
+	scheme := parsedURL.Scheme
+	username := parsedURL.User.Username()
+	password, isPasswordSet := parsedURL.User.Password()
+	path := parsedURL.Path
 	// fragment := parsedUrl.Fragment
-	host, port, _ := net.SplitHostPort(parsedUrl.Host)
-	query, err := url.ParseQuery(parsedUrl.RawQuery)
+	host, port, _ := net.SplitHostPort(parsedURL.Host)
+	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
 		return result, err
 	}
@@ -77,18 +77,18 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 			configurationMap["port"] = port
 		}
 		if len(path) > 1 {
-			dbname := strings.Replace(path, "/", "", -1)
+			dbname := strings.ReplaceAll(path, "/", "")
 			configurationMap["dbname"] = dbname
 		}
 		for key, value := range query {
 			configurationMap[key] = value[0]
 		}
-		if search_path, ok := query["schema"]; ok {
-			configurationMap["search_path"] = search_path[0]
+		if searchPath, ok := query["schema"]; ok {
+			configurationMap["search_path"] = searchPath[0]
 		}
 		configuration := ""
 		for key, value := range configurationMap {
-			configuration = configuration + fmt.Sprintf("%s=%s ", key, value)
+			configuration += fmt.Sprintf("%s=%s ", key, value)
 		}
 		result, err = connectorpostgresql.NewConnector(ctx, configuration)
 
@@ -108,10 +108,10 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 			configuration.Addr = host
 		}
 		if len(port) > 0 {
-			configuration.Addr = configuration.Addr + fmt.Sprintf(":%s", port)
+			configuration.Addr += fmt.Sprintf(":%s", port)
 		}
 		if len(path) > 1 {
-			dbname := strings.Replace(path, "/", "", -1)
+			dbname := strings.ReplaceAll(path, "/", "")
 			configuration.DBName = dbname
 		} else if schema, ok := query["schema"]; ok {
 			configuration.DBName = schema[0]
@@ -136,7 +136,7 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 			configurationMap["port"] = port
 		}
 		if len(path) > 1 {
-			dbname := strings.Replace(path, "/", "", -1)
+			dbname := strings.ReplaceAll(path, "/", "")
 			configurationMap["database"] = dbname
 		}
 		for key, value := range query {
@@ -144,7 +144,7 @@ func NewConnector(ctx context.Context, databaseUrl string) (driver.Connector, er
 		}
 		configuration := ""
 		for key, value := range configurationMap {
-			configuration = configuration + fmt.Sprintf("%s=%s;", key, value)
+			configuration += fmt.Sprintf("%s=%s;", key, value)
 		}
 		result, err = connectormssql.NewConnector(ctx, configuration)
 

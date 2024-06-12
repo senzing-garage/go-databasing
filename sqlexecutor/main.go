@@ -11,7 +11,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-type SqlExecutor interface {
+type SQLExecutor interface {
 	ProcessFileName(ctx context.Context, filename string) error
 	ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
@@ -25,14 +25,14 @@ type SqlExecutor interface {
 // ----------------------------------------------------------------------------
 
 // Identfier of the  package found messages having the format "senzing-6422xxxx".
-const ComponentId = 6422
+const ComponentID = 6422
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
 // Message templates for sqlfiler implementation.
-var IdMessages = map[int]string{
+var IDMessages = map[int]string{
 	1:    "Enter ProcessFileName(%s).",
 	2:    "Exit  ProcessFileName(%s) returned (%v).",
 	3:    "Enter ProcessScanner().",
@@ -56,4 +56,4 @@ var IdMessages = map[int]string{
 }
 
 // Status strings for specific messages.
-var IdStatuses = map[int]string{}
+var IDStatuses = map[int]string{}

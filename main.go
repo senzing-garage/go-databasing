@@ -29,15 +29,32 @@ const (
 // ----------------------------------------------------------------------------
 
 func main() {
+	databaseIDs := []int{Sqlite, Postgresql, Mysql, Mssql}
+	printStatementTemplate := "\n==== %11s ==========================\n\n"
+	for _, databaseID := range databaseIDs {
+		switch databaseID {
+		case Sqlite:
+			fmt.Printf(printStatementTemplate, "Sqlite")
+		case Postgresql:
+			fmt.Printf(printStatementTemplate, "Postgresql")
+		case Mysql:
+			fmt.Printf(printStatementTemplate, "Mysql")
+		case Mssql:
+			fmt.Printf(printStatementTemplate, "Mssql")
+		}
+		demonstrateDatabase(databaseID)
+	}
+}
+
+func demonstrateDatabase(databaseID int) {
 	ctx := context.TODO()
-	var sqlFilename string = ""
-	var databaseUrl string = ""
-	databaseId := Sqlite
+	var sqlFilename string
+	var databaseURL string
 
 	// Create a silent observer.
 
-	observer1 := &observer.ObserverNull{
-		Id:       "Observer 1",
+	observer1 := &observer.NullObserver{
+		ID:       "Observer 1",
 		IsSilent: true,
 	}
 
@@ -55,76 +72,68 @@ func main() {
 
 	// Construct database URL and choose SQL file.
 
-	switch databaseId {
+	switch databaseID {
 	case Sqlite:
-		databaseUrl = sqliteDatabaseUrl
+		databaseURL = sqliteDatabaseURL
 		sqlFilename = gitRepositoryDir + "/testdata/sqlite/g2core-schema-sqlite-create.sql"
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
-		databaseUrl = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
+		databaseURL = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
 		sqlFilename = gitRepositoryDir + "/testdata/postgresql/g2core-schema-postgresql-create.sql"
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-		databaseUrl = "mysql://root:root@localhost/G2" // #nosec G101
+		databaseURL = "mysql://root:root@localhost/G2" // #nosec G101
 		sqlFilename = gitRepositoryDir + "/testdata/mysql/g2core-schema-mysql-create.sql"
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-		databaseUrl = "mysql://sa:Passw0rd@localhost/master"
+		databaseURL = "mssql://sa:Passw0rd@localhost/master"
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/g2core-schema-mssql-create.sql"
 	default:
-		fmt.Printf("Unknown databaseNumber: %d", databaseId)
-		os.Exit(1)
+		exitOnError(fmt.Errorf("unknown databaseNumber: %d", databaseID))
 	}
 
 	// Create database connector.
 
-	databaseConnector, err := connector.NewConnector(ctx, databaseUrl)
-	if err != nil {
-		fmt.Printf("Could not create a database connector. Error: %v", err)
-		os.Exit(1)
-	}
+	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
+	exitOnError(err)
 
 	// Process file of SQL.
 
-	testObject := &sqlexecutor.SqlExecutorImpl{
+	testObject := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = testObject.RegisterObserver(ctx, observer1)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
-	}
+	exitOnError(err)
+
 	err = testObject.ProcessFileName(ctx, sqlFilename)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
-	}
+	exitOnError(err)
 
 	// PostgreSql only tests.
 
-	if databaseId == Postgresql {
-		postgresClient := &postgresql.PostgresqlImpl{
+	if databaseID == Postgresql {
+		postgresClient := &postgresql.BasicPostgresql{
 			DatabaseConnector: databaseConnector,
 		}
 		err = postgresClient.RegisterObserver(ctx, observer1)
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			os.Exit(1)
-		}
+		exitOnError(err)
+
 		err = postgresClient.SetLogLevel(ctx, logging.LevelTraceName)
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			os.Exit(1)
-		}
+		exitOnError(err)
+
 		oid, age, err := postgresClient.GetCurrentWatermark(ctx)
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			os.Exit(1)
-		}
+		exitOnError(err)
+
 		fmt.Printf("Postgresql: oid=%s age=%d\n", oid, age)
 	}
 
 	// Let Observer finish.
 
 	time.Sleep(2 * time.Second)
+}
+
+func exitOnError(err error) {
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
+	}
 }

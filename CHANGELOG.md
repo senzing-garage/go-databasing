@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.4.2] - 2024-06-11
+
+### Changed in 0.4.2
+
+- From `CheckerImpl` to `BasicChecker`
+- From `PostgresImpl` to `BasicPostgresql`
+- From `SqlExecutorImpl` to `BasicSQLExecutor`
+
 ## [0.4.1] - 2024-04-19
 
 ### Changed in 0.4.1

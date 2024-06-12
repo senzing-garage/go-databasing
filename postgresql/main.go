@@ -23,14 +23,14 @@ type Postgresql interface {
 // ----------------------------------------------------------------------------
 
 // Identfier of the  package found messages having the format "senzing-6423xxxx".
-const ComponentId = 6423
+const ComponentID = 6423
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
 // Message templates for sqlfiler implementation.
-var IdMessages = map[int]string{
+var IDMessages = map[int]string{
 	1:    "Enter GetCurrentWatermark().",
 	2:    "Exit  GetCurrentWatermark() returned (%s, %d, %v).",
 	3:    "Enter RegisterObserver(%s).",
@@ -46,4 +46,4 @@ var IdMessages = map[int]string{
 }
 
 // Status strings for specific messages.
-var IdStatuses = map[int]string{}
+var IDStatuses = map[int]string{}

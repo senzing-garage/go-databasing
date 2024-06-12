@@ -1,6 +1,6 @@
-name: go test darwin
+name: go test windows
 
-on: [push]
+on: [pull_request, workflow_dispatch]
 
 env:
   ACCEPT_EULA: Y
@@ -14,20 +14,19 @@ env:
   POSTGRESQL_PASSWORD: senzing
   POSTGRESQL_POSTGRES_PASSWORD: postgres
   POSTGRESQL_USERNAME: senzing
-  SENZING_ACCEPT_EULA: I_ACCEPT_THE_SENZING_EULA
-  SENZING_TOOLS_DATABASE_URL: "sqlite3://na:na@/tmp/sqlite/G2C.db"
+  SENZING_TOOLS_DATABASE_URL: 'sqlite3://na:na@nowhere/C:\Temp\sqlite\G2C.db'
 
 permissions:
   contents: read
 
 jobs:
-  go-test-darwin:
+  go-test-windows:
     name: "go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         go: ["1.21"]
-        os: [macos-latest]
+        os: [windows-latest]
 
     steps:
       - name: checkout repository
@@ -40,9 +39,9 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
-      # - name: install Docker
-      #   uses: docker-practice/actions-setup-docker@master
-      #   timeout-minutes: 12
+      - name: install Docker
+        uses: docker-practice/actions-setup-docker@v1
+        timeout-minutes: 12
 
       - uses: ikalnytskyi/action-setup-postgres@v6
         with:
@@ -52,18 +51,17 @@ jobs:
           port: 5432
         id: postgres
 
-      # - name: postgreSQL service
+      # - name: PostgreSQL service
       #   run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
 
       # - name: MsSQL service
       #   run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
 
-      # - name: MySQL service
-      #   run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
+      - name: MySQL service
+        run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
 
-      - run: mkdir /tmp/sqlite
-
-      - run: touch /tmp/sqlite/G2C.db
+      - name: create empty Sqlite database file
+        run: mkdir "C:\Temp\sqlite" && New-Item "C:\Temp\sqlite\G2C.db"
 
       # - name: run go test
       #   run: go test -v -p 1 ./...
@@ -71,20 +69,20 @@ jobs:
       - name: run go test - main
         run: go test -v -p 1 ./.
 
-      # - name: run go test - connector
-      #   run: go test -v -p 1 ./connector
+      - name: run go test - connector
+        run: go test -v -p 1 ./connector
 
       - name: run go test - connectordb2
         run: go test -v -p 1 ./connectordb2
 
-      - name: run go test - connectormssql
-        run: go test -v -p 1 ./connectormssql
+      # - name: run go test - connectormssql
+      #   run: go test -v -p 1 ./connectormssql
 
       - name: run go test - connectormysql
         run: go test -v -p 1 ./connectormysql
 
-      # - name: run go test - connectorpostgresql
-      #   run: go test -v -p 1 ./connectorpostgresql
+      - name: run go test - connectorpostgresql
+        run: go test -v -p 1 ./connectorpostgresql
 
       - name: run go test - connectorsqlite
         run: go test -v -p 1 ./connectorsqlite
@@ -92,11 +90,27 @@ jobs:
       - name: run go test - dbhelper
         run: go test -v -p 1 ./dbhelper
 
-      # - name: run go test - postgresql
-      #   run: go test -v -p 1 ./postgresql
+      - name: run go test - postgresql
+        run: go test -v -p 1 ./postgresql
 
       - name: run go test - sqlexecutor
         run: go test -v -p 1 ./sqlexecutor
 
       - name: run go test - main
         run: go test -v -p 1 ./.
+
+      - name: run go test
+        run: |
+          go test -v -p 1 -coverprofile=cover -covermode=atomic -coverpkg=./... ./...
+          cp cover cover.out
+
+      - name: Store coverage file
+        uses: actions/upload-artifact@v4
+        with:
+          name: cover.out
+          path: cover.out
+
+  coverage:
+    name: coverage
+    needs: go-test-windows
+    uses: senzing-factory/build-resources/.github/workflows/go-coverage.yaml@v2

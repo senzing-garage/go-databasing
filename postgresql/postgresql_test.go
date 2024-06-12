@@ -2,68 +2,88 @@ package postgresql
 
 import (
 	"context"
-	"fmt"
-	"os"
 	"testing"
 
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 	"github.com/senzing-garage/go-observing/observer"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-// ----------------------------------------------------------------------------
-// Test harness
-// ----------------------------------------------------------------------------
-
-func TestMain(m *testing.M) {
-	err := setup()
-	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
+var (
+	observerSingleton = &observer.NullObserver{
+		ID:       "Observer 1",
+		IsSilent: true,
 	}
-	code := m.Run()
-	err = teardown()
-	if err != nil {
-		fmt.Print(err)
-	}
-	os.Exit(code)
-}
-
-func setup() error {
-	var err error = nil
-	return err
-}
-
-func teardown() error {
-	var err error = nil
-	return err
-}
+)
 
 // ----------------------------------------------------------------------------
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestPostgresqlImpl_GetCurrentWatermark(test *testing.T) {
+func TestBasicPostgresql_GetCurrentWatermark(test *testing.T) {
 	ctx := context.TODO()
-	observer1 := &observer.ObserverNull{
-		Id:       "Observer 1",
-		IsSilent: true,
-	}
+	testObject := getTestObject(ctx, test)
+	_, _, err := testObject.GetCurrentWatermark(ctx)
+	require.NoError(test, err)
+}
+
+func TestBasicPostgresql_RegisterObserver(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.RegisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+}
+
+func TestBasicPostgresql_SetLogLevel(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.SetLogLevel(ctx, "DEBUG")
+	require.NoError(test, err)
+}
+
+func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
+	require.Error(test, err)
+}
+
+func TestBasicPostgresql_SetObserverOrigin(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+	testObject.SetObserverOrigin(ctx, "Test observer origin")
+}
+
+func TestBasicPostgresql_UnregisterObserver(test *testing.T) {
+	ctx := context.TODO()
+	testObject := getTestObject(ctx, test)
+
+	// TODO:  This needs to be removed.
+	err := testObject.RegisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+
+	err = testObject.UnregisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+}
+
+// ----------------------------------------------------------------------------
+// Internal functions
+// ----------------------------------------------------------------------------
+
+func getTestObject(ctx context.Context, test *testing.T) Postgresql {
+	return getBasicPostgresql(ctx, test)
+}
+
+func getBasicPostgresql(ctx context.Context, test *testing.T) *BasicPostgresql {
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
 	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
-	if err != nil {
-		assert.FailNow(test, err.Error(), databaseConnector)
-	}
-	testObject := &PostgresqlImpl{
+	require.NoError(test, err)
+	result := &BasicPostgresql{
 		DatabaseConnector: databaseConnector,
 	}
-	err = testObject.RegisterObserver(ctx, observer1)
-	if err != nil {
-		assert.FailNow(test, err.Error())
-	}
-	testObject.SetObserverOrigin(ctx, "Test")
-	oid, age, err := testObject.GetCurrentWatermark(ctx)
-	if err != nil {
-		assert.FailNow(test, err.Error(), oid, age)
-	}
+	err = result.RegisterObserver(ctx, observerSingleton)
+	require.NoError(test, err)
+	err = result.SetLogLevel(ctx, "TRACE")
+	require.NoError(test, err)
+	return result
 }

@@ -2,40 +2,10 @@ package connector
 
 import (
 	"context"
-	"fmt"
-	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-// ----------------------------------------------------------------------------
-// Test harness
-// ----------------------------------------------------------------------------
-
-func TestMain(m *testing.M) {
-	err := setup()
-	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
-	}
-	code := m.Run()
-	err = teardown()
-	if err != nil {
-		fmt.Print(err)
-	}
-	os.Exit(code)
-}
-
-func setup() error {
-	var err error = nil
-	return err
-}
-
-func teardown() error {
-	var err error = nil
-	return err
-}
 
 // ----------------------------------------------------------------------------
 // Test interface functions
@@ -43,54 +13,49 @@ func teardown() error {
 
 func TestNewConnector_sqlite(test *testing.T) {
 	ctx := context.TODO()
-	databaseUrl := "sqlite3://na:na@/tmp/sqlite/G2C.db"
-	databaseConnector, err := NewConnector(ctx, databaseUrl)
-	if err != nil {
-		assert.FailNow(test, err.Error(), databaseConnector)
-	}
+	databaseURL := "sqlite3://na:na@/tmp/sqlite/G2C.db"
+	_, err := NewConnector(ctx, databaseURL)
+	require.NoError(test, err)
 }
 
 func TestNewConnector_postgresql1(test *testing.T) {
 	ctx := context.TODO()
-	databaseUrl := "postgresql://username:password@hostname:5432:database/?schema=schemaname"
-	databaseConnector, err := NewConnector(ctx, databaseUrl)
-	if err != nil {
-		assert.FailNow(test, err.Error(), databaseConnector)
-	}
+	databaseURL := "postgresql://username:password@hostname:5432:database/?schema=schemaname"
+	_, err := NewConnector(ctx, databaseURL)
+	require.NoError(test, err)
 }
 
 func TestNewConnector_postgresql2(test *testing.T) {
 	ctx := context.TODO()
-	databaseUrl := "postgresql://username:password@hostname:5432/database/?schema=schemaname"
-	databaseConnector, err := NewConnector(ctx, databaseUrl)
-	if err != nil {
-		assert.FailNow(test, err.Error(), databaseConnector)
-	}
+	databaseURL := "postgresql://username:password@hostname:5432/database/?schema=schemaname"
+	_, err := NewConnector(ctx, databaseURL)
+	require.NoError(test, err)
 }
 
 func TestNewConnector_mysql1(test *testing.T) {
 	ctx := context.TODO()
-	databaseUrl := "mysql://username:password@hostname:3306/database?schema=schemaname"
-	databaseConnector, err := NewConnector(ctx, databaseUrl)
-	if err != nil {
-		assert.FailNow(test, err.Error(), databaseConnector)
-	}
+	databaseURL := "mysql://username:password@hostname:3306/database?schema=schemaname"
+	_, err := NewConnector(ctx, databaseURL)
+	require.NoError(test, err)
 }
 
 func TestNewConnector_mysql2(test *testing.T) {
 	ctx := context.TODO()
-	databaseUrl := "mysql://username:password@hostname:3306/?schema=schemaname"
-	databaseConnector, err := NewConnector(ctx, databaseUrl)
-	if err != nil {
-		assert.FailNow(test, err.Error(), databaseConnector)
-	}
+	databaseURL := "mysql://username:password@hostname:3306/?schema=schemaname"
+	_, err := NewConnector(ctx, databaseURL)
+	require.NoError(test, err)
 }
 
 func TestNewConnector_mssql(test *testing.T) {
 	ctx := context.TODO()
-	databaseUrl := "mssql://username:password@hostname:3306/database?schema=schemaname"
-	databaseConnector, err := NewConnector(ctx, databaseUrl)
-	if err != nil {
-		assert.FailNow(test, err.Error(), databaseConnector)
-	}
+	databaseURL := "mssql://username:password@hostname:3306/database?schema=schemaname"
+	_, err := NewConnector(ctx, databaseURL)
+	require.NoError(test, err)
+}
+
+func TestNewConnector_badURLProtocol(test *testing.T) {
+	ctx := context.TODO()
+	databaseURL := "badProtocol://username:password@hostname:3306/database?schema=schemaname"
+	_, err := NewConnector(ctx, databaseURL)
+	require.Error(test, err)
 }
