@@ -26,7 +26,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_mysql() {
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
 	databaseURL := "mysql://root:root@localhost:3306/G2" // #nosec G101
-	sqlFilename := "../testdata/mysql/g2core-schema-mysql-create.sql"
+	sqlFilename := "../testdata/mysql/szcore-schema-mysql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	printErr(err)
 	sqlExecutor := &BasicSQLExecutor{
@@ -42,7 +42,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_postgresql() {
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 	databaseURL := "postgresql://postgres:postgres@localhost:5432/G2/?sslmode=disable"
-	sqlFilename := "../testdata/postgresql/g2core-schema-postgresql-create.sql"
+	sqlFilename := "../testdata/postgresql/szcore-schema-postgresql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	printErr(err)
 	sqlExecutor := &BasicSQLExecutor{
@@ -58,7 +58,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_mssql() {
 	ctx := context.TODO()
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 	databaseURL := "mssql://sa:Passw0rd@localhost:1433/master"
-	sqlFilename := "../testdata/mssql/g2core-schema-mssql-create.sql"
+	sqlFilename := "../testdata/mssql/szcore-schema-mssql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	printErr(err)
 	sqlExecutor := &BasicSQLExecutor{
@@ -74,7 +74,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_sqlite() {
 	ctx := context.TODO()
 	databaseFilename := "/tmp/sqlite/G2C.db"
 	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
 	printErr(err)
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
@@ -92,7 +92,7 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite() {
 	ctx := context.TODO()
 	databaseFilename := "/tmp/sqlite/G2C.db"
 	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
 	printErr(err)
 	file, err := os.Open(sqlFilename)

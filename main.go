@@ -75,19 +75,19 @@ func demonstrateDatabase(databaseID int) {
 	switch databaseID {
 	case Sqlite:
 		databaseURL = sqliteDatabaseURL
-		sqlFilename = gitRepositoryDir + "/testdata/sqlite/g2core-schema-sqlite-create.sql"
+		sqlFilename = gitRepositoryDir + "/testdata/sqlite/szcore-schema-sqlite-create.sql"
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 		databaseURL = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
-		sqlFilename = gitRepositoryDir + "/testdata/postgresql/g2core-schema-postgresql-create.sql"
+		sqlFilename = gitRepositoryDir + "/testdata/postgresql/szcore-schema-postgresql-create.sql"
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
 		databaseURL = "mysql://root:root@localhost/G2" // #nosec G101
-		sqlFilename = gitRepositoryDir + "/testdata/mysql/g2core-schema-mysql-create.sql"
+		sqlFilename = gitRepositoryDir + "/testdata/mysql/szcore-schema-mysql-create.sql"
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 		databaseURL = "mssql://sa:Passw0rd@localhost/master"
-		sqlFilename = gitRepositoryDir + "/testdata/mssql/g2core-schema-mssql-create.sql"
+		sqlFilename = gitRepositoryDir + "/testdata/mssql/szcore-schema-mssql-create.sql"
 	default:
 		exitOnError(fmt.Errorf("unknown databaseNumber: %d", databaseID))
 	}
