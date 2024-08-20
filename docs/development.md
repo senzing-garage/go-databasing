@@ -66,25 +66,6 @@ These are "one-time tasks" which may already have been completed.
 
 To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases need to be accessable.
 
-1. Create an empty **Sqlite** database.
-   Example:
-
-    ```console
-    rm -rf /tmp/sqlite
-    mkdir  /tmp/sqlite
-    touch /tmp/sqlite/G2C.db
-
-    ```
-
-1. Start docker-compose formation with databases.
-   Example:
-
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    docker-compose up
-
-    ```
-
 1. Run tests.
    Example:
 
@@ -133,6 +114,17 @@ Example:
     [![Go Reference Badge]][Go Reference]
 
 1. To stop the `godoc` server, run
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make clean
+
+    ```
+
+## Clean
+
+1. Remove files and bring down docker-compose formation.
+   Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
@@ -338,7 +330,6 @@ Example:
 [Go Reference Badge]: https://pkg.go.dev/badge/github.com/senzing-garage/template-go.svg
 [Go Reference]: https://pkg.go.dev/github.com/senzing-garage/template-go
 [go]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/go.md
-[How to Install Senzing for Go Development]: https://github.com/senzing-garage/knowledge-base/blob/main/HOWTO/install-senzing-for-go-development.md
 [localhost:6060]: http://localhost:6060/pkg/github.com/senzing-garage/template-go/
 [make]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/make.md
 [testcoverage.yaml]: ../.github/coverage/testcoverage.yaml

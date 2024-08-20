@@ -53,12 +53,9 @@ See [main.go] for an example of use.
 1. [Errors]
 1. [Examples]
 1. [Package reference]
-1. Related artifacts:
-    1. [DockerHub]
 
 [API documentation]: https://pkg.go.dev/github.com/senzing-garage/go-databasing
 [Development]: docs/development.md
-[DockerHub]: https://hub.docker.com/r/senzing/go-databasing
 [Errors]: docs/errors.md
 [Examples]: docs/examples.md
 [Go Reference Badge]: https://pkg.go.dev/badge/github.com/senzing-garage/go-databasing.svg

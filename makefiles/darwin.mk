@@ -16,8 +16,6 @@ build-osarch-specific: darwin/amd64
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
-	@docker rm  --force $(DOCKER_CONTAINER_NAME) 2> /dev/null || true
-	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) 2> /dev/null || true
 	@rm -f  $(GOPATH)/bin/$(PROGRAM_NAME) || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.html || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.out || true
