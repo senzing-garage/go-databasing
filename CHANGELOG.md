@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.5.0] - 2024-08-20
+
+### Changed in 0.5.0
+
+- Change from `g2` to `sz`/`er`
+
 ## [0.4.2] - 2024-06-11
 
 ### Changed in 0.4.2

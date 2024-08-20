@@ -1,4 +1,4 @@
 /*
-The postgresql package has PostgreSQL specific functions.
+Package dbhelper has database agnostic helper functions.
 */
 package dbhelper

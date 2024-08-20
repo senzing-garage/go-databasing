@@ -1,1 +1,1 @@
-## Errors
+# go-database errors

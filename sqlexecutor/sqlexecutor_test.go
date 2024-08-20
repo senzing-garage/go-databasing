@@ -25,7 +25,7 @@ var (
 
 func TestBasicSQLExecutor_ProcessFileName(test *testing.T) {
 	ctx := context.TODO()
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(sqliteDatabaseFilename)
 	require.NoError(test, err)
 	testObject := getTestObject(ctx, test)
@@ -35,7 +35,7 @@ func TestBasicSQLExecutor_ProcessFileName(test *testing.T) {
 
 func TestBasicSQLExecutor_ProcessScanner(test *testing.T) {
 	ctx := context.TODO()
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(sqliteDatabaseFilename)
 	require.NoError(test, err)
 	file, err := os.Open(sqlFilename)

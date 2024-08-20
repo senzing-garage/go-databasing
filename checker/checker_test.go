@@ -28,7 +28,7 @@ func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 
 	// Make a fresh database and create Senzing schema.
 
-	sqlFilename := "../testdata/sqlite/g2core-schema-sqlite-create.sql"
+	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(sqliteDatabaseFilename)
 	require.NoError(test, err)
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
