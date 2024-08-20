@@ -17,12 +17,14 @@ build-osarch-specific: darwin/amd64
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
 	@rm -f  $(GOPATH)/bin/$(PROGRAM_NAME) || true
+	@rm -f  $(MAKEFILE_DIRECTORY)/.coverage || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.html || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.out || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/cover.out || true
 	@rm -fr $(TARGET_DIRECTORY) || true
 	@rm -fr /tmp/sqlite || true
 	@pkill godoc || true
+	@docker-compose down
 
 
 .PHONY: coverage-osarch-specific
@@ -58,6 +60,7 @@ run-osarch-specific:
 setup-osarch-specific:
 	@mkdir /tmp/sqlite
 	@touch /tmp/sqlite/G2C.db
+	docker-compose up --detach
 
 
 .PHONY: test-osarch-specific

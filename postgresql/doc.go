@@ -1,4 +1,4 @@
 /*
-The postgresql package has PostgreSQL specific functions.
+Package postgresql has PostgreSQL specific functions.
 */
 package postgresql

@@ -24,7 +24,7 @@ clean-osarch-specific:
 	@rm -fr $(TARGET_DIRECTORY) || true
 	@rm -fr /tmp/sqlite || true
 	@pkill godoc || true
-	@docker-compose down
+	@docker-compose down 2> /dev/null
 
 
 .PHONY: coverage-osarch-specific
