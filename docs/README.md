@@ -1,5 +1,8 @@
 # go-databasing
 
-Placeholder for [GitHub pages](https://pages.github.com/).
+Placeholder for [GitHub pages].
 
-See [https://senzing.github.io/go-databasing](https://senzing.github.io/go-databasing).
+See [GitHub page].
+
+[GitHub page]: https://garage.senzing.com/go-databasing
+[GitHub pages]: https://pages.github.com/
