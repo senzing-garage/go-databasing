@@ -24,6 +24,7 @@ clean-osarch-specific:
 	@del /F /S /Q $(TARGET_DIRECTORY)
 	@del /F /S /Q C:\Temp\sqlite
 	@taskkill /f /t/im godoc
+	@docker-compose down
 
 
 .PHONY: coverage-osarch-specific
@@ -35,6 +36,7 @@ coverage-osarch-specific:
 
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
+	@taskkill /f /t/im godoc
 	@start /b godoc
 	@explorer http://localhost:6060
 

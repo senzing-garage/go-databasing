@@ -1,1 +1,1 @@
-# go-database errors
+# go-databasing errors
