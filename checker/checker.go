@@ -19,7 +19,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// BasicChecker is the default implementation of the SqlExecutor interface.
+// Type BasicChecker struct is the default implementation of the [Checker] interface.
 type BasicChecker struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
@@ -49,7 +49,7 @@ var traceOptions = []interface{}{
 // ----------------------------------------------------------------------------
 
 /*
-The IsInstalled verifies that the Senzing schema has been installed.
+Method IsSchemaInstalled verifies that the Senzing schema has been installed.
 
 Input
   - ctx: A context to control lifecycle.
@@ -100,10 +100,13 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 }
 
 /*
-The IsInstalled verifies that the Senzing schema has been installed.
+Method RecordCount retrieves the number of records ingested into the Senzing datastore.
 
 Input
   - ctx: A context to control lifecycle.
+
+Output
+  - Number of records in Senzing datastore.
 */
 func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, error) {
 	var (
@@ -151,7 +154,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 }
 
 /*
-The RegisterObserver method adds the observer to the list of observers notified.
+Method RegisterObserver adds the observer to the list of observers notified.
 
 Input
   - ctx: A context to control lifecycle.
@@ -180,7 +183,7 @@ func (schemaChecker *BasicChecker) RegisterObserver(ctx context.Context, observe
 }
 
 /*
-The SetLogLevel method sets the level of logging.
+Method SetLogLevel sets the level of logging.
 
 Input
   - ctx: A context to control lifecycle.
@@ -214,7 +217,7 @@ func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName
 }
 
 /*
-The SetObserverOrigin method sets the "origin" value in future Observer messages.
+Method SetObserverOrigin sets the "origin" value in future Observer messages.
 
 Input
   - ctx: A context to control lifecycle.
@@ -275,7 +278,7 @@ func (schemaChecker *BasicChecker) SetObserverOrigin(ctx context.Context, origin
 }
 
 /*
-The UnregisterObserver method removes the observer to the list of observers notified.
+Method UnregisterObserver removes the observer to the list of observers notified.
 
 Input
   - ctx: A context to control lifecycle.
@@ -310,7 +313,7 @@ func (schemaChecker *BasicChecker) UnregisterObserver(ctx context.Context, obser
 // Internal methods
 // ----------------------------------------------------------------------------
 
-// Get the Logger singleton.
+// Method getLogger gets the Logger singleton.
 func (schemaChecker *BasicChecker) getLogger() logging.Logging {
 	var err error
 	if schemaChecker.logger == nil {
@@ -322,24 +325,24 @@ func (schemaChecker *BasicChecker) getLogger() logging.Logging {
 	return schemaChecker.logger
 }
 
-// Log message.
+// Method log logs a message.
 func (schemaChecker *BasicChecker) log(messageNumber int, details ...interface{}) {
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
-// Debug.
+// Method debug logs a debug message.
 func (schemaChecker *BasicChecker) debug(messageNumber int, details ...interface{}) {
 	details = append(details, debugOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
-// Trace method entry.
+// Method traceEntry logs an entry Trace message.
 func (schemaChecker *BasicChecker) traceEntry(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)
 }
 
-// Trace method exit.
+// Method traceExit logs an exit Trace message.
 func (schemaChecker *BasicChecker) traceExit(messageNumber int, details ...interface{}) {
 	details = append(details, traceOptions...)
 	schemaChecker.getLogger().Log(messageNumber, details...)

@@ -24,14 +24,14 @@ type SQLExecutor interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-// Identfier of the  package found messages having the format "senzing-6422xxxx".
+// Identfier of the  package found messages having the format "SZSDK6422xxxx".
 const ComponentID = 6422
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for sqlfiler implementation.
+// Message templates for sqlexecutor implementation.
 var IDMessages = map[int]string{
 	1:    "Enter ProcessFileName(%s).",
 	2:    "Exit  ProcessFileName(%s) returned (%v).",
