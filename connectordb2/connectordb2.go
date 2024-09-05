@@ -6,13 +6,15 @@ package connectordb2
 // Types
 // ----------------------------------------------------------------------------
 
-// Connector represents a fixed configuration for the pq driver with a given
-// name. Connector satisfies the database/sql/driver Connector interface and
-// can be used to create any number of DB Conn's via the database/sql OpenDB
-// function.
-//
-// See https://golang.org/pkg/database/sql/driver/#Connector.
-// See https://golang.org/pkg/database/sql/#OpenDB.
+/*
+type Db2 struct represents a fixed configuration for the pq driver with a given
+name. Connector satisfies the [database/sql/driver.Connector] interface and
+can be used to create any number of DB Conn's via the [database/sql.OpenDB]
+function.
+
+[database/sql/driver.Connector]: https://golang.org/pkg/database/sql/driver/#Connector
+[database/sql.OpenDB]: https://golang.org/pkg/database/sql/#OpenDB
+*/
 type Db2 struct {
 	Connection string
 }

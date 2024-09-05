@@ -23,10 +23,10 @@ import (
 Function NewConnector is a factory for producing the correct driver.Connector for a given database URL.
 
 Input
-  - databaseUrl: A properly formed URL containing database connection information
+  - databaseURL: A properly formed URL containing database connection information
     For acceptable database URLs, see [Database URLs].
 
-[Database URLs]: https://github.com/senzing-garage/go-databasing/blob/main/README.md#use
+[Database URLs]: https://github.com/senzing-garage/go-databasing/blob/main/README.md#database-urls
 */
 func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
 	var result driver.Connector

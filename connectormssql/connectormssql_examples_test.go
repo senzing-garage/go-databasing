@@ -5,16 +5,6 @@ import (
 	"fmt"
 )
 
-func printErr(err error) {
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-// ----------------------------------------------------------------------------
-// Examples for godoc documentation
-// ----------------------------------------------------------------------------
-
 func ExampleNewConnector() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/connectormssql/connectormssql_examples_test.go
 	ctx := context.TODO()
@@ -24,4 +14,14 @@ func ExampleNewConnector() {
 	printErr(err)
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
+}
+
+// ----------------------------------------------------------------------------
+// non-public functions
+// ----------------------------------------------------------------------------
+
+func printErr(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
 }
