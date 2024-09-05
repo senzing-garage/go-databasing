@@ -5,12 +5,6 @@ import (
 	"fmt"
 )
 
-func printErr(err error) {
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
@@ -21,7 +15,19 @@ func ExampleNewConnector() {
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
 	databaseConnector, err := NewConnector(ctx, configuration)
-	printErr(err)
+	failOnError(err)
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
+}
+
+func ExampleNewConnector_null() {} // Hack to format godoc documentation examples properly
+
+// ----------------------------------------------------------------------------
+// Internal methods
+// ----------------------------------------------------------------------------
+
+func failOnError(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
 }

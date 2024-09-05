@@ -11,12 +11,6 @@ import (
 	"github.com/senzing-garage/go-databasing/connector"
 )
 
-func printErr(err error) {
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
@@ -28,12 +22,12 @@ func ExampleBasicSQLExecutor_ProcessFileName_mysql() {
 	databaseURL := "mysql://root:root@localhost:3306/G2" // #nosec G101
 	sqlFilename := "../testdata/mysql/szcore-schema-mysql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
-	printErr(err)
+	failOnError(err)
 	sqlExecutor := &BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
-	printErr(err)
+	failOnError(err)
 	// Output:
 }
 
@@ -44,12 +38,12 @@ func ExampleBasicSQLExecutor_ProcessFileName_postgresql() {
 	databaseURL := "postgresql://postgres:postgres@localhost:5432/G2/?sslmode=disable"
 	sqlFilename := "../testdata/postgresql/szcore-schema-postgresql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
-	printErr(err)
+	failOnError(err)
 	sqlExecutor := &BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
-	printErr(err)
+	failOnError(err)
 	// Output:
 }
 
@@ -60,12 +54,12 @@ func ExampleBasicSQLExecutor_ProcessFileName_mssql() {
 	databaseURL := "mssql://sa:Passw0rd@localhost:1433/master"
 	sqlFilename := "../testdata/mssql/szcore-schema-mssql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
-	printErr(err)
+	failOnError(err)
 	sqlExecutor := &BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
-	printErr(err)
+	failOnError(err)
 	// Output:
 }
 
@@ -76,14 +70,14 @@ func ExampleBasicSQLExecutor_ProcessFileName_sqlite() {
 	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
-	printErr(err)
+	failOnError(err)
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
-	printErr(err)
+	failOnError(err)
 	sqlExecutor := &BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
-	printErr(err)
+	failOnError(err)
 	// Output:
 }
 
@@ -94,16 +88,26 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite() {
 	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
-	printErr(err)
+	failOnError(err)
 	file, err := os.Open(sqlFilename)
-	printErr(err)
+	failOnError(err)
 	defer file.Close()
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
-	printErr(err)
+	failOnError(err)
 	sqlExecutor := &BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessScanner(ctx, bufio.NewScanner(file))
-	printErr(err)
+	failOnError(err)
 	// Output:
+}
+
+// ----------------------------------------------------------------------------
+// Internal methods
+// ----------------------------------------------------------------------------
+
+func failOnError(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
 }

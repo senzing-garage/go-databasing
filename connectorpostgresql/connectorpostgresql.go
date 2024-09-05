@@ -12,10 +12,16 @@ import (
 // ----------------------------------------------------------------------------
 
 /*
-Wrapper for https://pkg.go.dev/github.com/lib/pq#NewConnector
+Function NewConnector is a wrapper for [github.com/lib/pq].
 
 Input
-  - dsn: See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
+  - dsn: See [Connection String Parameters].
+
+Output
+  - [driver.Connector] configured for PostgreSQL.
+
+[github.com/lib/pq]: https://pkg.go.dev/github.com/lib/pq#NewConnector
+[Connection String Parameters]: https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 */
 func NewConnector(ctx context.Context, dsn string) (driver.Connector, error) {
 	_ = ctx

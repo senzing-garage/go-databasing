@@ -48,7 +48,7 @@ var traceOptions = []interface{}{
 // ----------------------------------------------------------------------------
 
 /*
-Method ProcessFileName is a convenience method for calling method [BasicSQLExecutor.ProcessScanner] using a filename.
+Method ProcessFileName is a convenience method for calling [BasicSQLExecutor.ProcessScanner] using a filename.
 
 Input
   - ctx: A context to control lifecycle.
@@ -174,7 +174,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 }
 
 /*
-Method RegisterObserver method adds the observer to the list of observers notified.
+Method RegisterObserver adds the observer to the list of observers notified.
 
 Input
   - ctx: A context to control lifecycle.
@@ -211,7 +211,7 @@ func (sqlExecutor *BasicSQLExecutor) RegisterObserver(ctx context.Context, obser
 }
 
 /*
-Method SetLogLevel method sets the level of logging.
+Method SetLogLevel sets the level of logging.
 
 Input
   - ctx: A context to control lifecycle.
@@ -247,7 +247,7 @@ func (sqlExecutor *BasicSQLExecutor) SetLogLevel(ctx context.Context, logLevelNa
 }
 
 /*
-Method SetObserverOrigin method sets the "origin" value in future Observer messages.
+Method SetObserverOrigin sets the "origin" value in future Observer messages.
 
 Input
   - ctx: A context to control lifecycle.
@@ -308,7 +308,7 @@ func (sqlExecutor *BasicSQLExecutor) SetObserverOrigin(ctx context.Context, orig
 }
 
 /*
-The UnregisterObserver method removes the observer to the list of observers notified.
+Method UnregisterObserver removes the observer to the list of observers notified.
 
 Input
   - ctx: A context to control lifecycle.
