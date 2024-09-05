@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning].
 
 ### Changed in 0.5.1
 
--
+- Update dependencies
+- Improve documentation
 
 ## [0.5.0] - 2024-08-20
 
