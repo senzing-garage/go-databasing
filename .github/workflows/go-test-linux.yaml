@@ -3,6 +3,7 @@ name: Go test linux
 on: [push]
 
 env:
+  LD_LIBRARY_PATH: /opt/senzing/er/lib:/opt/oracle/instantclient_21_5
   SENZING_TOOLS_DATABASE_URL: sqlite3://na:na@nowhere/tmp/sqlite/G2C.db
 
 permissions:
@@ -18,15 +19,12 @@ jobs:
         os: [ubuntu-latest]
 
     services:
-      postgres:
+      oracle:
         env:
-          POSTGRESQL_DATABASE: G2
-          POSTGRESQL_PASSWORD: senzing
-          POSTGRESQL_POSTGRES_PASSWORD: postgres
-          POSTGRESQL_USERNAME: senzing
-        image: bitnami/postgresql
+          ORACLE_PWD: Passw0rd
+        image: container-registry.oracle.com/database/free
         ports:
-          - 5432:5432
+          - 1521:1521
 
       mssql:
         env:
@@ -48,6 +46,16 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
 
+      postgres:
+        env:
+          POSTGRESQL_DATABASE: G2
+          POSTGRESQL_PASSWORD: senzing
+          POSTGRESQL_POSTGRES_PASSWORD: postgres
+          POSTGRESQL_USERNAME: senzing
+        image: bitnami/postgresql
+        ports:
+          - 5432:5432
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -68,6 +76,13 @@ jobs:
         run: |
           mkdir /tmp/sqlite
           touch /tmp/sqlite/G2C.db
+
+      - name: Install Oracle SDK
+        run: |
+          curl --output /tmp/instantclient-basic-linux.zip https://download.oracle.com/otn_software/linux/instantclient/2350000/instantclient-basic-linux.x64-23.5.0.24.07.zip
+          mkdir -p /opt/oracle
+          unzip -d /opt/oracle /tmp/instantclient-basic-linux.zip
+          apt-get install libaio1
 
       - name: Run go test
         run: go test -json -v -p 1 -coverprofile=./cover.out -covermode=atomic -coverpkg=./... ./...  2>&1 | tee /tmp/gotest.log | gotestfmt
