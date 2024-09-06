@@ -46,6 +46,8 @@ Specific uses:
 
 See [main.go] for an example of use.
 
+### Database URLs
+
 ## References
 
 1. [API documentation]

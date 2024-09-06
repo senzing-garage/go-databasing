@@ -65,11 +65,10 @@ hello-world: hello-world-osarch-specific
 # -----------------------------------------------------------------------------
 
 .PHONY: dependencies-for-development
-dependencies-for-development:
+dependencies-for-development: dependencies-for-development-osarch-specific
 	@go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
 	@go install github.com/vladopajic/go-test-coverage/v2@latest
 	@go install golang.org/x/tools/cmd/godoc@latest
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.58.1
 
 
 .PHONY: dependencies
@@ -109,6 +108,7 @@ build: build-osarch-specific
 .PHONY: build-all $(PLATFORMS)
 build-all: $(PLATFORMS)
 	@mv $(TARGET_DIRECTORY)/windows-amd64/$(PROGRAM_NAME) $(TARGET_DIRECTORY)/windows-amd64/$(PROGRAM_NAME).exe
+	@mv $(TARGET_DIRECTORY)/windows-arm64/$(PROGRAM_NAME) $(TARGET_DIRECTORY)/windows-arm64/$(PROGRAM_NAME).exe
 
 # -----------------------------------------------------------------------------
 # Run
@@ -144,7 +144,6 @@ check-coverage:
 
 .PHONY: documentation
 documentation: documentation-osarch-specific
-
 
 # -----------------------------------------------------------------------------
 # Clean

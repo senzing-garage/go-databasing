@@ -5,12 +5,6 @@ import (
 	"fmt"
 )
 
-func printErr(err error) {
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
@@ -21,7 +15,19 @@ func ExampleNewConnector() {
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 	configuration := "user id=sa;password=Passw0rd;database=master;server=localhost"
 	databaseConnector, err := NewConnector(ctx, configuration)
-	printErr(err)
+	failOnError(err)
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
+}
+
+func ExampleNewConnector_null() {} // Hack to format godoc documentation examples properly
+
+// ----------------------------------------------------------------------------
+// Internal methods
+// ----------------------------------------------------------------------------
+
+func failOnError(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
 }

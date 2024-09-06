@@ -19,7 +19,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// BasicPostgresql is the default implementation of the SqlExecutor interface.
+// BasicPostgresql is the default implementation of the [Postgresql] interface.
 type BasicPostgresql struct {
 	DatabaseConnector driver.Connector
 	isTrace           bool
@@ -45,10 +45,14 @@ var traceOptions = []interface{}{
 // ----------------------------------------------------------------------------
 
 /*
-The GetCurrentWatermark does a database call for each line scanned.
+Method GetCurrentWatermark retrieves information about PostgreSQL's transaction IDs.
 
 Input
   - ctx: A context to control lifecycle.
+
+Output
+  - The Object Identifier (oid)
+  - The age
 */
 func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (string, int, error) {
 	var (
@@ -100,7 +104,7 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 }
 
 /*
-The RegisterObserver method adds the observer to the list of observers notified.
+Method RegisterObserver adds the observer to the list of observers notified.
 
 Input
   - ctx: A context to control lifecycle.
@@ -131,7 +135,7 @@ func (sqlExecutor *BasicPostgresql) RegisterObserver(ctx context.Context, observ
 }
 
 /*
-The SetLogLevel method sets the level of logging.
+Method SetLogLevel sets the level of logging.
 
 Input
   - ctx: A context to control lifecycle.
@@ -167,7 +171,7 @@ func (sqlExecutor *BasicPostgresql) SetLogLevel(ctx context.Context, logLevelNam
 }
 
 /*
-The SetObserverOrigin method sets the "origin" value in future Observer messages.
+Method SetObserverOrigin sets the "origin" value in future Observer messages.
 
 Input
   - ctx: A context to control lifecycle.
@@ -228,7 +232,7 @@ func (sqlExecutor *BasicPostgresql) SetObserverOrigin(ctx context.Context, origi
 }
 
 /*
-The UnregisterObserver method removes the observer to the list of observers notified.
+Method UnregisterObserver removes the observer to the list of observers notified.
 
 Input
   - ctx: A context to control lifecycle.

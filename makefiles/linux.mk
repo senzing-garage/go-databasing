@@ -24,7 +24,7 @@ clean-osarch-specific:
 	@rm -fr $(TARGET_DIRECTORY) || true
 	@rm -fr /tmp/sqlite || true
 	@pkill godoc || true
-	@docker-compose down 2> /dev/null
+	@docker-compose down 2> /dev/null || true
 
 
 .PHONY: coverage-osarch-specific
@@ -35,8 +35,14 @@ coverage-osarch-specific:
 	@xdg-open $(MAKEFILE_DIRECTORY)/coverage.html
 
 
+.PHONY: dependencies-for-development-osarch-specific
+dependencies-for-development-osarch-specific: 
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.58.1
+
+
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
+	@pkill godoc || true
 	@godoc &
 	@xdg-open http://localhost:6060
 
@@ -50,8 +56,8 @@ hello-world-osarch-specific:
 package-osarch-specific: docker-build-package
 	@mkdir -p $(TARGET_DIRECTORY) || true
 	@CONTAINER_ID=$$(docker create $(DOCKER_BUILD_IMAGE_NAME)); \
-	@docker cp $$CONTAINER_ID:/output/. $(TARGET_DIRECTORY)/; \
-	@docker rm -v $$CONTAINER_ID
+	docker cp $$CONTAINER_ID:/output/. $(TARGET_DIRECTORY)/; \
+	docker rm -v $$CONTAINER_ID
 
 
 .PHONY: run-osarch-specific

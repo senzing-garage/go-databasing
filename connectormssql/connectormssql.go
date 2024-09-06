@@ -12,10 +12,16 @@ import (
 // ----------------------------------------------------------------------------
 
 /*
-Wrapper for https://pkg.go.dev/github.com/microsoft/go-mssqldb#NewConnector
+Function NewConnector is a wrapper for [Microsoft's MS-SQL connector].
 
 Input
-  - configuration: See https://github.com/microsoft/go-mssqldb
+  - dsn: See [microsoft/go-mssqldb].
+
+Output
+  - [driver.Connector] configured for MS-SQL.
+
+[Microsoft's MS-SQL connector]: https://pkg.go.dev/github.com/microsoft/go-mssqldb#NewConnector
+[microsoft/go-mssqldb]: https://github.com/microsoft/go-mssqldb
 */
 func NewConnector(ctx context.Context, dsn string) (driver.Connector, error) {
 	_ = ctx

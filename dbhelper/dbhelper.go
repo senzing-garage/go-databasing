@@ -8,6 +8,16 @@ import (
 	"github.com/senzing-garage/go-messaging/messenger"
 )
 
+/*
+Function ExtractSqliteDatabaseFilename parses an SQLite Database URL
+and returns the fully qualified filename.
+
+Input
+  - databaseURL: An SQLite style database URL.
+
+Output
+  - A fully qualified path to the SQLite database file.
+*/
 func ExtractSqliteDatabaseFilename(databaseURL string) (string, error) {
 	var result = ""
 
@@ -27,6 +37,22 @@ func ExtractSqliteDatabaseFilename(databaseURL string) (string, error) {
 	return extractSqliteDatabaseFilenameForOsArch(parsedURL)
 }
 
+/*
+Function GetMessenger is a factory to produce a [messenger.Messenger].
+
+Input
+  - componentID: A 4-digit number (0...9999) identifying the component creating the message.
+  - idMessages: A map of error numbers to messaage templates.
+  - callerSkip: Number of stack frames to ascend in [runtime.Caller].
+  - options: 0 or more [messenger.OptionsXxx].
+
+Output
+  - A configured [messenger.Messenger] implementation.
+
+[messenger.OptionsXxx]: https://pkg.go.dev/github.com/senzing-garage/go-messaging/messenger#OptionCallerSkip
+[runtime.Caller]: https://pkg.go.dev/runtime#Caller
+[messenger.Messenger]: https://pkg.go.dev/github.com/senzing-garage/go-messaging/messenger#Messenger
+*/
 func GetMessenger(componentID int, idMessages map[int]string, callerSkip int, options ...interface{}) messenger.Messenger {
 	optionMessageIDTemplate := fmt.Sprintf("%s%04d", MessageIDPrefix, componentID) + "%04d"
 	messengerOptions := []interface{}{

@@ -24,7 +24,7 @@ clean-osarch-specific:
 	@rm -fr $(TARGET_DIRECTORY) || true
 	@rm -fr /tmp/sqlite || true
 	@pkill godoc || true
-	@docker-compose down
+	@docker-compose down 2> /dev/null || true
 
 
 .PHONY: coverage-osarch-specific
@@ -35,8 +35,14 @@ coverage-osarch-specific:
 	@open file://$(MAKEFILE_DIRECTORY)/coverage.html
 
 
+.PHONY: dependencies-for-development-osarch-specific
+dependencies-for-development-osarch-specific: 
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.58.1
+
+
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
+	@pkill godoc || true
 	@godoc &
 	@open http://localhost:6060
 

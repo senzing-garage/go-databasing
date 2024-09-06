@@ -11,13 +11,13 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// Connector represents a fixed configuration for the pq driver with a given
-// name. Connector satisfies the database/sql/driver Connector interface and
-// can be used to create any number of DB Conn's via the database/sql OpenDB
-// function.
-//
-// See https://golang.org/pkg/database/sql/driver/#Connector.
-// See https://golang.org/pkg/database/sql/#OpenDB.
+/*
+Type Sqlite struct implements [driver.Connnector] interface.
+This allows Sqlite to be used with [OpenDB].
+
+[driver.Connnector]: https://golang.org/pkg/database/sql/driver/#Connector
+[OpenDB]: https://golang.org/pkg/database/sql/#OpenDB
+*/
 type Sqlite struct {
 	Filename string
 }
@@ -26,13 +26,21 @@ type Sqlite struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// Connect returns a connection to the database using the fixed configuration
-// of this Connector. Context is not used.
+/*
+Method Connect implements [driver.Connector]'s Connect method.
+Context is not used.
+
+[driver.Connector]: https://golang.org/pkg/database/sql/driver/#Connector
+*/
 func (connector *Sqlite) Connect(_ context.Context) (driver.Conn, error) {
 	return connector.Driver().Open(connector.Filename)
 }
 
-// Driver returns the underlying driver of this Connector.
+/*
+Method Driver implements [driver.Connector]'s Driver method.
+
+[driver.Connector]: https://golang.org/pkg/database/sql/driver/#Connector
+*/
 func (connector *Sqlite) Driver() driver.Driver {
 	return &sqlite.SQLiteDriver{}
 }
@@ -41,6 +49,18 @@ func (connector *Sqlite) Driver() driver.Driver {
 // Constructor methods
 // ----------------------------------------------------------------------------
 
+/*
+Function NewConnector is a wrapper for [github.com/mattn/go-sqlite3].
+
+Input
+  - filename: See [github.com/mattn/go-sqlite3].
+
+Output
+  - [driver.Connector] configured for SQLite.
+
+[github.com/mattn/go-sqlite3]: https://github.com/mattn/go-sqlite3
+[driver.Connector]: https://golang.org/pkg/database/sql/driver/#Connector
+*/
 func NewConnector(ctx context.Context, filename string) (driver.Connector, error) {
 	_ = ctx
 	return &Sqlite{

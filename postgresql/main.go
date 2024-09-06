@@ -22,14 +22,14 @@ type Postgresql interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-// Identfier of the  package found messages having the format "senzing-6423xxxx".
+// Identfier of the  package found messages having the format "SZSDK6423xxxx".
 const ComponentID = 6423
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for sqlfiler implementation.
+// Message templates for postgresql implementation.
 var IDMessages = map[int]string{
 	1:    "Enter GetCurrentWatermark().",
 	2:    "Exit  GetCurrentWatermark() returned (%s, %d, %v).",
