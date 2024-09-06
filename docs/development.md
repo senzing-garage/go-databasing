@@ -52,8 +52,6 @@ These are "one-time tasks" which may already have been completed.
 
     ```
 
-## Environment variables
-
 ## Lint
 
 1. Run linting.

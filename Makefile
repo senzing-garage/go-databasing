@@ -184,4 +184,4 @@ update-pkg-cache:
 
 .PHONY: golangci-lint
 golangci-lint:
-	@${GOBIN}/golangci-lint run -v --config=.github/linters/.golangci.yaml
+	@${GOBIN}/golangci-lint run --config=.github/linters/.golangci.yaml
