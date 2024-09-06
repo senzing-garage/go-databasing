@@ -15,6 +15,7 @@ These are "one-time tasks" which may already have been completed.
     1. [make]
     1. [docker]
     1. [go]
+    1. [Oracle instant client]
 
 ## Install Git repository
 
@@ -332,4 +333,5 @@ Example:
 [go]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/go.md
 [localhost:6060]: http://localhost:6060/pkg/github.com/senzing-garage/template-go/
 [make]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/make.md
+[Oracle instant client]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/oracle-instant-client.md
 [testcoverage.yaml]: ../.github/coverage/testcoverage.yaml

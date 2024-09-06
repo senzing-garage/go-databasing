@@ -1,9 +1,12 @@
 module github.com/senzing-garage/go-databasing
 
-go 1.21
+go 1.22.4
+
+toolchain go1.23.1
 
 require (
 	github.com/go-sql-driver/mysql v1.8.1
+	github.com/godror/godror v0.44.6
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.23
 	github.com/microsoft/go-mssqldb v1.7.2
@@ -17,9 +20,12 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/go-logfmt/logfmt v0.6.0 // indirect
+	github.com/godror/knownpb v0.2.0 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
+	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e // indirect
