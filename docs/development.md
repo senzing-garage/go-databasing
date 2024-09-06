@@ -52,6 +52,15 @@ These are "one-time tasks" which may already have been completed.
 
     ```
 
+## Environment variables
+
+1. Add to `LD_LIBRARY_PATH` for Oracle database.
+   Example:
+
+    ```console
+    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/oracle/instantclient_23_5
+    ```
+
 ## Lint
 
 1. Run linting.

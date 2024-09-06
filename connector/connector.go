@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"net"
 	"net/url"
+	"path/filepath"
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/senzing-garage/go-databasing/connectormssql"
 	"github.com/senzing-garage/go-databasing/connectormysql"
+	"github.com/senzing-garage/go-databasing/connectororacle"
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 	"github.com/senzing-garage/go-databasing/connectorsqlite"
 )
@@ -149,6 +151,26 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 			configuration += fmt.Sprintf("%s=%s;", key, value)
 		}
 		result, err = connectormssql.NewConnector(ctx, configuration)
+
+	case "oracle":
+		// See https://pkg.go.dev/github.com/godror/godror
+		// databaseConnector, err = connectororacle.NewConnector(ctx, "user=sa;password=Passw0rd;database=master;server=localhost")
+		configurationMap := map[string]string{}
+		if len(username) > 0 {
+			configurationMap["user"] = username
+		}
+		if isPasswordSet {
+			configurationMap["password"] = password
+		}
+		configurationMap["connectString"] = fmt.Sprintf("%s:%s%s", host, port, filepath.Clean(path))
+		for key, value := range query {
+			configurationMap[key] = value[0]
+		}
+		configuration := ""
+		for key, value := range configurationMap {
+			configuration += fmt.Sprintf("%s=%s ", key, value)
+		}
+		result, err = connectororacle.NewConnector(ctx, configuration)
 
 	default:
 		err = fmt.Errorf("unknown database scheme: %s", scheme)

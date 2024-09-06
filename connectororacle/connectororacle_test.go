@@ -13,7 +13,6 @@ import (
 
 func TestNewConnector(test *testing.T) {
 	ctx := context.TODO()
-	// configuration := `user="sysdba" password="Passw0rd" connectString="localhost:1521/FREEPDB1"`
 	configuration := `user="sys" password="Passw0rd" sysdba=true noTimezoneCheck=true connectString="localhost:1521/FREE"`
 	databaseConnector, err := NewConnector(ctx, configuration)
 	require.NoError(test, err)
