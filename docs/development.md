@@ -54,13 +54,6 @@ These are "one-time tasks" which may already have been completed.
 
 ## Environment variables
 
-1. Add to `LD_LIBRARY_PATH` for Oracle database.
-   Example:
-
-    ```console
-    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/oracle/instantclient_23_5
-    ```
-
 ## Lint
 
 1. Run linting.
@@ -76,11 +69,11 @@ These are "one-time tasks" which may already have been completed.
 
 To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases need to be accessable.
 
-1. :thinking: Set environment variables.
+1. :thinking: Add to `LD_LIBRARY_PATH` for Oracle database.
    Example:
 
     ```console
-    export LD_LIBRARY_PATH=/opt/senzing/er/lib:/opt/oracle/instantclient_23_5:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=/opt/senzing/er/lib:/opt/oracle/instantclient_23_5:${LD_LIBRARY_PATH}
     ```
 
 1. Run tests.
