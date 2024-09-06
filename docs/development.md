@@ -67,6 +67,13 @@ These are "one-time tasks" which may already have been completed.
 
 To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases need to be accessable.
 
+1. :thinking: Set environment variables.
+   Example:
+
+    ```console
+    export LD_LIBRARY_PATH=/opt/senzing/er/lib:/opt/oracle/instantclient_23_5:$LD_LIBRARY_PATH
+    ```
+
 1. Run tests.
    Example:
 

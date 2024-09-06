@@ -13,7 +13,9 @@ func ExampleNewConnector() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/connectormssql/connectororacle_examples_test.go
 	ctx := context.TODO()
 	// See https://godror.github.io/godror/doc/connection.html
-	configuration := `user="sysdba" password="Passw0rd" connectString="localhost:1521/FREEPDB1"`
+	// See https://pkg.go.dev/github.com/godror/godror
+	// configuration := `user="sysdba" password="Passw0rd" connectString="localhost:1521/FREEPDB1"`
+	configuration := `user="sys" sysdba=true password="Passw0rd" connectString="localhost:1521/FREE"`
 	databaseConnector, err := NewConnector(ctx, configuration)
 	failOnError(err)
 	_ = databaseConnector // Faux use of databaseConnector

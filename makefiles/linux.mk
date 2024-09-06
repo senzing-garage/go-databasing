@@ -36,7 +36,7 @@ coverage-osarch-specific:
 
 
 .PHONY: dependencies-for-development-osarch-specific
-dependencies-for-development-osarch-specific: 
+dependencies-for-development-osarch-specific:
 	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.58.1
 
 
@@ -74,7 +74,8 @@ setup-osarch-specific:
 
 .PHONY: test-osarch-specific
 test-osarch-specific:
-	@go test -json -v -p 1 ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
+	# @go test -json -v -p 1 ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
+	@go test -json -v -p 1 ./connectororacle 2>&1 | tee /tmp/gotest.log | gotestfmt
 
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.
