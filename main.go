@@ -18,10 +18,11 @@ import (
 // ----------------------------------------------------------------------------
 
 const (
-	Sqlite int = iota
-	Postgresql
+	Mssql int = iota
 	Mysql
-	Mssql
+	Oracle
+	Postgresql
+	Sqlite
 )
 
 // ----------------------------------------------------------------------------
@@ -29,18 +30,20 @@ const (
 // ----------------------------------------------------------------------------
 
 func main() {
-	databaseIDs := []int{Sqlite, Postgresql, Mysql, Mssql}
+	databaseIDs := []int{Oracle, Mssql, Mysql, Postgresql, Sqlite}
 	printStatementTemplate := "\n==== %11s ==========================\n\n"
 	for _, databaseID := range databaseIDs {
 		switch databaseID {
-		case Sqlite:
-			fmt.Printf(printStatementTemplate, "Sqlite")
-		case Postgresql:
-			fmt.Printf(printStatementTemplate, "Postgresql")
-		case Mysql:
-			fmt.Printf(printStatementTemplate, "Mysql")
 		case Mssql:
 			fmt.Printf(printStatementTemplate, "Mssql")
+		case Mysql:
+			fmt.Printf(printStatementTemplate, "Mysql")
+		case Oracle:
+			fmt.Printf(printStatementTemplate, "Oracle")
+		case Postgresql:
+			fmt.Printf(printStatementTemplate, "Postgresql")
+		case Sqlite:
+			fmt.Printf(printStatementTemplate, "Sqlite")
 		}
 		demonstrateDatabase(databaseID)
 	}
@@ -73,13 +76,6 @@ func demonstrateDatabase(databaseID int) {
 	// Construct database URL and choose SQL file.
 
 	switch databaseID {
-	case Sqlite:
-		databaseURL = sqliteDatabaseURL
-		sqlFilename = gitRepositoryDir + "/testdata/sqlite/szcore-schema-sqlite-create.sql"
-	case Postgresql:
-		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
-		databaseURL = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
-		sqlFilename = gitRepositoryDir + "/testdata/postgresql/szcore-schema-postgresql-create.sql"
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
 		databaseURL = "mysql://root:root@localhost/G2" // #nosec G101
@@ -88,6 +84,17 @@ func demonstrateDatabase(databaseID int) {
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 		databaseURL = "mssql://sa:Passw0rd@localhost/master"
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/szcore-schema-mssql-create.sql"
+	case Oracle:
+		// See https://pkg.go.dev/github.com/godror/godror#pkg-overview
+		databaseURL = "oracle://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
+		sqlFilename = gitRepositoryDir + "/testdata/oracle/szcore-schema-oracle-create.sql"
+	case Postgresql:
+		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
+		databaseURL = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
+		sqlFilename = gitRepositoryDir + "/testdata/postgresql/szcore-schema-postgresql-create.sql"
+	case Sqlite:
+		databaseURL = sqliteDatabaseURL
+		sqlFilename = gitRepositoryDir + "/testdata/sqlite/szcore-schema-sqlite-create.sql"
 	default:
 		exitOnError(fmt.Errorf("unknown databaseNumber: %d", databaseID))
 	}

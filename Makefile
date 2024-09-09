@@ -36,7 +36,7 @@ GO_ARCH = $(word 2, $(GO_OSARCH))
 # Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/er/lib"
 
 GOBIN ?= $(shell go env GOPATH)/bin
-LD_LIBRARY_PATH ?= /opt/senzing/er/lib
+LD_LIBRARY_PATH ?= /opt/senzing/er/lib:/opt/oracle/instantclient_23_5
 
 # Export environment variables.
 
@@ -69,6 +69,7 @@ dependencies-for-development: dependencies-for-development-osarch-specific
 	@go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
 	@go install github.com/vladopajic/go-test-coverage/v2@latest
 	@go install golang.org/x/tools/cmd/godoc@latest
+	@docker-compose pull
 
 
 .PHONY: dependencies

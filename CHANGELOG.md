@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.5.2] - 2024-09-09
+
+### Changed in 0.5.2
+
+- Support for Oracle database
+
 ## [0.5.1] - 2024-09-05
 
 ### Changed in 0.5.1

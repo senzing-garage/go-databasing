@@ -36,7 +36,7 @@ coverage-osarch-specific:
 
 
 .PHONY: dependencies-for-development-osarch-specific
-dependencies-for-development-osarch-specific: 
+dependencies-for-development-osarch-specific:
 	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.58.1
 
 

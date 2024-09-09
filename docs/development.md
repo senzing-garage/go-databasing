@@ -15,6 +15,7 @@ These are "one-time tasks" which may already have been completed.
     1. [make]
     1. [docker]
     1. [go]
+    1. [Oracle instant client]
 
 ## Install Git repository
 
@@ -65,6 +66,14 @@ These are "one-time tasks" which may already have been completed.
 ## Test
 
 To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases need to be accessable.
+
+1. :thinking: Add to `LD_LIBRARY_PATH` for Oracle database.
+   Example:
+
+    ```console
+    export LD_LIBRARY_PATH=/opt/senzing/er/lib:/opt/oracle/instantclient_23_5:${LD_LIBRARY_PATH}
+
+    ```
 
 1. Run tests.
    Example:
@@ -332,4 +341,5 @@ Example:
 [go]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/go.md
 [localhost:6060]: http://localhost:6060/pkg/github.com/senzing-garage/template-go/
 [make]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/make.md
+[Oracle instant client]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/oracle-instant-client.md
 [testcoverage.yaml]: ../.github/coverage/testcoverage.yaml
