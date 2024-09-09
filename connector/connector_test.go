@@ -32,16 +32,9 @@ func TestNewConnector_mysql2(test *testing.T) {
 	require.NoError(test, err)
 }
 
-func TestNewConnector_mssql(test *testing.T) {
+func TestNewConnector_mssql1(test *testing.T) {
 	ctx := context.TODO()
 	databaseURL := "mssql://username:password@hostname:3306/database?schema=schemaname"
-	_, err := NewConnector(ctx, databaseURL)
-	require.NoError(test, err)
-}
-
-func TestNewConnector_postgresql1(test *testing.T) {
-	ctx := context.TODO()
-	databaseURL := "postgresql://username:password@hostname:5432:database/?schema=schemaname"
 	_, err := NewConnector(ctx, databaseURL)
 	require.NoError(test, err)
 }
@@ -49,6 +42,13 @@ func TestNewConnector_postgresql1(test *testing.T) {
 func TestNewConnector_oracle1(test *testing.T) {
 	ctx := context.TODO()
 	databaseURL := "oracle://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
+	_, err := NewConnector(ctx, databaseURL)
+	require.NoError(test, err)
+}
+
+func TestNewConnector_postgresql1(test *testing.T) {
+	ctx := context.TODO()
+	databaseURL := "postgresql://username:password@hostname:5432:database/?schema=schemaname"
 	_, err := NewConnector(ctx, databaseURL)
 	require.NoError(test, err)
 }
