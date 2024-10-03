@@ -44,24 +44,27 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # - name: Install Docker
+      #   uses: docker-practice/actions-setup-docker@v1
+      #   timeout-minutes: 12
+
       - name: Install Docker
-        uses: docker-practice/actions-setup-docker@v1
-        timeout-minutes: 12
+        uses: crazy-max/ghaction-setup-docker@v3
 
-      - name: Install PostgreSQL
-        uses: ikalnytskyi/action-setup-postgres@v6
-        with:
-          username: senzing
-          password: senzing
-          database: G2
-          port: 5432
-        id: postgres
+      # - name: Install PostgreSQL
+      #   uses: ikalnytskyi/action-setup-postgres@v6
+      #   with:
+      #     username: senzing
+      #     password: senzing
+      #     database: G2
+      #     port: 5432
+      #   id: postgres
 
-      # - name: PostgreSQL service
-      #   run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
+      - name: PostgreSQL service
+        run: docker run --detach --env POSTGRESQL_DATABASE --env POSTGRESQL_PASSWORD --env POSTGRESQL_POSTGRES_PASSWORD --env POSTGRESQL_USERNAME --publish 5432:5432 bitnami/postgresql:latest
 
-      # - name: MsSQL service
-      #   run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
+      - name: MsSQL service
+        run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
 
       - name: MySQL service
         run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
