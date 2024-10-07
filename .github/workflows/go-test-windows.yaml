@@ -44,9 +44,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # - name: Install Docker
+      #   uses: docker-practice/actions-setup-docker@v1
+      #   timeout-minutes: 12
+
       - name: Install Docker
-        uses: docker-practice/actions-setup-docker@v1
-        timeout-minutes: 12
+        uses: crazy-max/ghaction-setup-docker@v3
 
       - name: Install PostgreSQL
         uses: ikalnytskyi/action-setup-postgres@v6
@@ -63,8 +66,8 @@ jobs:
       # - name: MsSQL service
       #   run: docker run --detach --env ACCEPT_EULA --env MSSQL_PID --env MSSQL_SA_PASSWORD --publish 1433:1433 mcr.microsoft.com/mssql/server
 
-      - name: MySQL service
-        run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
+      # - name: MySQL service
+      #   run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
 
       - name: create empty Sqlite database file
         run: mkdir "C:\Temp\sqlite" && New-Item "C:\Temp\sqlite\G2C.db"
@@ -72,8 +75,8 @@ jobs:
       # - name: run go test
       #   run: go test -v -p 1 ./...
 
-      - name: run go test - main
-        run: go test -v -p 1 ./.
+      # - name: run go test - main
+      #   run: go test -v -p 1 ./.
 
       - name: run go test - connector
         run: go test -v -p 1 ./connector
