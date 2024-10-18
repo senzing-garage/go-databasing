@@ -83,7 +83,7 @@ jobs:
           sudo mkdir -p /opt/oracle
           sudo unzip -d /opt/oracle /tmp/instantclient-basic-linux.zip
           sudo apt-get install libaio1 libaio-dev
-      #         sudo apt-get install libaio1t64
+
       - name: Run go test
         run: go test -json -v -p 1 -coverprofile=./cover.out -covermode=atomic -coverpkg=./... ./...  2>&1 | tee /tmp/gotest.log | gotestfmt
 

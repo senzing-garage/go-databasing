@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning].
 
 -
 
-## [0.5.3] - 2024-10-14
+## [0.5.3] - 2024-10-18
 
 ### Changed in 0.5.3
 
-- Oracle
+- Update dependencies
 
 ## [0.5.2] - 2024-09-09
 
