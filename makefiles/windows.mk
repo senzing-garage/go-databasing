@@ -24,7 +24,7 @@ clean-osarch-specific:
 	@del /F /S /Q $(TARGET_DIRECTORY)
 	@del /F /S /Q C:\Temp\sqlite
 	@taskkill /f /t/im godoc
-	@docker-compose down
+	@docker-compose -f docker-compose.test.yaml down
 
 
 .PHONY: coverage-osarch-specific
