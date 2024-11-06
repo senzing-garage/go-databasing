@@ -62,10 +62,14 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 
 	switch scheme {
 	case "sqlite3":
-		configuration := path
+		// configuration := path
+		configuration := "BOBWASHERE"
 		if len(parsedURL.RawQuery) > 0 {
-			configuration = fmt.Sprintf("file:%s?%s", configuration, parsedURL.RawQuery)
+			configuration = fmt.Sprintf("file:%s?%s", configuration, parsedURL.Query().Encode())
 		}
+
+		fmt.Printf(">>>>> configuration: %v\n", []byte(configuration))
+
 		result, err = connectorsqlite.NewConnector(ctx, configuration)
 
 	case "postgresql":
