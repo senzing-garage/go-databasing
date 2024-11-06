@@ -7,7 +7,6 @@ import (
 	"net"
 	"net/url"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
@@ -65,11 +64,7 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	case "sqlite3":
 		configuration := path
 		if len(parsedURL.RawQuery) > 0 {
-			unescapedQuery, err := strconv.Unquote(parsedURL.RawQuery)
-			if err != nil {
-				return result, err
-			}
-			configuration = fmt.Sprintf("file:%s?%s", configuration, unescapedQuery)
+			configuration = fmt.Sprintf("file:%s?%s", configuration, parsedURL.RawQuery)
 		}
 		result, err = connectorsqlite.NewConnector(ctx, configuration)
 
