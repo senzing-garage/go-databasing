@@ -62,13 +62,15 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 
 	switch scheme {
 	case "sqlite3":
-		// configuration := path
-		configuration := "BOBWASHERE"
+		configuration := path[1:]
 		if len(parsedURL.RawQuery) > 0 {
 			configuration = fmt.Sprintf("file:%s?%s", configuration, parsedURL.Query().Encode())
 		}
 
-		fmt.Printf(">>>>> configuration: %v\n", []byte(configuration))
+		// configuration := "file:MYPRIVATE_DB?mode=memory&cache=shared" <- Accurate
+		// configuration := "file:/MYPRIVATE_DB?mode=memory&cache=shared" <- Does not match C code
+
+		fmt.Printf(">>>>> go-databasing.connector.go configuration: %s\n", configuration)
 
 		result, err = connectorsqlite.NewConnector(ctx, configuration)
 

@@ -121,7 +121,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 	// Open a database connection.
 
 	database := sql.OpenDB(sqlExecutor.DatabaseConnector)
-	defer database.Close()
+	// defer database.Close()
 
 	err = database.PingContext(ctx)
 	if err != nil {
