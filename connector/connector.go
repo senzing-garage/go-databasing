@@ -62,7 +62,9 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 
 	switch scheme {
 	case "sqlite3":
-		configuration := path[1:]
+		// configuration := path[1:]  // Failed.
+		configuration := path
+
 		if len(parsedURL.RawQuery) > 0 {
 			configuration = fmt.Sprintf("file:%s?%s", configuration, parsedURL.Query().Encode())
 		}

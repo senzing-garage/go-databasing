@@ -152,21 +152,20 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 
 	// >>>>> FIXME:
 
-	sqlRows, err := database.Query("SELECT name FROM sqlite_master WHERE type='table';")
-	if err != nil {
-		return err
-	}
-	defer sqlRows.Close()
+	// sqlRows, err := database.Query("SELECT name FROM sqlite_master WHERE type='table';")
+	// if err != nil {
+	// 	return err
+	// }
+	// defer sqlRows.Close()
 
-	var name string
-	for sqlRows.Next() {
-		err := sqlRows.Scan(&name)
-		if err != nil {
-			fmt.Printf(">>>>>> error: %v\n", err)
-		}
-		fmt.Printf(">>>>> name: %s\n", name)
-
-	}
+	// var name string
+	// for sqlRows.Next() {
+	// 	err := sqlRows.Scan(&name)
+	// 	if err != nil {
+	// 		fmt.Printf(">>>>> error: %v\n", err)
+	// 	}
+	// 	fmt.Printf(">>>>> name: %s\n", name)
+	// }
 
 	// Exit tasks.
 
