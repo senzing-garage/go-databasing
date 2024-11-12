@@ -64,7 +64,6 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	case "sqlite3":
 		configuration := path
 		if len(parsedURL.RawQuery) > 0 {
-			// TODO:  Determine if this is correct.
 			configuration = fmt.Sprintf("file:%s?%s", configuration[1:], parsedURL.Query().Encode())
 		}
 		result, err = connectorsqlite.NewConnector(ctx, configuration)
