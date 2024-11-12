@@ -48,11 +48,14 @@ jobs:
 
       postgres:
         env:
-          POSTGRESQL_DATABASE: G2
-          POSTGRESQL_PASSWORD: senzing
-          POSTGRESQL_POSTGRES_PASSWORD: postgres
-          POSTGRESQL_USERNAME: senzing
-        image: bitnami/postgresql:16
+          POSTGRES_DB: G2
+          POSTGRES_PASSWORD: postgres
+        image: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         ports:
           - 5432:5432
 
