@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning].
 ## [Unreleased]
 
 -
--
 
 ## [0.5.4] - 2024-11-04
 

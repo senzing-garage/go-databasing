@@ -31,7 +31,7 @@ const (
 // ----------------------------------------------------------------------------
 
 func main() {
-	databaseIDs := []int{Oracle, Mssql, Mysql, Postgresql, Sqlite, SqliteInMemory}
+	databaseIDs := []int{Oracle, Mssql, Mysql, Sqlite, SqliteInMemory, Postgresql}
 	printStatementTemplate := "\n==== %11s ==========================\n\n"
 	for _, databaseID := range databaseIDs {
 		switch databaseID {
@@ -56,6 +56,10 @@ func demonstrateDatabase(databaseID int) {
 	ctx := context.TODO()
 	var sqlFilename string
 	var databaseURL string
+
+	if databaseID == Postgresql {
+		time.Sleep(2 * time.Minute)
+	}
 
 	// Create a silent observer.
 
