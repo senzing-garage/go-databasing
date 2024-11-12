@@ -57,10 +57,6 @@ func demonstrateDatabase(databaseID int) {
 	var sqlFilename string
 	var databaseURL string
 
-	if databaseID == Postgresql {
-		time.Sleep(2 * time.Minute)
-	}
-
 	// Create a silent observer.
 
 	observer1 := &observer.NullObserver{

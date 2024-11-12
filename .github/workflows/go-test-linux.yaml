@@ -52,7 +52,7 @@ jobs:
           POSTGRESQL_PASSWORD: senzing
           POSTGRESQL_POSTGRES_PASSWORD: postgres
           POSTGRESQL_USERNAME: senzing
-        image: bitnami/postgresql
+        image: bitnami/postgresql:16
         ports:
           - 5432:5432
 
