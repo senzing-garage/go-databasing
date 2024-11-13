@@ -10,6 +10,7 @@ import (
 type testCaseMetadata struct {
 	databaseFilename string
 	databaseURL      string
+	fixedDatabaseURL string
 	name             string
 	succeeds         bool
 }
@@ -56,6 +57,12 @@ var testCasesForMultiPlatform = []testCaseMetadata{
 		succeeds:    false,
 	},
 	{
+		name:             "postgresql-003",
+		databaseURL:      "postgresql://username:password@hostname:5432:G2/?schema=schemaname",
+		fixedDatabaseURL: "postgresql://username:password@hostname:5432/G2/?schema=schemaname",
+		succeeds:         false,
+	},
+	{
 		name:        "sqlite-001",
 		databaseURL: "sqlite3://na:na@/tmp/sqlite/G2C.db",
 		succeeds:    true,
@@ -88,4 +95,18 @@ func TestGetMessenger(test *testing.T) {
 	_ = test
 	options := []interface{}{}
 	_ = GetMessenger(1, map[int]string{}, 0, options...)
+}
+
+func TestParseDatabaseURL(test *testing.T) {
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			result, err := ParseDatabaseURL(testCase.databaseURL)
+			require.NoError(test, err)
+			if len(testCase.fixedDatabaseURL) > 0 {
+				assert.Equal(test, testCase.fixedDatabaseURL, result.String())
+			} else {
+				assert.Equal(test, testCase.databaseURL, result.String())
+			}
+		})
+	}
 }
