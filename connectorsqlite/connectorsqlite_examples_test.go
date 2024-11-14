@@ -19,6 +19,16 @@ func ExampleNewConnector() {
 	// Output:
 }
 
+func ExampleNewConnector_inmemory() {
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/connectorsqlite/connectorsqlite_examples_test.go
+	ctx := context.TODO()
+	configuration := "/tmp/sqlite/G2C.db?mode=memory&cache=shared"
+	databaseConnector, err := NewConnector(ctx, configuration)
+	failOnError(err)
+	_ = databaseConnector // Faux use of databaseConnector
+	// Output:
+}
+
 func ExampleNewConnector_null() {} // Hack to format godoc documentation examples properly
 
 // ----------------------------------------------------------------------------

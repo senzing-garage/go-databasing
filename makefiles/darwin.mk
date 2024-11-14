@@ -24,7 +24,7 @@ clean-osarch-specific:
 	@rm -fr $(TARGET_DIRECTORY) || true
 	@rm -fr /tmp/sqlite || true
 	@pkill godoc || true
-	@docker-compose down 2> /dev/null || true
+	@docker-compose -f docker-compose.test.yaml down 2> /dev/null || true
 
 
 .PHONY: coverage-osarch-specific
@@ -37,7 +37,7 @@ coverage-osarch-specific:
 
 .PHONY: dependencies-for-development-osarch-specific
 dependencies-for-development-osarch-specific:
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.58.1
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin latest
 
 
 .PHONY: documentation-osarch-specific
@@ -66,7 +66,7 @@ run-osarch-specific:
 setup-osarch-specific:
 	@mkdir /tmp/sqlite
 	@touch /tmp/sqlite/G2C.db
-	docker-compose up --detach
+	docker-compose -f docker-compose.test.yaml up --detach
 
 
 .PHONY: test-osarch-specific

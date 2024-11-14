@@ -69,7 +69,7 @@ dependencies-for-development: dependencies-for-development-osarch-specific
 	@go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
 	@go install github.com/vladopajic/go-test-coverage/v2@latest
 	@go install golang.org/x/tools/cmd/godoc@latest
-	@docker-compose pull
+	@docker-compose -f docker-compose.test.yaml pull 2>/dev/null || true
 
 
 .PHONY: dependencies

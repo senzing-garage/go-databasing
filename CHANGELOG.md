@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.5.4] - 2024-11-14
+
+### Added in 0.5.4
+
+- Support for in-memory SQLite
+
 ## [0.5.3] - 2024-10-18
 
 ### Changed in 0.5.3

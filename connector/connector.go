@@ -15,6 +15,7 @@ import (
 	"github.com/senzing-garage/go-databasing/connectororacle"
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 	"github.com/senzing-garage/go-databasing/connectorsqlite"
+	"github.com/senzing-garage/go-databasing/dbhelper"
 )
 
 // ----------------------------------------------------------------------------
@@ -33,18 +34,9 @@ Input
 func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
 	var result driver.Connector
 
-	parsedURL, err := url.Parse(databaseURL)
+	parsedURL, err := dbhelper.ParseDatabaseURL(databaseURL)
 	if err != nil {
-
-		if strings.HasPrefix(databaseURL, "postgresql") {
-			index := strings.LastIndex(databaseURL, ":")
-			newDatabaseURL := databaseURL[:index] + "/" + databaseURL[index+1:]
-			parsedURL, err = url.Parse(newDatabaseURL)
-		}
-
-		if err != nil {
-			return result, err
-		}
+		return result, err
 	}
 
 	// Parse URL: https://pkg.go.dev/net/url#URL
@@ -63,6 +55,9 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	switch scheme {
 	case "sqlite3":
 		configuration := path
+		if len(parsedURL.RawQuery) > 0 {
+			configuration = fmt.Sprintf("file:%s?%s", configuration[1:], parsedURL.Query().Encode())
+		}
 		result, err = connectorsqlite.NewConnector(ctx, configuration)
 
 	case "postgresql":

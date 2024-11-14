@@ -23,6 +23,7 @@ const (
 	Oracle
 	Postgresql
 	Sqlite
+	SqliteInMemory
 )
 
 // ----------------------------------------------------------------------------
@@ -30,7 +31,7 @@ const (
 // ----------------------------------------------------------------------------
 
 func main() {
-	databaseIDs := []int{Oracle, Mssql, Mysql, Postgresql, Sqlite}
+	databaseIDs := []int{Oracle, Mssql, Mysql, Sqlite, SqliteInMemory, Postgresql}
 	printStatementTemplate := "\n==== %11s ==========================\n\n"
 	for _, databaseID := range databaseIDs {
 		switch databaseID {
@@ -44,6 +45,8 @@ func main() {
 			fmt.Printf(printStatementTemplate, "Postgresql")
 		case Sqlite:
 			fmt.Printf(printStatementTemplate, "Sqlite")
+		case SqliteInMemory:
+			fmt.Printf(printStatementTemplate, "SqliteInMemory")
 		}
 		demonstrateDatabase(databaseID)
 	}
@@ -94,6 +97,9 @@ func demonstrateDatabase(databaseID int) {
 		sqlFilename = gitRepositoryDir + "/testdata/postgresql/szcore-schema-postgresql-create.sql"
 	case Sqlite:
 		databaseURL = sqliteDatabaseURL
+		sqlFilename = gitRepositoryDir + "/testdata/sqlite/szcore-schema-sqlite-create.sql"
+	case SqliteInMemory:
+		databaseURL = sqliteDatabaseURL + "?mode=memory&cache=shared"
 		sqlFilename = gitRepositoryDir + "/testdata/sqlite/szcore-schema-sqlite-create.sql"
 	default:
 		exitOnError(fmt.Errorf("unknown databaseNumber: %d", databaseID))

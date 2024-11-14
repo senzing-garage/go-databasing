@@ -81,6 +81,22 @@ func ExampleBasicSQLExecutor_ProcessFileName_sqlite() {
 	// Output:
 }
 
+func ExampleBasicSQLExecutor_ProcessFileName_sqlite_inmemory() {
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
+	ctx := context.TODO()
+	databaseFilename := "/tmp/sqlite/NotAFile1.db?mode=memory&cache=shared"
+	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
+	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
+	failOnError(err)
+	sqlExecutor := &BasicSQLExecutor{
+		DatabaseConnector: databaseConnector,
+	}
+	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
+	failOnError(err)
+	// Output:
+}
+
 func ExampleBasicSQLExecutor_ProcessScanner_sqlite() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
@@ -89,6 +105,25 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite() {
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
 	failOnError(err)
+	file, err := os.Open(sqlFilename)
+	failOnError(err)
+	defer file.Close()
+	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
+	failOnError(err)
+	sqlExecutor := &BasicSQLExecutor{
+		DatabaseConnector: databaseConnector,
+	}
+	err = sqlExecutor.ProcessScanner(ctx, bufio.NewScanner(file))
+	failOnError(err)
+	// Output:
+}
+
+func ExampleBasicSQLExecutor_ProcessScanner_sqlite_inmemory() {
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
+	ctx := context.TODO()
+	databaseFilename := "/tmp/sqlite/NotAFile2.db?mode=memory&cache=shared"
+	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	file, err := os.Open(sqlFilename)
 	failOnError(err)
 	defer file.Close()
