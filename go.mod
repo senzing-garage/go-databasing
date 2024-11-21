@@ -6,7 +6,7 @@ toolchain go1.23.2
 
 require (
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/godror/godror v0.45.1
+	github.com/godror/godror v0.45.2
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.24
 	github.com/microsoft/go-mssqldb v1.7.2
