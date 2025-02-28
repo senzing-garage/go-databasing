@@ -34,6 +34,8 @@ Input
 func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
 	var result driver.Connector
 
+	fmt.Printf(">>>>>> databaseURL: %s\n", databaseURL)
+
 	parsedURL, err := dbhelper.ParseDatabaseURL(databaseURL)
 	if err != nil {
 		return result, err
@@ -52,7 +54,12 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		return result, err
 	}
 
-	fmt.Printf(">>>>>> scheme: %s; username: %s; password: %s; path: %s; host: %s; port: %s; query: %s", scheme, username, password, path, host, port, query)
+	if scheme == "oci" {
+		host = "oracle"
+		port = "1521"
+		path = "/G2"
+	}
+	fmt.Printf(">>>>>> scheme: %s; username: %s; password: %s; path: %s; host: %s; port: %s; query: %s\n", scheme, username, password, path, host, port, query)
 
 	switch scheme {
 	case "sqlite3":
