@@ -150,6 +150,9 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	case "oci":
 		// See https://pkg.go.dev/github.com/godror/godror
 		// databaseConnector, err = connectororacle.NewConnector(ctx, "user=sa;password=Passw0rd;database=master;server=localhost")
+
+		// configuration := `user="sys" sysdba=true password="Passw0rd" connectString="localhost:1521/FREE"`
+
 		configurationMap := map[string]string{}
 		if len(username) > 0 {
 			configurationMap["user"] = username
@@ -165,6 +168,9 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		for key, value := range configurationMap {
 			configuration += fmt.Sprintf("%s=%s ", key, value)
 		}
+
+		fmt.Printf(">>>>>> OCI connection string: %s\n", configuration)
+
 		result, err = connectororacle.NewConnector(ctx, configuration)
 
 	default:
