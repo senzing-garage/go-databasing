@@ -55,7 +55,7 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	}
 
 	if scheme == "oci" {
-		host = "oracle"
+		host = "127.0.0.1"
 		port = "1521"
 		path = "/G2"
 	}
