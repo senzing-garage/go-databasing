@@ -89,7 +89,7 @@ func demonstrateDatabase(databaseID int) {
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/szcore-schema-mssql-create.sql"
 	case Oracle:
 		// See https://pkg.go.dev/github.com/godror/godror#pkg-overview
-		databaseURL = "oracle://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
+		databaseURL = "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
 		sqlFilename = gitRepositoryDir + "/testdata/oracle/szcore-schema-oracle-create.sql"
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters

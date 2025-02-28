@@ -147,7 +147,7 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		}
 		result, err = connectormssql.NewConnector(ctx, configuration)
 
-	case "oracle":
+	case "oci":
 		// See https://pkg.go.dev/github.com/godror/godror
 		// databaseConnector, err = connectororacle.NewConnector(ctx, "user=sa;password=Passw0rd;database=master;server=localhost")
 		configurationMap := map[string]string{}

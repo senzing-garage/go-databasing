@@ -41,7 +41,7 @@ func TestNewConnector_mssql1(test *testing.T) {
 
 func TestNewConnector_oracle1(test *testing.T) {
 	ctx := context.TODO()
-	databaseURL := "oracle://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
+	databaseURL := "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
 	_, err := NewConnector(ctx, databaseURL)
 	require.NoError(test, err)
 }
