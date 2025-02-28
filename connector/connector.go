@@ -52,6 +52,8 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		return result, err
 	}
 
+	fmt.Printf(">>>>>> scheme: %s; username: %s; password: %s; path: %s; host: %s; port: %s; query: %s", scheme, username, password, path, host, port, query)
+
 	switch scheme {
 	case "sqlite3":
 		configuration := path
