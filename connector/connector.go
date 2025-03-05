@@ -54,11 +54,6 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		return result, err
 	}
 
-	if scheme == "oci" {
-		host = "127.0.0.1"
-		port = "1521"
-		path = "/G2"
-	}
 	// fmt.Printf(">>>>>> scheme: %s; username: %s; password: %s; path: %s; host: %s; port: %s; query: %s\n", scheme, username, password, path, host, port, query)
 
 	switch scheme {
