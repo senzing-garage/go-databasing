@@ -4,6 +4,8 @@ go 1.23.0
 
 toolchain go1.23.2
 
+godebug x509negativeserial=1
+
 require (
 	github.com/go-sql-driver/mysql v1.9.0
 	github.com/godror/godror v0.47.0
@@ -14,7 +16,6 @@ require (
 	github.com/senzing-garage/go-messaging v1.5.2
 	github.com/senzing-garage/go-observing v0.3.3
 	github.com/stretchr/testify v1.10.0
-
 )
 
 require (
@@ -30,7 +31,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/exp v0.0.0-20250228200357-dead58393ab7 // indirect
-	golang.org/x/net v0.36.0 // indirect
+	golang.org/x/net v0.37.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250303144028-a0af3efb3deb // indirect
