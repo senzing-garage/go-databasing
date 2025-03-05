@@ -4,6 +4,8 @@ go 1.23.0
 
 toolchain go1.23.2
 
+godebug x509negativeserial=1
+
 require (
 	github.com/go-sql-driver/mysql v1.9.0
 	github.com/godror/godror v0.47.0
