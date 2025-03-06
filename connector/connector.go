@@ -15,7 +15,6 @@ import (
 	"github.com/senzing-garage/go-databasing/connectororacle"
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 	"github.com/senzing-garage/go-databasing/connectorsqlite"
-	"github.com/senzing-garage/go-databasing/dbhelper"
 )
 
 // ----------------------------------------------------------------------------
@@ -36,7 +35,7 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 
 	// fmt.Printf(">>>>>> databaseURL: %s\n", databaseURL)
 
-	parsedURL, err := dbhelper.ParseDatabaseURL(databaseURL)
+	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 		return result, err
 	}
