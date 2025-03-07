@@ -23,9 +23,8 @@ var testCases = []testCaseMetadata{
 		databaseURL: "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true",
 	},
 	{
-		name:             "oci-003",
-		databaseURL:      "oci://username:password@G2",
-		isBadDatabaseURL: true,
+		name:        "oci-003",
+		databaseURL: "oci://username:password@G2",
 	},
 	{
 		name:        "mssql-001",
@@ -62,9 +61,8 @@ var testCases = []testCaseMetadata{
 		databaseURL: "mysql://username:password@hostname:3306/database?schema=schemaname",
 	},
 	{
-		name:             "mysql-003",
-		databaseURL:      "mysql://username:password@hostname:3306/?schema=G2",
-		isBadDatabaseURL: true,
+		name:        "mysql-003",
+		databaseURL: "mysql://username:password@hostname:3306/?schema=G2",
 	},
 	{
 		name:        "postgresql-001",
@@ -75,8 +73,9 @@ var testCases = []testCaseMetadata{
 		databaseURL: "postgresql://username:password@hostname:5432/G2/?schema=schemaname",
 	},
 	{
-		name:        "postgresql-003",
-		databaseURL: "postgresql://username:password@hostname:5432:G2/?schema=schemaname",
+		name:             "postgresql-003",
+		databaseURL:      "postgresql://username:password@hostname:5432:G2/?schema=schemaname",
+		isBadDatabaseURL: true,
 	},
 	{
 		name:        "postgresql-004",
