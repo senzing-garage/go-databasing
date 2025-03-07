@@ -25,7 +25,7 @@ func ExtractSqliteDatabaseFilename(databaseURL string) (string, error) {
 		return result, fmt.Errorf("sqlite3 URL schema needed")
 	}
 
-	parsedURL, err := ParseDatabaseURL(databaseURL)
+	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 		return result, err
 	}
@@ -80,14 +80,14 @@ Output
 
 [url.URL]: https://pkg.go.dev/net/url#URL
 */
-func ParseDatabaseURL(databaseURL string) (*url.URL, error) {
-	result, err := url.Parse(databaseURL)
-	if err != nil {
-		if strings.HasPrefix(databaseURL, "postgresql") {
-			index := strings.LastIndex(databaseURL, ":")
-			newDatabaseURL := databaseURL[:index] + "/" + databaseURL[index+1:]
-			result, err = url.Parse(newDatabaseURL)
-		}
-	}
-	return result, err
-}
+// func ParseDatabaseURL(databaseURL string) (*url.URL, error) {
+// 	result, err := url.Parse(databaseURL)
+// 	if err != nil {
+// 		if strings.HasPrefix(databaseURL, "postgresql") {
+// 			index := strings.LastIndex(databaseURL, ":")
+// 			newDatabaseURL := databaseURL[:index] + "/" + databaseURL[index+1:]
+// 			result, err = url.Parse(newDatabaseURL)
+// 		}
+// 	}
+// 	return result, err
+// }

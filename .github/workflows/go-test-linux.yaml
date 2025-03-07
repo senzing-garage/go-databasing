@@ -70,6 +70,10 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
+      - name: Install depencencies
+        run: |
+          sudo apt-get install -y ca-certificates
+
       - name: Set up gotestfmt
         uses: gotesttools/gotestfmt-action@v2
         with:

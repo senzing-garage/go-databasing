@@ -15,7 +15,6 @@ import (
 	"github.com/senzing-garage/go-databasing/connectororacle"
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 	"github.com/senzing-garage/go-databasing/connectorsqlite"
-	"github.com/senzing-garage/go-databasing/dbhelper"
 )
 
 // ----------------------------------------------------------------------------
@@ -34,7 +33,9 @@ Input
 func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
 	var result driver.Connector
 
-	parsedURL, err := dbhelper.ParseDatabaseURL(databaseURL)
+	// fmt.Printf(">>>>>> databaseURL: %s\n", databaseURL)
+
+	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 		return result, err
 	}
@@ -51,6 +52,8 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	if err != nil {
 		return result, err
 	}
+
+	// fmt.Printf(">>>>>> scheme: %s; username: %s; password: %s; path: %s; host: %s; port: %s; query: %s\n", scheme, username, password, path, host, port, query)
 
 	switch scheme {
 	case "sqlite3":
@@ -147,9 +150,12 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		}
 		result, err = connectormssql.NewConnector(ctx, configuration)
 
-	case "oracle":
+	case "oci":
 		// See https://pkg.go.dev/github.com/godror/godror
 		// databaseConnector, err = connectororacle.NewConnector(ctx, "user=sa;password=Passw0rd;database=master;server=localhost")
+
+		// configuration := `user="sys" sysdba=true password="Passw0rd" connectString="localhost:1521/FREE"`
+
 		configurationMap := map[string]string{}
 		if len(username) > 0 {
 			configurationMap["user"] = username
@@ -165,6 +171,9 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		for key, value := range configurationMap {
 			configuration += fmt.Sprintf("%s=%s ", key, value)
 		}
+
+		// fmt.Printf(">>>>>> OCI connection string: %s\n", configuration)
+
 		result, err = connectororacle.NewConnector(ctx, configuration)
 
 	default:
