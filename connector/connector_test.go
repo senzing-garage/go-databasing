@@ -43,13 +43,12 @@ var testCases = []testCaseMetadata{
 		databaseURL: "mssql://username:password@hostname:3306/database?schema=schemaname",
 	},
 	{
-		name:             "mssql-005",
-		databaseURL:      "mssql://username:password@hostname:1433:G2/?driver=mssqldriver",
-		isBadDatabaseURL: true,
+		name:        "mssql-005",
+		databaseURL: "mssql://username:password@G2",
 	},
 	{
 		name:             "mssql-006",
-		databaseURL:      "mssql://username:password@G2",
+		databaseURL:      "mssql://username:password@hostname:1433:G2/?driver=mssqldriver",
 		isBadDatabaseURL: true,
 	},
 	{
@@ -73,13 +72,13 @@ var testCases = []testCaseMetadata{
 		databaseURL: "postgresql://username:password@hostname:5432/G2/?schema=schemaname",
 	},
 	{
-		name:             "postgresql-003",
-		databaseURL:      "postgresql://username:password@hostname:5432:G2/?schema=schemaname",
-		isBadDatabaseURL: true,
+		name:        "postgresql-003",
+		databaseURL: "postgresql://username:password@hostname:5432/database/?schema=schemaname",
 	},
 	{
-		name:        "postgresql-004",
-		databaseURL: "postgresql://username:password@hostname:5432/database/?schema=schemaname",
+		name:             "postgresql-004",
+		databaseURL:      "postgresql://username:password@hostname:5432:G2/?schema=schemaname",
+		isBadDatabaseURL: true,
 	},
 	{
 		name:             "postgresql-005",
