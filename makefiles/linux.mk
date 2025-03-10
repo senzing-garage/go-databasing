@@ -5,6 +5,7 @@
 # -----------------------------------------------------------------------------
 
 SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@nowhere/tmp/sqlite/G2C.db
+LD_LIBRARY_PATH ?= /opt/senzing/er/lib:/opt/oracle/instantclient_23_5
 
 # -----------------------------------------------------------------------------
 # OS specific targets

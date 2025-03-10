@@ -68,6 +68,7 @@ services:
     environment:
       # See https://hub.docker.com/_/mysql/ "Environment Variables"
       MYSQL_DATABASE: G2
+      MYSQL_NATIVE_PASSWORD: "ON"
       MYSQL_PASSWORD: mysql
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: mysql

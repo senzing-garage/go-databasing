@@ -118,3 +118,21 @@ func TestNewConnector(test *testing.T) {
 		})
 	}
 }
+
+// func TestNewConnector_connect(test *testing.T) {
+// 	ctx := context.TODO()
+// 	for _, testCase := range testCases {
+// 		test.Run(testCase.name, func(test *testing.T) {
+// 			databaseConnector, err := NewConnector(ctx, testCase.databaseURL)
+// 			if testCase.isBadDatabaseURL {
+// 				require.Error(test, err)
+// 			} else {
+// 				require.NoError(test, err)
+// 				if !testCase.doNotTestConnect {
+// 					_, err = databaseConnector.Connect(ctx)
+// 					require.NoError(test, err)
+// 				}
+// 			}
+// 		})
+// 	}
+// }
