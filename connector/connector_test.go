@@ -24,18 +24,10 @@ var testCases = []testCaseMetadata{
 	},
 	{
 		name:        "mssql-003",
-		databaseURL: "mysql://username:password@hostname:3306/?schema=schemaname",
-	},
-	{
-		name:        "mssql-004",
-		databaseURL: "mssql://username:password@hostname:3306/database?schema=schemaname",
-	},
-	{
-		name:        "mssql-005",
 		databaseURL: "mssql://username:password@G2",
 	},
 	{
-		name:             "mssql-006",
+		name:             "mssql-004",
 		databaseURL:      "mssql://username:password@hostname:1433:G2/?driver=mssqldriver",
 		isBadDatabaseURL: true,
 	},
@@ -48,7 +40,11 @@ var testCases = []testCaseMetadata{
 		databaseURL: "mysql://username:password@hostname:3306/database?schema=schemaname",
 	},
 	{
-		name:        "mysql-003",
+		name:        "mssql-003",
+		databaseURL: "mysql://username:password@hostname:3306/?schema=schemaname",
+	},
+	{
+		name:        "mysql-004",
 		databaseURL: "mysql://username:password@hostname:3306/?schema=G2",
 	},
 	{
@@ -57,7 +53,7 @@ var testCases = []testCaseMetadata{
 	},
 	{
 		name:        "oci-002",
-		databaseURL: "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true",
+		databaseURL: "oci://sys:Passw0rd@localhost:1521/FREE/?noTimezoneCheck=true&sysdba=true",
 	},
 	{
 		name:        "oci-003",
