@@ -22,7 +22,7 @@ jobs:
       oracle:
         env:
           ORACLE_PWD: Passw0rd
-        image: container-registry.oracle.com/database/free
+        image: container-registry.oracle.com/database/free:latest
         ports:
           - 1521:1521
 

@@ -33,12 +33,16 @@ Input
 func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
 	var result driver.Connector
 
-	// fmt.Printf(">>>>>> databaseURL: %s\n", databaseURL)
+	// fmt.Printf(">>>>>> NewConnector: 1.0\n")
+
+	// fmt.Printf(">>>>>> NewConnector.databaseURL: %s\n", databaseURL)
 
 	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 		return result, err
 	}
+
+	// fmt.Printf(">>>>>> NewConnector: 2.0\n")
 
 	// Parse URL: https://pkg.go.dev/net/url#URL
 
@@ -52,6 +56,8 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	if err != nil {
 		return result, err
 	}
+
+	// fmt.Printf(">>>>>> NewConnector: 3.0\n")
 
 	// fmt.Printf(">>>>>> scheme: %s; username: %s; password: %s; path: %s; host: %s; port: %s; query: %s\n", scheme, username, password, path, host, port, query)
 
@@ -144,10 +150,19 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		for key, value := range query {
 			configurationMap[key] = value[0]
 		}
+		value, ok := configurationMap["TrustServerCertificate"]
+		if ok {
+			if value == "yes" {
+				configurationMap["TrustServerCertificate"] = "true"
+			}
+		}
 		configuration := ""
 		for key, value := range configurationMap {
 			configuration += fmt.Sprintf("%s=%s;", key, value)
 		}
+
+		// fmt.Printf(">>>>>> mssql configuration: %s\n", configuration)
+
 		result, err = connectormssql.NewConnector(ctx, configuration)
 
 	case "oci":
@@ -179,6 +194,8 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	default:
 		err = fmt.Errorf("unknown database scheme: %s", scheme)
 	}
+
+	// fmt.Printf(">>>>>> NewConnector: 4.0\n")
 
 	return result, err
 }
