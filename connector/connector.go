@@ -32,6 +32,7 @@ Input
 */
 func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
 	var result driver.Connector
+
 	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 		return result, err
@@ -113,7 +114,6 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		} else if schema, ok := query["schema"]; ok {
 			configuration.DBName = schema[0]
 		}
-
 		result, err = connectormysql.NewConnector(ctx, configuration)
 
 	case "mssql":
@@ -149,7 +149,6 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		for key, value := range configurationMap {
 			configuration += fmt.Sprintf("%s=%s;", key, value)
 		}
-
 		result, err = connectormssql.NewConnector(ctx, configuration)
 
 	case "oci":
@@ -170,7 +169,6 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		for key, value := range configurationMap {
 			configuration += fmt.Sprintf("%s=%s ", key, value)
 		}
-
 		result, err = connectororacle.NewConnector(ctx, configuration)
 
 	default:

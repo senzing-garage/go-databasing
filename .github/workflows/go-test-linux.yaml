@@ -22,7 +22,7 @@ jobs:
       oracle:
         env:
           ORACLE_PWD: Passw0rd
-        image: container-registry.oracle.com/database/free:latest
+        image: container-registry.oracle.com/database/free
         ports:
           - 1521:1521
 
@@ -70,9 +70,9 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
-      - name: Install depencencies
-        run: |
-          sudo apt-get install -y ca-certificates
+      # - name: Install depencencies
+      #   run: |
+      #     sudo apt-get install -y ca-certificates
 
       - name: Set up gotestfmt
         uses: gotesttools/gotestfmt-action@v2

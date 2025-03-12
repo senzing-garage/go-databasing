@@ -96,17 +96,3 @@ func TestGetMessenger(test *testing.T) {
 	options := []interface{}{}
 	_ = GetMessenger(1, map[int]string{}, 0, options...)
 }
-
-// func TestParseDatabaseURL(test *testing.T) {
-// 	for _, testCase := range testCases {
-// 		test.Run(testCase.name, func(test *testing.T) {
-// 			result, err := ParseDatabaseURL(testCase.databaseURL)
-// 			require.NoError(test, err)
-// 			if len(testCase.fixedDatabaseURL) > 0 {
-// 				assert.Equal(test, testCase.fixedDatabaseURL, result.String())
-// 			} else {
-// 				assert.Equal(test, testCase.databaseURL, result.String())
-// 			}
-// 		})
-// 	}
-// }
