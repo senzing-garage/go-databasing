@@ -137,8 +137,6 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 		if err != nil {
 			scanFailure++
 			sqlExecutor.log(3001, scanFailure, scanLine, result, err)
-		} else {
-			fmt.Println(result)
 		}
 		if sqlExecutor.observers != nil {
 			go func() {
