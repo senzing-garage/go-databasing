@@ -153,7 +153,6 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 
 	case "oci":
 		// See https://pkg.go.dev/github.com/godror/godror
-
 		configurationMap := map[string]string{}
 		if len(username) > 0 {
 			configurationMap["user"] = username
