@@ -104,12 +104,12 @@ Input
   - scanner: SQL statements to be processed.
 */
 func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error {
-
 	var (
 		err         error
 		scanLine    = 0
 		scanFailure = 0
 	)
+
 	// Entry tasks.
 
 	if sqlExecutor.isTrace {
@@ -304,7 +304,6 @@ func (sqlExecutor *BasicSQLExecutor) SetObserverOrigin(ctx context.Context, orig
 			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8005, err, details)
 		}()
 	}
-
 }
 
 /*
