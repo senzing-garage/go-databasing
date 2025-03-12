@@ -32,17 +32,10 @@ Input
 */
 func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
 	var result driver.Connector
-
-	// fmt.Printf(">>>>>> NewConnector: 1.0\n")
-
-	// fmt.Printf(">>>>>> NewConnector.databaseURL: %s\n", databaseURL)
-
 	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 		return result, err
 	}
-
-	// fmt.Printf(">>>>>> NewConnector: 2.0\n")
 
 	// Parse URL: https://pkg.go.dev/net/url#URL
 
@@ -56,10 +49,6 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	if err != nil {
 		return result, err
 	}
-
-	// fmt.Printf(">>>>>> NewConnector: 3.0\n")
-
-	// fmt.Printf(">>>>>> scheme: %s; username: %s; password: %s; path: %s; host: %s; port: %s; query: %s\n", scheme, username, password, path, host, port, query)
 
 	switch scheme {
 	case "sqlite3":
@@ -161,15 +150,10 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 			configuration += fmt.Sprintf("%s=%s;", key, value)
 		}
 
-		// fmt.Printf(">>>>>> mssql configuration: %s\n", configuration)
-
 		result, err = connectormssql.NewConnector(ctx, configuration)
 
 	case "oci":
 		// See https://pkg.go.dev/github.com/godror/godror
-		// databaseConnector, err = connectororacle.NewConnector(ctx, "user=sa;password=Passw0rd;database=master;server=localhost")
-
-		// configuration := `user="sys" sysdba=true password="Passw0rd" connectString="localhost:1521/FREE"`
 
 		configurationMap := map[string]string{}
 		if len(username) > 0 {
@@ -187,15 +171,11 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 			configuration += fmt.Sprintf("%s=%s ", key, value)
 		}
 
-		// fmt.Printf(">>>>>> OCI connection string: %s\n", configuration)
-
 		result, err = connectororacle.NewConnector(ctx, configuration)
 
 	default:
 		err = fmt.Errorf("unknown database scheme: %s", scheme)
 	}
-
-	// fmt.Printf(">>>>>> NewConnector: 4.0\n")
 
 	return result, err
 }
