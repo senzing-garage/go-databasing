@@ -25,7 +25,7 @@ func ExtractSqliteDatabaseFilename(databaseURL string) (string, error) {
 		return result, fmt.Errorf("sqlite3 URL schema needed")
 	}
 
-	parsedURL, err := ParseDatabaseURL(databaseURL)
+	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 		return result, err
 	}
@@ -67,27 +67,4 @@ func GetMessenger(componentID int, idMessages map[int]string, callerSkip int, op
 		panic(err)
 	}
 	return result
-}
-
-/*
-Function ParseDatabaseURL is fixes database URLs prior to parsing them.
-
-Input
-  - databaseURL: The database URL to be parsed.
-
-Output
-  - [url.URL]
-
-[url.URL]: https://pkg.go.dev/net/url#URL
-*/
-func ParseDatabaseURL(databaseURL string) (*url.URL, error) {
-	result, err := url.Parse(databaseURL)
-	if err != nil {
-		if strings.HasPrefix(databaseURL, "postgresql") {
-			index := strings.LastIndex(databaseURL, ":")
-			newDatabaseURL := databaseURL[:index] + "/" + databaseURL[index+1:]
-			result, err = url.Parse(newDatabaseURL)
-		}
-	}
-	return result, err
 }

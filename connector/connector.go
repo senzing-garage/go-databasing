@@ -15,7 +15,6 @@ import (
 	"github.com/senzing-garage/go-databasing/connectororacle"
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 	"github.com/senzing-garage/go-databasing/connectorsqlite"
-	"github.com/senzing-garage/go-databasing/dbhelper"
 )
 
 // ----------------------------------------------------------------------------
@@ -34,7 +33,7 @@ Input
 func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, error) {
 	var result driver.Connector
 
-	parsedURL, err := dbhelper.ParseDatabaseURL(databaseURL)
+	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
 		return result, err
 	}
@@ -115,7 +114,6 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		} else if schema, ok := query["schema"]; ok {
 			configuration.DBName = schema[0]
 		}
-
 		result, err = connectormysql.NewConnector(ctx, configuration)
 
 	case "mssql":
@@ -141,15 +139,20 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		for key, value := range query {
 			configurationMap[key] = value[0]
 		}
+		value, ok := configurationMap["TrustServerCertificate"]
+		if ok {
+			if value == "yes" {
+				configurationMap["TrustServerCertificate"] = "true"
+			}
+		}
 		configuration := ""
 		for key, value := range configurationMap {
 			configuration += fmt.Sprintf("%s=%s;", key, value)
 		}
 		result, err = connectormssql.NewConnector(ctx, configuration)
 
-	case "oracle":
+	case "oci":
 		// See https://pkg.go.dev/github.com/godror/godror
-		// databaseConnector, err = connectororacle.NewConnector(ctx, "user=sa;password=Passw0rd;database=master;server=localhost")
 		configurationMap := map[string]string{}
 		if len(username) > 0 {
 			configurationMap["user"] = username

@@ -79,17 +79,17 @@ func demonstrateDatabase(databaseID int) {
 	// Construct database URL and choose SQL file.
 
 	switch databaseID {
-	case Mysql:
-		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-		databaseURL = "mysql://root:root@localhost/G2" // #nosec G101
-		sqlFilename = gitRepositoryDir + "/testdata/mysql/szcore-schema-mysql-create.sql"
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 		databaseURL = "mssql://sa:Passw0rd@localhost/master"
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/szcore-schema-mssql-create.sql"
+	case Mysql:
+		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
+		databaseURL = "mysql://root:root@localhost/G2" // #nosec G101
+		sqlFilename = gitRepositoryDir + "/testdata/mysql/szcore-schema-mysql-create.sql"
 	case Oracle:
 		// See https://pkg.go.dev/github.com/godror/godror#pkg-overview
-		databaseURL = "oracle://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
+		databaseURL = "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
 		sqlFilename = gitRepositoryDir + "/testdata/oracle/szcore-schema-oracle-create.sql"
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters

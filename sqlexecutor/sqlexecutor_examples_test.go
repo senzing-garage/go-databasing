@@ -31,6 +31,22 @@ func ExampleBasicSQLExecutor_ProcessFileName_mysql() {
 	// Output:
 }
 
+func ExampleBasicSQLExecutor_ProcessFileName_oracle() {
+	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
+	ctx := context.TODO()
+	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
+	databaseURL := "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
+	sqlFilename := "../testdata/oracle/szcore-schema-oracle-create.sql"
+	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
+	failOnError(err)
+	sqlExecutor := &BasicSQLExecutor{
+		DatabaseConnector: databaseConnector,
+	}
+	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
+	failOnError(err)
+	// Output:
+}
+
 func ExampleBasicSQLExecutor_ProcessFileName_postgresql() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()

@@ -104,12 +104,12 @@ Input
   - scanner: SQL statements to be processed.
 */
 func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner *bufio.Scanner) error {
-
 	var (
 		err         error
 		scanLine    = 0
 		scanFailure = 0
 	)
+
 	// Entry tasks.
 
 	if sqlExecutor.isTrace {
@@ -149,23 +149,6 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 		}
 	}
 	err = scanner.Err()
-
-	// >>>>> FIXME:
-
-	// sqlRows, err := database.Query("SELECT name FROM sqlite_master WHERE type='table';")
-	// if err != nil {
-	// 	return err
-	// }
-	// defer sqlRows.Close()
-
-	// var name string
-	// for sqlRows.Next() {
-	// 	err := sqlRows.Scan(&name)
-	// 	if err != nil {
-	// 		fmt.Printf(">>>>> error: %v\n", err)
-	// 	}
-	// 	fmt.Printf(">>>>> name: %s\n", name)
-	// }
 
 	// Exit tasks.
 
@@ -321,7 +304,6 @@ func (sqlExecutor *BasicSQLExecutor) SetObserverOrigin(ctx context.Context, orig
 			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8005, err, details)
 		}()
 	}
-
 }
 
 /*

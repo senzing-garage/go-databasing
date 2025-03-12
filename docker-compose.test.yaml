@@ -1,4 +1,5 @@
-version: '3'
+version: "3"
+
 services:
 
   # makefile makes a metadata file for pgadmin.
@@ -68,6 +69,7 @@ services:
     environment:
       # See https://hub.docker.com/_/mysql/ "Environment Variables"
       MYSQL_DATABASE: G2
+      MYSQL_NATIVE_PASSWORD: "ON"
       MYSQL_PASSWORD: mysql
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: mysql
@@ -123,8 +125,6 @@ services:
     ports:
       - 1521:1521
     restart: always
-    # volumes:
-    #   - ./testdata/oracle:/opt/oracle/scripts/startup
 
   pgadmin:
     container_name: senzing-pgadmin
@@ -154,6 +154,31 @@ services:
     user: "${SENZING_UID:-1001}:0"
     volumes:
       - /tmp:/var/lib/pgadmin/storage
+
+  phpmyadmin:
+    container_name: senzing-phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      DATABASE_HOST: mysql
+    image: bitnami/phpmyadmin:${SENZING_DOCKER_IMAGE_VERSION_BITNAMI_PHPMYADMIN:-latest}
+    networks:
+      - senzing
+    ports:
+      - 9173:8080
+    restart: always
+
+  adminer:
+    container_name: senzing-adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: senzing-mssql
+    image: senzing/adminer:${SENZING_DOCKER_IMAGE_VERSION_ADMINER:-latest}
+    networks:
+      - senzing
+    ports:
+      - 9177:8080
+    restart: always
+
 
 networks:
   senzing:

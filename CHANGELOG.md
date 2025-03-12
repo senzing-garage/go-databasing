@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.5.5] - 2025-03-12
+
+### Changed in 0.5.5
+
+- Oracle database protocol change from `oracle` to `oci`
+- Update dependencies
+
 ## [0.5.4] - 2024-11-14
 
 ### Added in 0.5.4
