@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/senzing-garage/go-logging/logging"
@@ -133,6 +134,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 	for scanner.Scan() {
 		scanLine++
 		sqlText := scanner.Text()
+		sqlText = strings.TrimSuffix(sqlText, ";")
 		result, err := database.ExecContext(ctx, sqlText)
 		if err != nil {
 			scanFailure++

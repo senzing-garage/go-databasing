@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.5.6] - 2025-03-13
+
+### Changed in 0.5.6
+
+- Strip trailing semi-colons in SQL files before processing
+
 ## [0.5.5] - 2025-03-12
 
 ### Changed in 0.5.5
