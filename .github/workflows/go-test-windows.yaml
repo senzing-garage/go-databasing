@@ -21,12 +21,11 @@ permissions:
 
 jobs:
   go-test-windows:
-    name: "Go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
-    runs-on: ${{ matrix.os }}
+    name: "Go test with OS: windows-latest; Go: ${{ matrix.go }}"
+    runs-on: windows-latest
     strategy:
       matrix:
-        go: ["1.21"]
-        os: [windows-latest]
+        go: ["1.24"]
 
     steps:
       - name: Checkout repository
@@ -70,7 +69,9 @@ jobs:
       #   run: docker run --detach --env MYSQL_DATABASE --env MYSQL_PASSWORD --env MYSQL_ROOT_PASSWORD --env MYSQL_USER --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=6 --publish 3306:3306 bitnami/mysql
 
       - name: create empty Sqlite database file
-        run: mkdir "C:\Temp\sqlite" && New-Item "C:\Temp\sqlite\G2C.db"
+        run: |
+          mkdir "C:\Temp\sqlite"
+          New-Item "C:\Temp\sqlite\G2C.db"
 
       # - name: run go test
       #   run: go test -v -p 1 ./...
@@ -79,34 +80,43 @@ jobs:
       #   run: go test -v -p 1 ./.
 
       - name: run go test - connector
-        run: go test -v -p 1 ./connector
+        run: |
+          go test -v -p 1 ./connector
 
       - name: run go test - connectordb2
-        run: go test -v -p 1 ./connectordb2
+        run: |
+          go test -v -p 1 ./connectordb2
 
       # - name: run go test - connectormssql
       #   run: go test -v -p 1 ./connectormssql
 
       - name: Run go test - connectormysql
-        run: go test -v -p 1 ./connectormysql
+        run: |
+          go test -v -p 1 ./connectormysql
 
       - name: Run go test - connectorpostgresql
-        run: go test -v -p 1 ./connectorpostgresql
+        run: |
+          go test -v -p 1 ./connectorpostgresql
 
       - name: Run go test - connectorsqlite
-        run: go test -v -p 1 ./connectorsqlite
+        run: |
+          go test -v -p 1 ./connectorsqlite
 
       - name: Run go test - dbhelper
-        run: go test -v -p 1 ./dbhelper
+        run: |
+          go test -v -p 1 ./dbhelper
 
       - name: Run go test - postgresql
-        run: go test -v -p 1 ./postgresql
+        run: |
+          go test -v -p 1 ./postgresql
 
       - name: Run go test - sqlexecutor
-        run: go test -v -p 1 ./sqlexecutor
+        run: |
+          go test -v -p 1 ./sqlexecutor
 
       - name: Run go test - main
-        run: go test -v -p 1 ./.
+        run: |
+          go test -v -p 1 ./.
 
       - name: Run go test
         run: |
