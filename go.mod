@@ -8,7 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.9.1
 	github.com/godror/godror v0.48.1
 	github.com/lib/pq v1.10.9
-	github.com/mattn/go-sqlite3 v1.14.24
+	github.com/mattn/go-sqlite3 v1.14.26
 	github.com/microsoft/go-mssqldb v1.8.0
 	github.com/senzing-garage/go-logging v1.5.1
 	github.com/senzing-garage/go-messaging v1.5.2
