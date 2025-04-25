@@ -25,6 +25,7 @@ var (
 // ----------------------------------------------------------------------------
 
 func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 
 	// Make a fresh database and create Senzing schema.
@@ -51,16 +52,15 @@ func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 	} else {
 		require.Error(test, err, "An error should have been returned")
 	}
-}
 
-func TestBasicChecker_RecordCount(test *testing.T) {
-	ctx := context.TODO()
-	testObject := getTestObject(ctx, test)
-	_, err := testObject.RecordCount(ctx)
+	// Perform RecordCount test.
+
+	_, err = testObject.RecordCount(ctx)
 	require.NoError(test, err)
 }
 
 func TestBasicChecker_RegisterObserver(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	err := testObject.RegisterObserver(ctx, observerSingleton)
@@ -68,6 +68,7 @@ func TestBasicChecker_RegisterObserver(test *testing.T) {
 }
 
 func TestBasicChecker_SetLogLevel(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "DEBUG")
@@ -75,6 +76,7 @@ func TestBasicChecker_SetLogLevel(test *testing.T) {
 }
 
 func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
@@ -82,12 +84,14 @@ func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 }
 
 func TestBasicChecker_SetObserverOrigin(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	testObject.SetObserverOrigin(ctx, "Test observer origin")
 }
 
 func TestBasicChecker_UnregisterObserver(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 
@@ -100,6 +104,7 @@ func TestBasicChecker_UnregisterObserver(test *testing.T) {
 }
 
 func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	err := refreshSqliteDatabase(sqliteDatabaseFilename)
 	require.NoError(test, err)
@@ -112,23 +117,26 @@ func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
 // Internal functions
 // ----------------------------------------------------------------------------
 
-func getBasicChecker(ctx context.Context, test *testing.T) *checker.BasicChecker {
+func getBasicChecker(ctx context.Context, t *testing.T) *checker.BasicChecker {
+	t.Helper()
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
-	require.NoError(test, err)
+	require.NoError(t, err)
 
 	result := &checker.BasicChecker{
 		DatabaseConnector: databaseConnector,
 	}
 	err = result.RegisterObserver(ctx, observerSingleton)
-	require.NoError(test, err)
+	require.NoError(t, err)
 	err = result.SetLogLevel(ctx, "TRACE")
-	require.NoError(test, err)
+	require.NoError(t, err)
 
 	return result
 }
 
-func getTestObject(ctx context.Context, test *testing.T) checker.Checker {
-	return getBasicChecker(ctx, test)
+func getTestObject(ctx context.Context, t *testing.T) checker.Checker {
+	t.Helper()
+
+	return getBasicChecker(ctx, t)
 }
 
 func outputf(format string, message ...any) {

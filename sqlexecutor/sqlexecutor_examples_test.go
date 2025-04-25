@@ -88,7 +88,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_sqlite() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	databaseFilename := "/tmp/sqlite/G2C.db"
-	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	databaseURL := "sqlite3://na:na@" + databaseFilename
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
 	failOnError(err)
@@ -107,7 +107,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_sqlite_inmemory() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	databaseFilename := "/tmp/sqlite/NotAFile1.db?mode=memory&cache=shared"
-	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	databaseURL := "sqlite3://na:na@" + databaseFilename
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
@@ -124,7 +124,7 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	databaseFilename := "/tmp/sqlite/G2C.db"
-	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	databaseURL := "sqlite3://na:na@" + databaseFilename
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
 	failOnError(err)
@@ -148,7 +148,7 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite_inmemory() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	databaseFilename := "/tmp/sqlite/NotAFile2.db?mode=memory&cache=shared"
-	databaseURL := fmt.Sprintf("sqlite3://na:na@%s", databaseFilename)
+	databaseURL := "sqlite3://na:na@" + databaseFilename
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	file, err := os.Open(sqlFilename)
 	failOnError(err)

@@ -9,6 +9,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestNewConnector(test *testing.T) {
+	test.Parallel()
 	_ = test
 	// ctx := context.TODO()
 	// databaseConnector, err := NewConnector(ctx, "")

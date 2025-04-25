@@ -13,6 +13,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestNewConnector(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	configuration := `user="sys" password="Passw0rd" sysdba=true noTimezoneCheck=true connectString="localhost:1521/FREE"`
 	databaseConnector, err := connectororacle.NewConnector(ctx, configuration)

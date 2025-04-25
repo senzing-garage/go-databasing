@@ -13,6 +13,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestNewConnector(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
 	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)

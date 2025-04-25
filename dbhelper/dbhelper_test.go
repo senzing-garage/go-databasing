@@ -77,8 +77,10 @@ var testCases = append(testCasesForMultiPlatform, testCasesForOsArch...)
 // ----------------------------------------------------------------------------
 
 func TestExtractSqliteDatabaseFilename(test *testing.T) {
+	test.Parallel()
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
+			test.Parallel()
 			result, err := dbhelper.ExtractSqliteDatabaseFilename(testCase.databaseURL)
 			if testCase.succeeds {
 				require.NoError(test, err)
@@ -94,7 +96,7 @@ func TestExtractSqliteDatabaseFilename(test *testing.T) {
 }
 
 func TestGetMessenger(test *testing.T) {
-	_ = test
+	test.Parallel()
 	options := []interface{}{}
 	_ = dbhelper.GetMessenger(1, map[int]string{}, 0, options...)
 }

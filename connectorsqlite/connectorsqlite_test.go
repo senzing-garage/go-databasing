@@ -13,6 +13,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestNewConnector(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	configuration := "/tmp/sqlite/G2C.db"
 	databaseConnector, err := connectorsqlite.NewConnector(ctx, configuration)
@@ -22,6 +23,7 @@ func TestNewConnector(test *testing.T) {
 }
 
 func TestNewConnectorInMemory(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	configuration := "/tmp/sqlite/G2C.db?mode=memory&cache=shared"
 	databaseConnector, err := connectorsqlite.NewConnector(ctx, configuration)

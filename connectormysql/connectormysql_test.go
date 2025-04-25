@@ -14,6 +14,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestNewConnector(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	configuration := &mysql.Config{
 		User:      "root",

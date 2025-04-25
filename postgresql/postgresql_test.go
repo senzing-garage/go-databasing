@@ -22,6 +22,7 @@ var (
 // ----------------------------------------------------------------------------
 
 func TestBasicPostgresql_GetCurrentWatermark(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	_, _, err := testObject.GetCurrentWatermark(ctx)
@@ -29,6 +30,7 @@ func TestBasicPostgresql_GetCurrentWatermark(test *testing.T) {
 }
 
 func TestBasicPostgresql_RegisterObserver(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	err := testObject.RegisterObserver(ctx, observerSingleton)
@@ -36,6 +38,7 @@ func TestBasicPostgresql_RegisterObserver(test *testing.T) {
 }
 
 func TestBasicPostgresql_SetLogLevel(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "DEBUG")
@@ -43,6 +46,7 @@ func TestBasicPostgresql_SetLogLevel(test *testing.T) {
 }
 
 func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
@@ -50,12 +54,14 @@ func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 }
 
 func TestBasicPostgresql_SetObserverOrigin(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 	testObject.SetObserverOrigin(ctx, "Test observer origin")
 }
 
 func TestBasicPostgresql_UnregisterObserver(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 
@@ -71,22 +77,26 @@ func TestBasicPostgresql_UnregisterObserver(test *testing.T) {
 // Internal functions
 // ----------------------------------------------------------------------------
 
-func getTestObject(ctx context.Context, test *testing.T) postgresql.Postgresql {
-	return getBasicPostgresql(ctx, test)
+func getTestObject(ctx context.Context, t *testing.T) postgresql.Postgresql {
+	t.Helper()
+
+	return getBasicPostgresql(ctx, t)
 }
 
-func getBasicPostgresql(ctx context.Context, test *testing.T) *postgresql.BasicPostgresql {
+func getBasicPostgresql(ctx context.Context, t *testing.T) *postgresql.BasicPostgresql {
+	t.Helper()
+
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
 	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
-	require.NoError(test, err)
+	require.NoError(t, err)
 
 	result := &postgresql.BasicPostgresql{
 		DatabaseConnector: databaseConnector,
 	}
 	err = result.RegisterObserver(ctx, observerSingleton)
-	require.NoError(test, err)
+	require.NoError(t, err)
 	err = result.SetLogLevel(ctx, "TRACE")
-	require.NoError(test, err)
+	require.NoError(t, err)
 
 	return result
 }

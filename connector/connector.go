@@ -154,7 +154,7 @@ func createMysqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 	}
 
 	if len(port) > 0 {
-		configuration.Addr += fmt.Sprintf(":%s", port)
+		configuration.Addr += ":" + port
 	}
 
 	if len(path) > 1 {

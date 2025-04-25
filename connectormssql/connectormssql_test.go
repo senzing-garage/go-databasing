@@ -13,6 +13,7 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestNewConnector(test *testing.T) {
+	test.Parallel()
 	ctx := context.TODO()
 	configuration := "user id=sa;password=Passw0rd;database=master;server=localhost"
 	databaseConnector, err := connectormssql.NewConnector(ctx, configuration)

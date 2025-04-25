@@ -33,7 +33,9 @@ func ExampleNewConnector_inmemory() {
 	// Output:
 }
 
-func ExampleNewConnector_null() {} // Hack to format godoc documentation examples properly
+func ExampleNewConnector_null() {
+	// Output:
+} // Hack to format godoc documentation examples properly
 
 // ----------------------------------------------------------------------------
 // Internal methods
