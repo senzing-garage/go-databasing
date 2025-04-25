@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"context"
+	"errors"
 
 	"github.com/senzing-garage/go-observing/observer"
 )
@@ -47,3 +48,5 @@ var IDMessages = map[int]string{
 
 // Status strings for specific messages.
 var IDStatuses = map[int]string{}
+
+var errPackage = errors.New("sqlexecutor")

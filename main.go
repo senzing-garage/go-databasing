@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -10,6 +11,7 @@ import (
 	"github.com/senzing-garage/go-databasing/connector"
 	"github.com/senzing-garage/go-databasing/postgresql"
 	"github.com/senzing-garage/go-databasing/sqlexecutor"
+	"github.com/senzing-garage/go-helpers/wraperror"
 	"github.com/senzing-garage/go-logging/logging"
 	"github.com/senzing-garage/go-observing/observer"
 )
@@ -26,6 +28,8 @@ const (
 	Sqlite
 	SqliteInMemory
 )
+
+var errPackage = errors.New("sqlexecutor")
 
 // ----------------------------------------------------------------------------
 // Main
@@ -107,7 +111,7 @@ func demonstrateDatabase(databaseID int) {
 		databaseURL = sqliteDatabaseURL + "?mode=memory&cache=shared"
 		sqlFilename = gitRepositoryDir + "/testdata/sqlite/szcore-schema-sqlite-create.sql"
 	default:
-		exitOnError(fmt.Errorf("unknown databaseNumber: %d", databaseID))
+		exitOnError(wraperror.Errorf(errPackage, "unknown databaseNumber: %d error: %w", databaseID, errPackage))
 	}
 
 	// Create database connector.
@@ -129,9 +133,7 @@ func demonstrateDatabase(databaseID int) {
 	// PostgreSql only tests.
 
 	if databaseID == Postgresql {
-
 		preparePostgresql(ctx, databaseConnector, observer1)
-
 	}
 
 	// Let Observer finish.
@@ -154,7 +156,6 @@ func preparePostgresql(ctx context.Context, databaseConnector driver.Connector, 
 	exitOnError(err)
 
 	fmt.Printf("Postgresql: oid=%s age=%d\n", oid, age)
-
 }
 
 func exitOnError(err error) {

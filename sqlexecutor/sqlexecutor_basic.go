@@ -6,13 +6,13 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/senzing-garage/go-helpers/wraperror"
 	"github.com/senzing-garage/go-logging/logging"
 	"github.com/senzing-garage/go-observing/notifier"
 	"github.com/senzing-garage/go-observing/observer"
@@ -242,7 +242,7 @@ func (sqlExecutor *BasicSQLExecutor) SetLogLevel(ctx context.Context, logLevelNa
 			}()
 		}
 	} else {
-		err = fmt.Errorf("invalid error level: %s", logLevelName)
+		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
 	}
 
 	return err

@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"time"
 
+	"github.com/senzing-garage/go-helpers/wraperror"
 	"github.com/senzing-garage/go-logging/logging"
 	"github.com/senzing-garage/go-observing/notifier"
 	"github.com/senzing-garage/go-observing/observer"
@@ -207,11 +207,19 @@ func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName
 				details := map[string]string{
 					"logLevelName": logLevelName,
 				}
-				notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8003, err, details)
+				notifier.Notify(
+					ctx,
+					schemaChecker.observers,
+					schemaChecker.observerOrigin,
+					ComponentID,
+					8003,
+					err,
+					details,
+				)
 			}()
 		}
 	} else {
-		err = fmt.Errorf("invalid error level: %s", logLevelName)
+		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
 	}
 	return err
 }

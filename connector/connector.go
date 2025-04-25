@@ -15,6 +15,7 @@ import (
 	"github.com/senzing-garage/go-databasing/connectororacle"
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 	"github.com/senzing-garage/go-databasing/connectorsqlite"
+	"github.com/senzing-garage/go-helpers/wraperror"
 )
 
 // ----------------------------------------------------------------------------
@@ -41,17 +42,17 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 	scheme := parsedURL.Scheme
 	switch scheme {
 	case "sqlite3":
-		return connectorSqlite3(ctx, parsedURL)
+		return createSqlite3Connector(ctx, parsedURL)
 	case "postgresql":
-		return connectorPostgresql(ctx, parsedURL)
+		return createPostgresqlConnector(ctx, parsedURL)
 	case "mysql":
-		return connectorMysql(ctx, parsedURL)
+		return createMysqlConnector(ctx, parsedURL)
 	case "mssql":
-		return connectorMssql(ctx, parsedURL)
+		return createMssqlConnector(ctx, parsedURL)
 	case "oci":
-		return connectorOci(ctx, parsedURL)
+		return createOciConnector(ctx, parsedURL)
 	default:
-		err = fmt.Errorf("unknown database scheme: %s", scheme)
+		err = wraperror.Errorf(errPackage, "unknown database scheme: %s error: %w", scheme, errPackage)
 	}
 
 	return result, err
@@ -61,7 +62,7 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 // Private functions
 // ----------------------------------------------------------------------------
 
-func connectorSqlite3(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+func createSqlite3Connector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
 	configuration := parsedURL.Path
 	if len(parsedURL.RawQuery) > 0 {
 		configuration = fmt.Sprintf("file:%s?%s", configuration[1:], parsedURL.Query().Encode())
@@ -70,7 +71,7 @@ func connectorSqlite3(ctx context.Context, parsedURL *url.URL) (driver.Connector
 	return connectorsqlite.NewConnector(ctx, configuration)
 }
 
-func connectorPostgresql(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
 
 	// Parse URL: https://pkg.go.dev/net/url#URL
 
@@ -116,7 +117,7 @@ func connectorPostgresql(ctx context.Context, parsedURL *url.URL) (driver.Connec
 	return connectorpostgresql.NewConnector(ctx, configuration)
 }
 
-func connectorMysql(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+func createMysqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
 
 	// Parse URL: https://pkg.go.dev/net/url#URL
 
@@ -157,7 +158,7 @@ func connectorMysql(ctx context.Context, parsedURL *url.URL) (driver.Connector, 
 	return connectormysql.NewConnector(ctx, configuration)
 }
 
-func connectorMssql(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
 
 	// Parse URL: https://pkg.go.dev/net/url#URL
 
@@ -207,7 +208,7 @@ func connectorMssql(ctx context.Context, parsedURL *url.URL) (driver.Connector, 
 	return connectormssql.NewConnector(ctx, configuration)
 }
 
-func connectorOci(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+func createOciConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
 
 	// Parse URL: https://pkg.go.dev/net/url#URL
 
