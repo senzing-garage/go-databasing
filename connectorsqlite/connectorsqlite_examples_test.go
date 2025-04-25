@@ -1,8 +1,10 @@
-package connectorsqlite
+package connectorsqlite_test
 
 import (
 	"context"
 	"fmt"
+
+	"github.com/senzing-garage/go-databasing/connectorsqlite"
 )
 
 // ----------------------------------------------------------------------------
@@ -13,8 +15,9 @@ func ExampleNewConnector() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/connectorsqlite/connectorsqlite_examples_test.go
 	ctx := context.TODO()
 	configuration := "/tmp/sqlite/G2C.db"
-	databaseConnector, err := NewConnector(ctx, configuration)
+	databaseConnector, err := connectorsqlite.NewConnector(ctx, configuration)
 	failOnError(err)
+
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
 }
@@ -23,13 +26,16 @@ func ExampleNewConnector_inmemory() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/connectorsqlite/connectorsqlite_examples_test.go
 	ctx := context.TODO()
 	configuration := "/tmp/sqlite/G2C.db?mode=memory&cache=shared"
-	databaseConnector, err := NewConnector(ctx, configuration)
+	databaseConnector, err := connectorsqlite.NewConnector(ctx, configuration)
 	failOnError(err)
+
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
 }
 
-func ExampleNewConnector_null() {} // Hack to format godoc documentation examples properly
+func ExampleNewConnector_null() {
+	// Output:
+} // Hack to format godoc documentation examples properly
 
 // ----------------------------------------------------------------------------
 // Internal methods
@@ -37,6 +43,6 @@ func ExampleNewConnector_null() {} // Hack to format godoc documentation example
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 
 	"github.com/godror/godror"
+	"github.com/senzing-garage/go-helpers/wraperror"
 )
 
 // ----------------------------------------------------------------------------
@@ -27,5 +28,6 @@ Output
 func NewConnector(ctx context.Context, dsn string) (driver.Connector, error) {
 	_ = ctx
 	params, err := godror.ParseDSN(dsn)
-	return godror.NewConnector(params), err
+
+	return godror.NewConnector(params), wraperror.Errorf(err, "connectororacle.NewConnector error: %w", err)
 }

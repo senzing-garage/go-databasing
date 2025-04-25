@@ -1,9 +1,9 @@
-package connector
+package connector_test
 
 import (
-	"context"
 	"testing"
 
+	"github.com/senzing-garage/go-databasing/connector"
 	"github.com/stretchr/testify/require"
 )
 
@@ -134,10 +134,14 @@ var testCasesConnect = []testCaseConnect{
 // ----------------------------------------------------------------------------
 
 func TestNewConnector(test *testing.T) {
-	ctx := context.TODO()
+	test.Parallel()
+	ctx := test.Context()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			_, err := NewConnector(ctx, testCase.databaseURL)
+			test.Parallel()
+
+			_, err := connector.NewConnector(ctx, testCase.databaseURL)
 			if testCase.isBadDatabaseURL {
 				require.Error(test, err)
 			} else {
@@ -148,10 +152,14 @@ func TestNewConnector(test *testing.T) {
 }
 
 func TestNewConnector_connect(test *testing.T) {
-	ctx := context.TODO()
+	test.Parallel()
+	ctx := test.Context()
+
 	for _, testCase := range testCasesConnect {
 		test.Run(testCase.name, func(test *testing.T) {
-			databaseConnector, err := NewConnector(ctx, testCase.databaseURL)
+			test.Parallel()
+
+			databaseConnector, err := connector.NewConnector(ctx, testCase.databaseURL)
 			require.NoError(test, err)
 			_, err = databaseConnector.Connect(ctx)
 			require.NoError(test, err)

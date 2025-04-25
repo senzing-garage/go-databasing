@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"time"
 
+	"github.com/senzing-garage/go-helpers/wraperror"
 	"github.com/senzing-garage/go-logging/logging"
 	"github.com/senzing-garage/go-observing/notifier"
 	"github.com/senzing-garage/go-observing/observer"
@@ -66,26 +66,31 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(1)
+
 		defer func() { sqlExecutor.traceExit(2, oid, age, err, time.Since(entryTime)) }()
 	}
+
 	sqlStatement := "SELECT c.oid::regclass, age(c.relfrozenxid), pg_size_pretty(pg_total_relation_size(c.oid)) FROM pg_class c JOIN pg_namespace n on c.relnamespace = n.oid WHERE relkind IN ('r', 't', 'm') AND n.nspname NOT IN ('pg_toast') ORDER BY 2 DESC LIMIT 1;"
 
 	// Open a database connection.
 
 	database := sql.OpenDB(sqlExecutor.DatabaseConnector)
 	defer database.Close()
+
 	err = database.PingContext(ctx)
 	if err != nil {
-		return "", 0, err
+		return "", 0, wraperror.Errorf(err, "postgresql.GetCurrentWatermark.database.PingContext error: %w", err)
 	}
 
 	// Get the Row.
 
 	row := database.QueryRowContext(ctx, sqlStatement)
+
 	err = row.Scan(&oid, &age, &size)
 	if err != nil {
-		return "", 0, err
+		return "", 0, wraperror.Errorf(err, "postgresql.GetCurrentWatermark.row.Scan error: %w", err)
 	}
 
 	// Exit tasks.
@@ -100,7 +105,7 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 		}()
 	}
 
-	return oid, age, err
+	return oid, age, wraperror.Errorf(err, "postgresql.GetCurrentWatermark error: %w", err)
 }
 
 /*
@@ -115,13 +120,18 @@ func (sqlExecutor *BasicPostgresql) RegisterObserver(ctx context.Context, observ
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(3, observer.GetObserverID(ctx))
+
 		defer func() { sqlExecutor.traceExit(4, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
+
 	if sqlExecutor.observers == nil {
 		sqlExecutor.observers = &subject.SimpleSubject{}
 	}
+
 	err = sqlExecutor.observers.RegisterObserver(ctx, observer)
+
 	if sqlExecutor.observers != nil {
 		go func() {
 			details := map[string]string{
@@ -131,7 +141,7 @@ func (sqlExecutor *BasicPostgresql) RegisterObserver(ctx context.Context, observ
 		}()
 	}
 
-	return err
+	return wraperror.Errorf(err, "postgresql.RegisterObserver error: %w", err)
 }
 
 /*
@@ -146,14 +156,18 @@ func (sqlExecutor *BasicPostgresql) SetLogLevel(ctx context.Context, logLevelNam
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(5, logLevelName)
+
 		defer func() { sqlExecutor.traceExit(6, logLevelName, err, time.Since(entryTime)) }()
 	}
+
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = sqlExecutor.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
-			return err
+			return wraperror.Errorf(err, "postgresql.SetLogLevel error: %w", err)
 		}
+
 		sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
 		if sqlExecutor.observers != nil {
 			go func() {
@@ -164,10 +178,10 @@ func (sqlExecutor *BasicPostgresql) SetLogLevel(ctx context.Context, logLevelNam
 			}()
 		}
 	} else {
-		err = fmt.Errorf("invalid error level: %s", logLevelName)
+		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
 	}
 
-	return err
+	return wraperror.Errorf(err, "postgresql.SetLogLevel error: %w", err)
 }
 
 /*
@@ -184,10 +198,9 @@ func (sqlExecutor *BasicPostgresql) SetObserverOrigin(ctx context.Context, origi
 
 	debugMessageNumber := 0
 	traceExitMessageNumber := 69
+
 	if sqlExecutor.getLogger().IsDebug() {
-
 		// If DEBUG, log error exit.
-
 		defer func() {
 			if debugMessageNumber > 0 {
 				sqlExecutor.debug(debugMessageNumber, err)
@@ -198,7 +211,9 @@ func (sqlExecutor *BasicPostgresql) SetObserverOrigin(ctx context.Context, origi
 
 		if sqlExecutor.getLogger().IsTrace() {
 			entryTime := time.Now()
+
 			sqlExecutor.traceEntry(60, origin)
+
 			defer func() {
 				sqlExecutor.traceExit(traceExitMessageNumber, origin, err, time.Since(entryTime))
 			}()
@@ -209,8 +224,10 @@ func (sqlExecutor *BasicPostgresql) SetObserverOrigin(ctx context.Context, origi
 		asJSON, err := json.Marshal(sqlExecutor) //nolint:musttag
 		if err != nil {
 			traceExitMessageNumber, debugMessageNumber = 61, 1061
+
 			return
 		}
+
 		sqlExecutor.log(1004, sqlExecutor, string(asJSON))
 	}
 
@@ -228,7 +245,6 @@ func (sqlExecutor *BasicPostgresql) SetObserverOrigin(ctx context.Context, origi
 			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8005, err, details)
 		}()
 	}
-
 }
 
 /*
@@ -243,9 +259,12 @@ func (sqlExecutor *BasicPostgresql) UnregisterObserver(ctx context.Context, obse
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(7, observer.GetObserverID(ctx))
+
 		defer func() { sqlExecutor.traceExit(8, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
+
 	if sqlExecutor.observers != nil {
 		// Tricky code:
 		// client.notify is called synchronously before client.observers is set to nil.
@@ -256,12 +275,14 @@ func (sqlExecutor *BasicPostgresql) UnregisterObserver(ctx context.Context, obse
 		}
 		notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8004, err, details)
 	}
+
 	err = sqlExecutor.observers.UnregisterObserver(ctx, observer)
+
 	if !sqlExecutor.observers.HasObservers(ctx) {
 		sqlExecutor.observers = nil
 	}
 
-	return err
+	return wraperror.Errorf(err, "postgresql.UnregisterObserver error: %w", err)
 }
 
 // ----------------------------------------------------------------------------
@@ -271,15 +292,18 @@ func (sqlExecutor *BasicPostgresql) UnregisterObserver(ctx context.Context, obse
 // Get the Logger singleton.
 func (sqlExecutor *BasicPostgresql) getLogger() logging.Logging {
 	var err error
+
 	if sqlExecutor.logger == nil {
 		options := []interface{}{
 			&logging.OptionCallerSkip{Value: 4},
 		}
+
 		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
 		if err != nil {
 			panic(err)
 		}
 	}
+
 	return sqlExecutor.logger
 }
 

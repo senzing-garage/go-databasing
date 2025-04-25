@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"database/sql/driver"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -9,6 +11,7 @@ import (
 	"github.com/senzing-garage/go-databasing/connector"
 	"github.com/senzing-garage/go-databasing/postgresql"
 	"github.com/senzing-garage/go-databasing/sqlexecutor"
+	"github.com/senzing-garage/go-helpers/wraperror"
 	"github.com/senzing-garage/go-logging/logging"
 	"github.com/senzing-garage/go-observing/observer"
 )
@@ -26,6 +29,8 @@ const (
 	SqliteInMemory
 )
 
+var errPackage = errors.New("sqlexecutor")
+
 // ----------------------------------------------------------------------------
 // Main
 // ----------------------------------------------------------------------------
@@ -33,28 +38,36 @@ const (
 func main() {
 	databaseIDs := []int{Oracle, Mssql, Mysql, Sqlite, SqliteInMemory, Postgresql}
 	printStatementTemplate := "\n==== %11s ==========================\n\n"
+
 	for _, databaseID := range databaseIDs {
 		switch databaseID {
 		case Mssql:
-			fmt.Printf(printStatementTemplate, "Mssql")
+			outputf(printStatementTemplate, "Mssql")
 		case Mysql:
-			fmt.Printf(printStatementTemplate, "Mysql")
+			outputf(printStatementTemplate, "Mysql")
 		case Oracle:
-			fmt.Printf(printStatementTemplate, "Oracle")
+			outputf(printStatementTemplate, "Oracle")
 		case Postgresql:
-			fmt.Printf(printStatementTemplate, "Postgresql")
+			outputf(printStatementTemplate, "Postgresql")
 		case Sqlite:
-			fmt.Printf(printStatementTemplate, "Sqlite")
+			outputf(printStatementTemplate, "Sqlite")
 		case SqliteInMemory:
-			fmt.Printf(printStatementTemplate, "SqliteInMemory")
+			outputf(printStatementTemplate, "SqliteInMemory")
 		}
+
 		demonstrateDatabase(databaseID)
 	}
 }
 
+// ----------------------------------------------------------------------------
+// Private functions
+// ----------------------------------------------------------------------------
+
 func demonstrateDatabase(databaseID int) {
 	ctx := context.TODO()
+
 	var sqlFilename string
+
 	var databaseURL string
 
 	// Create a silent observer.
@@ -102,7 +115,7 @@ func demonstrateDatabase(databaseID int) {
 		databaseURL = sqliteDatabaseURL + "?mode=memory&cache=shared"
 		sqlFilename = gitRepositoryDir + "/testdata/sqlite/szcore-schema-sqlite-create.sql"
 	default:
-		exitOnError(fmt.Errorf("unknown databaseNumber: %d", databaseID))
+		exitOnError(wraperror.Errorf(errPackage, "unknown databaseNumber: %d error: %w", databaseID, errPackage))
 	}
 
 	// Create database connector.
@@ -124,19 +137,7 @@ func demonstrateDatabase(databaseID int) {
 	// PostgreSql only tests.
 
 	if databaseID == Postgresql {
-		postgresClient := &postgresql.BasicPostgresql{
-			DatabaseConnector: databaseConnector,
-		}
-		err = postgresClient.RegisterObserver(ctx, observer1)
-		exitOnError(err)
-
-		err = postgresClient.SetLogLevel(ctx, logging.LevelTraceName)
-		exitOnError(err)
-
-		oid, age, err := postgresClient.GetCurrentWatermark(ctx)
-		exitOnError(err)
-
-		fmt.Printf("Postgresql: oid=%s age=%d\n", oid, age)
+		preparePostgresql(ctx, databaseConnector, observer1)
 	}
 
 	// Let Observer finish.
@@ -144,9 +145,29 @@ func demonstrateDatabase(databaseID int) {
 	time.Sleep(2 * time.Second)
 }
 
+func preparePostgresql(ctx context.Context, databaseConnector driver.Connector, observer observer.Observer) {
+	postgresClient := &postgresql.BasicPostgresql{
+		DatabaseConnector: databaseConnector,
+	}
+	err := postgresClient.RegisterObserver(ctx, observer)
+	exitOnError(err)
+
+	err = postgresClient.SetLogLevel(ctx, logging.LevelTraceName)
+	exitOnError(err)
+
+	oid, age, err := postgresClient.GetCurrentWatermark(ctx)
+	exitOnError(err)
+
+	outputf("Postgresql: oid=%s age=%d\n", oid, age)
+}
+
 func exitOnError(err error) {
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		outputf("Error: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+func outputf(format string, message ...any) {
+	fmt.Printf(format, message...) //nolint
 }

@@ -1,6 +1,6 @@
 //go:build linux
 
-package dbhelper
+package dbhelper_test
 
 var testCasesForOsArch = []testCaseMetadata{
 	{

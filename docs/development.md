@@ -65,7 +65,7 @@ These are "one-time tasks" which may already have been completed.
 
 ## Test
 
-To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases need to be accessable.
+To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases need to be accessible.
 
 1. :thinking: Add to `LD_LIBRARY_PATH` for Oracle database.
    Example:

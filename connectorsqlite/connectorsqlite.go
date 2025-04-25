@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 
 	sqlite "github.com/mattn/go-sqlite3"
+	"github.com/senzing-garage/go-helpers/wraperror"
 )
 
 // ----------------------------------------------------------------------------
@@ -33,7 +34,9 @@ Context is not used.
 [driver.Connector]: https://golang.org/pkg/database/sql/driver/#Connector
 */
 func (connector *Sqlite) Connect(_ context.Context) (driver.Conn, error) {
-	return connector.Driver().Open(connector.Filename)
+	result, err := connector.Driver().Open(connector.Filename)
+
+	return result, wraperror.Errorf(err, "connectorsqlite.Connect error: %w", err)
 }
 
 /*
@@ -42,7 +45,7 @@ Method Driver implements [driver.Connector]'s Driver method.
 [driver.Connector]: https://golang.org/pkg/database/sql/driver/#Connector
 */
 func (connector *Sqlite) Driver() driver.Driver {
-	return &sqlite.SQLiteDriver{}
+	return &sqlite.SQLiteDriver{} //nolint
 }
 
 // ----------------------------------------------------------------------------
@@ -63,6 +66,7 @@ Output
 */
 func NewConnector(ctx context.Context, filename string) (driver.Connector, error) {
 	_ = ctx
+
 	return &Sqlite{
 		Filename: filename,
 	}, nil

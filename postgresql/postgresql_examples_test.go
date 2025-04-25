@@ -1,12 +1,13 @@
 //go:build linux
 
-package postgresql
+package postgresql_test
 
 import (
 	"context"
 	"fmt"
 
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
+	"github.com/senzing-garage/go-databasing/postgresql"
 )
 
 // ----------------------------------------------------------------------------
@@ -20,17 +21,21 @@ func ExampleBasicPostgresql_GetCurrentWatermark() {
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
 	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
 	failOnError(err)
-	database := &BasicPostgresql{
+
+	database := &postgresql.BasicPostgresql{
 		DatabaseConnector: databaseConnector,
 	}
 	oid, age, err := database.GetCurrentWatermark(ctx)
 	failOnError(err)
+
 	_ = oid // Faux use of oid
 	_ = age // Faux use of age
 	// Output:
 }
 
-func ExampleNewConnector_null() {} // Hack to format godoc documentation examples properly
+func ExampleNewConnector_null() {
+	// Output:
+} // Hack to format godoc documentation examples properly
 
 // ----------------------------------------------------------------------------
 // Internal methods
@@ -38,6 +43,6 @@ func ExampleNewConnector_null() {} // Hack to format godoc documentation example
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }

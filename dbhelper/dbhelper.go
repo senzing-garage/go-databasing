@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/senzing-garage/go-helpers/wraperror"
 	"github.com/senzing-garage/go-messaging/messenger"
 )
 
@@ -19,19 +20,31 @@ Output
   - A fully qualified path to the SQLite database file.
 */
 func ExtractSqliteDatabaseFilename(databaseURL string) (string, error) {
-	var result = ""
+	result := ""
 
 	if !strings.HasPrefix(databaseURL, "sqlite3:") {
-		return result, fmt.Errorf("sqlite3 URL schema needed")
+		return result, wraperror.Errorf(
+			errPackage,
+			"dbhelper.ExtractSqliteDatabaseFilename sqlite3 URL schema needed error: %w",
+			errPackage,
+		)
 	}
 
 	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
-		return result, err
+		return result, wraperror.Errorf(
+			errPackage,
+			"dbhelper.ExtractSqliteDatabaseFilename sqlite3 URL schema needed error: %w",
+			errPackage,
+		)
 	}
 
 	if parsedURL.Scheme != "sqlite3" {
-		return result, fmt.Errorf("sqlite3 URL schema needed")
+		return result, wraperror.Errorf(
+			errPackage,
+			"dbhelper.ExtractSqliteDatabaseFilename sqlite3 URL schema needed error: %w",
+			errPackage,
+		)
 	}
 
 	return extractSqliteDatabaseFilenameForOsArch(parsedURL)
@@ -53,7 +66,12 @@ Output
 [runtime.Caller]: https://pkg.go.dev/runtime#Caller
 [messenger.Messenger]: https://pkg.go.dev/github.com/senzing-garage/go-messaging/messenger#Messenger
 */
-func GetMessenger(componentID int, idMessages map[int]string, callerSkip int, options ...interface{}) messenger.Messenger {
+func GetMessenger(
+	componentID int,
+	idMessages map[int]string,
+	callerSkip int,
+	options ...interface{},
+) messenger.Messenger {
 	optionMessageIDTemplate := fmt.Sprintf("%s%04d", MessageIDPrefix, componentID) + "%04d"
 	messengerOptions := []interface{}{
 		messenger.OptionCallerSkip{Value: callerSkip},
@@ -62,9 +80,11 @@ func GetMessenger(componentID int, idMessages map[int]string, callerSkip int, op
 		messenger.OptionMessageIDTemplate{Value: optionMessageIDTemplate},
 	}
 	messengerOptions = append(messengerOptions, options...)
+
 	result, err := messenger.New(messengerOptions...)
 	if err != nil {
 		panic(err)
 	}
+
 	return result
 }

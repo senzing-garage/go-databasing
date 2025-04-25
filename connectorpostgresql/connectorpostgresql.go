@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 
 	"github.com/lib/pq"
+	"github.com/senzing-garage/go-helpers/wraperror"
 )
 
 // ----------------------------------------------------------------------------
@@ -25,5 +26,8 @@ Output
 */
 func NewConnector(ctx context.Context, dsn string) (driver.Connector, error) {
 	_ = ctx
-	return pq.NewConnector(dsn)
+
+	result, err := pq.NewConnector(dsn)
+
+	return result, wraperror.Errorf(err, "connectorpostgresql.NewConnector error: %w", err)
 }

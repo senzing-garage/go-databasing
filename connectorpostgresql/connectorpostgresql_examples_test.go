@@ -1,8 +1,10 @@
-package connectorpostgresql
+package connectorpostgresql_test
 
 import (
 	"context"
 	"fmt"
+
+	"github.com/senzing-garage/go-databasing/connectorpostgresql"
 )
 
 // ----------------------------------------------------------------------------
@@ -14,13 +16,16 @@ func ExampleNewConnector() {
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
-	databaseConnector, err := NewConnector(ctx, configuration)
+	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
 	failOnError(err)
+
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
 }
 
-func ExampleNewConnector_null() {} // Hack to format godoc documentation examples properly
+func ExampleNewConnector_null() {
+	// Output:
+} // Hack to format godoc documentation examples properly
 
 // ----------------------------------------------------------------------------
 // Internal methods
@@ -28,6 +33,6 @@ func ExampleNewConnector_null() {} // Hack to format godoc documentation example
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }

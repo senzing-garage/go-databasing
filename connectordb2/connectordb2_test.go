@@ -1,4 +1,4 @@
-package connectordb2
+package connectordb2_test
 
 import (
 	"testing"
@@ -9,10 +9,10 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestNewConnector(test *testing.T) {
-	_ = test
-	// ctx := context.TODO()
+	// ctx := test.Context()
 	// databaseConnector, err := NewConnector(ctx, "")
 	// require.NoError(test, err)
 	// _, err = databaseConnector.Connect(ctx)
 	// require.NoError(test, err)
+	test.Parallel()
 }
