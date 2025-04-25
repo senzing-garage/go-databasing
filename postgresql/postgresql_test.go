@@ -10,12 +10,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	observerSingleton = &observer.NullObserver{
-		ID:       "Observer 1",
-		IsSilent: true,
-	}
-)
+var observerSingleton = &observer.NullObserver{
+	ID:       "Observer 1",
+	IsSilent: true,
+}
 
 // ----------------------------------------------------------------------------
 // Test interface functions

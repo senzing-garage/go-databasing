@@ -20,7 +20,7 @@ Output
   - A fully qualified path to the SQLite database file.
 */
 func ExtractSqliteDatabaseFilename(databaseURL string) (string, error) {
-	var result = ""
+	result := ""
 
 	if !strings.HasPrefix(databaseURL, "sqlite3:") {
 		return result, wraperror.Errorf(
