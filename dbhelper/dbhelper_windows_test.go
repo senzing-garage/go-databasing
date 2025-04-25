@@ -1,6 +1,6 @@
 //go:build windows
 
-package dbhelper
+package dbhelper_test
 
 var testCasesForOsArch = []testCaseMetadata{
 	{

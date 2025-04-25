@@ -25,5 +25,6 @@ Output
 */
 func NewConnector(ctx context.Context, configuration *mysql.Config) (driver.Connector, error) {
 	_ = ctx
+
 	return mysql.NewConnector(configuration)
 }

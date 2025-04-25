@@ -1,4 +1,4 @@
-package connectordb2
+package connectordb2_test
 
 import (
 	"testing"

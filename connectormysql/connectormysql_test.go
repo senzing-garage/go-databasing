@@ -1,10 +1,11 @@
-package connectormysql
+package connectormysql_test
 
 import (
 	"context"
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/senzing-garage/go-databasing/connectormysql"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,7 +23,7 @@ func TestNewConnector(test *testing.T) {
 		Collation: "utf8mb4_general_ci",
 		DBName:    "G2",
 	}
-	databaseConnector, err := NewConnector(ctx, configuration)
+	databaseConnector, err := connectormysql.NewConnector(ctx, configuration)
 	require.NoError(test, err)
 	_, err = databaseConnector.Connect(ctx)
 	require.NoError(test, err)

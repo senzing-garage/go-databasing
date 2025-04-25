@@ -1,6 +1,6 @@
 //go:build darwin
 
-package dbhelper
+package dbhelper_test
 
 var testCasesForOsArch = []testCaseMetadata{
 	{

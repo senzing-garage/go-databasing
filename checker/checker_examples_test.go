@@ -1,11 +1,12 @@
 //go:build linux
 
-package checker
+package checker_test
 
 import (
 	"context"
 	"fmt"
 
+	"github.com/senzing-garage/go-databasing/checker"
 	"github.com/senzing-garage/go-databasing/connector"
 )
 
@@ -18,7 +19,8 @@ func ExampleBasicChecker_IsSchemaInstalled() {
 	ctx := context.TODO()
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	failOnError(err)
-	myChecker := &BasicChecker{
+
+	myChecker := &checker.BasicChecker{
 		DatabaseConnector: databaseConnector,
 	}
 	isSchemaInstalled, _ := myChecker.IsSchemaInstalled(ctx)
@@ -31,11 +33,13 @@ func ExampleBasicChecker_RecordCount() {
 	ctx := context.TODO()
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	failOnError(err)
-	myChecker := &BasicChecker{
+
+	myChecker := &checker.BasicChecker{
 		DatabaseConnector: databaseConnector,
 	}
 	recordCount, err := myChecker.RecordCount(ctx)
 	failOnError(err)
+
 	_ = recordCount // Faux use of recordCount
 }
 
@@ -45,6 +49,6 @@ func ExampleBasicChecker_RecordCount() {
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }

@@ -68,9 +68,11 @@ func GetMessenger(
 		messenger.OptionMessageIDTemplate{Value: optionMessageIDTemplate},
 	}
 	messengerOptions = append(messengerOptions, options...)
+
 	result, err := messenger.New(messengerOptions...)
 	if err != nil {
 		panic(err)
 	}
+
 	return result
 }

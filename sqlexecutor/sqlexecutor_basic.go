@@ -56,29 +56,33 @@ Input
   - filename: A fully qualified path to a file of SQL statements.
 */
 func (sqlExecutor *BasicSQLExecutor) ProcessFileName(ctx context.Context, filename string) error {
-
 	var err error
 
 	// Entry tasks.
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(1, filename)
+
 		defer func() { sqlExecutor.traceExit(2, filename, err, time.Since(entryTime)) }()
 	}
 
 	// Process file.
 
 	filename = filepath.Clean(filename)
+
 	file, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
+
 	defer func() {
 		if err := file.Close(); err != nil {
 			sqlExecutor.log(9999, file, err)
 		}
 	}()
+
 	err = sqlExecutor.ProcessScanner(ctx, bufio.NewScanner(file))
 	if err != nil {
 		return err
@@ -94,6 +98,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessFileName(ctx context.Context, filena
 			notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8001, err, details)
 		}()
 	}
+
 	return err
 }
 
@@ -115,7 +120,9 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(3)
+
 		defer func() { sqlExecutor.traceExit(4, scanLine, scanFailure, err, time.Since(entryTime)) }()
 	}
 
@@ -131,25 +138,8 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 
 	// Process each scanned line.
 
-	for scanner.Scan() {
-		scanLine++
-		sqlText := scanner.Text()
-		sqlText = strings.TrimSuffix(sqlText, ";")
-		result, err := database.ExecContext(ctx, sqlText)
-		if err != nil {
-			scanFailure++
-			sqlExecutor.log(3001, scanFailure, scanLine, result, err)
-		}
-		if sqlExecutor.observers != nil {
-			go func() {
-				details := map[string]string{
-					"line": strconv.Itoa(scanLine),
-					"SQL":  sqlText,
-				}
-				notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8002, err, details)
-			}()
-		}
-	}
+	scanLine, scanFailure, err = sqlExecutor.processScanner(ctx, scanner, database)
+
 	err = scanner.Err()
 
 	// Exit tasks.
@@ -170,6 +160,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 	if scanFailure > 0 {
 		messageNumber = 3002 // WARN message.
 	}
+
 	sqlExecutor.log(messageNumber, scanLine, scanFailure)
 
 	return err
@@ -187,9 +178,12 @@ func (sqlExecutor *BasicSQLExecutor) RegisterObserver(ctx context.Context, obser
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(5, observer.GetObserverID(ctx))
+
 		defer func() { sqlExecutor.traceExit(6, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
+
 	if sqlExecutor.observers == nil {
 		sqlExecutor.observers = &subject.SimpleSubject{}
 	}
@@ -224,14 +218,18 @@ func (sqlExecutor *BasicSQLExecutor) SetLogLevel(ctx context.Context, logLevelNa
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(7, logLevelName)
+
 		defer func() { sqlExecutor.traceExit(8, logLevelName, err, time.Since(entryTime)) }()
 	}
+
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = sqlExecutor.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
 			return err
 		}
+
 		sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
 		if sqlExecutor.observers != nil {
 			go func() {
@@ -262,10 +260,9 @@ func (sqlExecutor *BasicSQLExecutor) SetObserverOrigin(ctx context.Context, orig
 
 	debugMessageNumber := 0
 	traceExitMessageNumber := 69
+
 	if sqlExecutor.getLogger().IsDebug() {
-
 		// If DEBUG, log error exit.
-
 		defer func() {
 			if debugMessageNumber > 0 {
 				sqlExecutor.debug(debugMessageNumber, err)
@@ -276,7 +273,9 @@ func (sqlExecutor *BasicSQLExecutor) SetObserverOrigin(ctx context.Context, orig
 
 		if sqlExecutor.getLogger().IsTrace() {
 			entryTime := time.Now()
+
 			sqlExecutor.traceEntry(60, origin)
+
 			defer func() {
 				sqlExecutor.traceExit(traceExitMessageNumber, origin, err, time.Since(entryTime))
 			}()
@@ -287,8 +286,10 @@ func (sqlExecutor *BasicSQLExecutor) SetObserverOrigin(ctx context.Context, orig
 		asJSON, err := json.Marshal(sqlExecutor)
 		if err != nil {
 			traceExitMessageNumber, debugMessageNumber = 61, 1061
+
 			return
 		}
+
 		sqlExecutor.log(1004, sqlExecutor, string(asJSON))
 	}
 
@@ -320,7 +321,9 @@ func (sqlExecutor *BasicSQLExecutor) UnregisterObserver(ctx context.Context, obs
 
 	if sqlExecutor.isTrace {
 		entryTime := time.Now()
+
 		sqlExecutor.traceEntry(9, observer.GetObserverID(ctx))
+
 		defer func() { sqlExecutor.traceExit(10, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
 
@@ -352,7 +355,7 @@ func (sqlExecutor *BasicSQLExecutor) UnregisterObserver(ctx context.Context, obs
 }
 
 // ----------------------------------------------------------------------------
-// Internal methods
+// Private methods
 // ----------------------------------------------------------------------------
 
 // --- Logging ----------------------------------------------------------------
@@ -360,16 +363,19 @@ func (sqlExecutor *BasicSQLExecutor) UnregisterObserver(ctx context.Context, obs
 // Get the Logger singleton.
 func (sqlExecutor *BasicSQLExecutor) getLogger() logging.Logging {
 	var err error
+
 	if sqlExecutor.logger == nil {
 		options := []interface{}{
 			logging.OptionCallerSkip{Value: 4},
 			logging.OptionMessageFields{Value: []string{"id", "text"}},
 		}
+
 		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
 		if err != nil {
 			panic(err)
 		}
 	}
+
 	return sqlExecutor.logger
 }
 
@@ -382,6 +388,44 @@ func (sqlExecutor *BasicSQLExecutor) log(messageNumber int, details ...interface
 func (sqlExecutor *BasicSQLExecutor) debug(messageNumber int, details ...interface{}) {
 	details = append(details, debugOptions...)
 	sqlExecutor.getLogger().Log(messageNumber, details...)
+}
+
+func (sqlExecutor *BasicSQLExecutor) processScanner(
+	ctx context.Context,
+	scanner *bufio.Scanner,
+	database *sql.DB,
+) (int, int, error) {
+
+	var (
+		err         error
+		scanLine    = 0
+		scanFailure = 0
+	)
+
+	for scanner.Scan() {
+		scanLine++
+		sqlText := scanner.Text()
+		sqlText = strings.TrimSuffix(sqlText, ";")
+
+		result, err := database.ExecContext(ctx, sqlText)
+		if err != nil {
+			scanFailure++
+			sqlExecutor.log(3001, scanFailure, scanLine, result, err)
+		}
+
+		if sqlExecutor.observers != nil {
+			go func() {
+				details := map[string]string{
+					"line": strconv.Itoa(scanLine),
+					"SQL":  sqlText,
+				}
+				notifier.Notify(ctx, sqlExecutor.observers, sqlExecutor.observerOrigin, ComponentID, 8002, err, details)
+			}()
+		}
+	}
+
+	return scanLine, scanFailure, err
+
 }
 
 // Trace method entry.

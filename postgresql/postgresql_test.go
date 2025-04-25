@@ -1,10 +1,11 @@
-package postgresql
+package postgresql_test
 
 import (
 	"context"
 	"testing"
 
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
+	"github.com/senzing-garage/go-databasing/postgresql"
 	"github.com/senzing-garage/go-observing/observer"
 	"github.com/stretchr/testify/require"
 )
@@ -58,7 +59,7 @@ func TestBasicPostgresql_UnregisterObserver(test *testing.T) {
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 
-	// TODO:  This needs to be removed.
+	// IMPROVE:  This needs to be removed.
 	err := testObject.RegisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
 
@@ -70,20 +71,22 @@ func TestBasicPostgresql_UnregisterObserver(test *testing.T) {
 // Internal functions
 // ----------------------------------------------------------------------------
 
-func getTestObject(ctx context.Context, test *testing.T) Postgresql {
+func getTestObject(ctx context.Context, test *testing.T) postgresql.Postgresql {
 	return getBasicPostgresql(ctx, test)
 }
 
-func getBasicPostgresql(ctx context.Context, test *testing.T) *BasicPostgresql {
+func getBasicPostgresql(ctx context.Context, test *testing.T) *postgresql.BasicPostgresql {
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
 	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
 	require.NoError(test, err)
-	result := &BasicPostgresql{
+
+	result := &postgresql.BasicPostgresql{
 		DatabaseConnector: databaseConnector,
 	}
 	err = result.RegisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
 	err = result.SetLogLevel(ctx, "TRACE")
 	require.NoError(test, err)
+
 	return result
 }

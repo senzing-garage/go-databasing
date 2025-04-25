@@ -27,21 +27,21 @@ linters:
     - exhaustruct
     - exptostd
     - fatcontext
-    # - forbidigo
+    - forbidigo
     - forcetypeassert
     - funcorder
     - funlen
     - ginkgolinter
     - gocheckcompilerdirectives
-    # - gochecknoglobals
-    # - gochecknoinits
+    - gochecknoglobals
+    - gochecknoinits
     - gochecksumtype
-    # - gocognit
-    # - goconst
+    - gocognit
+    - goconst
     - gocritic
-    # - gocyclo
+    - gocyclo
     - godot
-    # - godox
+    - godox
     - goheader
     - gomoddirectives
     - gomodguard
@@ -56,21 +56,21 @@ linters:
     - ineffassign
     - interfacebloat
     - intrange
-    # - ireturn
-    # - lll
+    - ireturn
+    - lll
     - loggercheck
     - maintidx
     - makezero
     - mirror
     - misspell
-    # - mnd
+    - mnd
     - musttag
     - nakedret
     - nestif
     - nilerr
     - nilnesserr
     - nilnil
-    # - nlreturn
+    - nlreturn
     - noctx
     - nolintlint
     - nonamedreturns
@@ -109,7 +109,9 @@ linters:
     - zerologlint
   disable:
     - gochecknoglobals
-    - gochecknoinits
+    - goconst
+    - lll
+    - mnd
   exclusions:
     generated: lax
     presets:
@@ -135,16 +137,27 @@ linters:
               desc: "replaced by io and os packages since Go 1.16: https://tip.golang.org/doc/go1.16#ioutil"
     exhaustruct:
       exclude:
-        - '.+/cobra\.Command$'
-        - '.+/subject\.SimpleSubject$'
         - '.+/checker\.BasicChecker$'
-        - '.+/connector\.testCaseMetadata$'
+        - '.+/cobra\.Command$'
+        - '.+/connector_test\.testCaseMetadata$'
+        - '.+/dbhelper_test\.testCaseMetadata$'
         - '.+/mysql\.Config$'
-        - '.+/sqlite\.SQLiteDriver$'
-        - '.+/sqlite3\.SQLiteDriver$'
-        - '.+/dbhelper\.testCaseMetadata$'
         - '.+/postgresql\.BasicPostgresql$'
         - '.+/sqlexecutor\.BasicSQLExecutor$'
+        - '.+/sqlite\.SQLiteDriver$'
+        - '.+/sqlite3\.SQLiteDriver$'
+        - '.+/subject\.SimpleSubject$'
+    ireturn:
+      allow:
+        - anon
+        - checker.Checker
+        - empty
+        - error
+        - logging.Logging
+        - messenger.Messenger
+        - postgresql.Postgresql
+        - sqlexecutor.SQLExecutor
+        - stdlib
 
 formatters:
   enable:

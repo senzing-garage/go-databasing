@@ -64,15 +64,19 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 
 	if schemaChecker.isTrace {
 		entryTime := time.Now()
+
 		schemaChecker.traceEntry(1)
+
 		defer func() { schemaChecker.traceExit(2, count, err, time.Since(entryTime)) }()
 	}
+
 	sqlStatement := "SELECT count(*) from DSRC_RECORD;"
 
 	// Open a database connection.
 
 	database := sql.OpenDB(schemaChecker.DatabaseConnector)
 	defer database.Close()
+
 	err = database.PingContext(ctx)
 	if err != nil {
 		return false, err
@@ -81,6 +85,7 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 	// Get the Row.
 
 	row := database.QueryRowContext(ctx, sqlStatement)
+
 	err = row.Scan(&count)
 	if err != nil {
 		return false, err
@@ -96,6 +101,7 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8001, err, details)
 		}()
 	}
+
 	return true, err
 }
 
@@ -118,15 +124,19 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 
 	if schemaChecker.isTrace {
 		entryTime := time.Now()
+
 		schemaChecker.traceEntry(9)
+
 		defer func() { schemaChecker.traceExit(10, count, err, time.Since(entryTime)) }()
 	}
+
 	sqlStatement := "SELECT count(*) from DSRC_RECORD;"
 
 	// Open a database connection.
 
 	database := sql.OpenDB(schemaChecker.DatabaseConnector)
 	defer database.Close()
+
 	err = database.PingContext(ctx)
 	if err != nil {
 		return 0, err
@@ -135,6 +145,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 	// Get the Row.
 
 	row := database.QueryRowContext(ctx, sqlStatement)
+
 	err = row.Scan(&count)
 	if err != nil {
 		return 0, err
@@ -150,6 +161,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8005, err, details)
 		}()
 	}
+
 	return count, err
 }
 
@@ -162,15 +174,21 @@ Input
 */
 func (schemaChecker *BasicChecker) RegisterObserver(ctx context.Context, observer observer.Observer) error {
 	var err error
+
 	if schemaChecker.isTrace {
 		entryTime := time.Now()
+
 		schemaChecker.traceEntry(3, observer.GetObserverID(ctx))
+
 		defer func() { schemaChecker.traceExit(4, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
+
 	if schemaChecker.observers == nil {
 		schemaChecker.observers = &subject.SimpleSubject{}
 	}
+
 	err = schemaChecker.observers.RegisterObserver(ctx, observer)
+
 	if schemaChecker.observers != nil {
 		go func() {
 			details := map[string]string{
@@ -179,6 +197,7 @@ func (schemaChecker *BasicChecker) RegisterObserver(ctx context.Context, observe
 			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8002, err, details)
 		}()
 	}
+
 	return err
 }
 
@@ -191,16 +210,21 @@ Input
 */
 func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName string) error {
 	var err error
+
 	if schemaChecker.isTrace {
 		entryTime := time.Now()
+
 		schemaChecker.traceEntry(5, logLevelName)
+
 		defer func() { schemaChecker.traceExit(6, logLevelName, err, time.Since(entryTime)) }()
 	}
+
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = schemaChecker.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
 			return err
 		}
+
 		schemaChecker.isTrace = (logLevelName == logging.LevelTraceName)
 		if schemaChecker.observers != nil {
 			go func() {
@@ -221,6 +245,7 @@ func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName
 	} else {
 		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
 	}
+
 	return err
 }
 
@@ -238,10 +263,9 @@ func (schemaChecker *BasicChecker) SetObserverOrigin(ctx context.Context, origin
 
 	debugMessageNumber := 0
 	traceExitMessageNumber := 69
+
 	if schemaChecker.getLogger().IsDebug() {
-
 		// If DEBUG, log error exit.
-
 		defer func() {
 			if debugMessageNumber > 0 {
 				schemaChecker.debug(debugMessageNumber, err)
@@ -252,7 +276,9 @@ func (schemaChecker *BasicChecker) SetObserverOrigin(ctx context.Context, origin
 
 		if schemaChecker.getLogger().IsTrace() {
 			entryTime := time.Now()
+
 			schemaChecker.traceEntry(60, origin)
+
 			defer func() {
 				schemaChecker.traceExit(traceExitMessageNumber, origin, err, time.Since(entryTime))
 			}()
@@ -263,8 +289,10 @@ func (schemaChecker *BasicChecker) SetObserverOrigin(ctx context.Context, origin
 		asJSON, err := json.Marshal(schemaChecker) //nolint:musttag
 		if err != nil {
 			traceExitMessageNumber, debugMessageNumber = 61, 1061
+
 			return
 		}
+
 		schemaChecker.log(1004, schemaChecker, string(asJSON))
 	}
 
@@ -282,7 +310,6 @@ func (schemaChecker *BasicChecker) SetObserverOrigin(ctx context.Context, origin
 			notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8005, err, details)
 		}()
 	}
-
 }
 
 /*
@@ -294,11 +321,15 @@ Input
 */
 func (schemaChecker *BasicChecker) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
 	var err error
+
 	if schemaChecker.isTrace {
 		entryTime := time.Now()
+
 		schemaChecker.traceEntry(7, observer.GetObserverID(ctx))
+
 		defer func() { schemaChecker.traceExit(8, observer.GetObserverID(ctx), err, time.Since(entryTime)) }()
 	}
+
 	if schemaChecker.observers != nil {
 		// Tricky code:
 		// client.notify is called synchronously before client.observers is set to nil.
@@ -309,7 +340,9 @@ func (schemaChecker *BasicChecker) UnregisterObserver(ctx context.Context, obser
 		}
 		notifier.Notify(ctx, schemaChecker.observers, schemaChecker.observerOrigin, ComponentID, 8004, err, details)
 	}
+
 	err = schemaChecker.observers.UnregisterObserver(ctx, observer)
+
 	if !schemaChecker.observers.HasObservers(ctx) {
 		schemaChecker.observers = nil
 	}
@@ -330,6 +363,7 @@ func (schemaChecker *BasicChecker) getLogger() logging.Logging {
 			panic(err)
 		}
 	}
+
 	return schemaChecker.logger
 }
 

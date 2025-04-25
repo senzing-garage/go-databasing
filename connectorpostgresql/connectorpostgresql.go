@@ -25,5 +25,6 @@ Output
 */
 func NewConnector(ctx context.Context, dsn string) (driver.Connector, error) {
 	_ = ctx
+
 	return pq.NewConnector(dsn)
 }

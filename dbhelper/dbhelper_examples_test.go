@@ -1,8 +1,12 @@
 //go:build linux
 
-package dbhelper
+package dbhelper_test
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/senzing-garage/go-databasing/dbhelper"
+)
 
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
@@ -11,7 +15,7 @@ import "fmt"
 func ExampleExtractSqliteDatabaseFilename() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/dbhelper/dbhelper_examples_test.go
 	databaseURL := "sqlite3://na:na@/var/opt/senzing/sqlite/G2C.db"
-	databaseFilename, err := ExtractSqliteDatabaseFilename(databaseURL)
+	databaseFilename, err := dbhelper.ExtractSqliteDatabaseFilename(databaseURL)
 	failOnError(err)
 	fmt.Println(databaseFilename)
 	// Output: /var/opt/senzing/sqlite/G2C.db
@@ -23,7 +27,7 @@ func ExampleGetMessenger() {
 	idMessages := map[int]string{}
 	callerSkip := 0
 	options := []interface{}{}
-	_ = GetMessenger(componentID, idMessages, callerSkip, options...)
+	_ = dbhelper.GetMessenger(componentID, idMessages, callerSkip, options...)
 	// Output:
 }
 
@@ -33,6 +37,6 @@ func ExampleGetMessenger() {
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }

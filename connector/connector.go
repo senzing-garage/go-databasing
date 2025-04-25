@@ -72,13 +72,12 @@ func createSqlite3Connector(ctx context.Context, parsedURL *url.URL) (driver.Con
 }
 
 func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
-
 	// Parse URL: https://pkg.go.dev/net/url#URL
-
 	username := parsedURL.User.Username()
 	password, isPasswordSet := parsedURL.User.Password()
 	path := parsedURL.Path
 	host, port, _ := net.SplitHostPort(parsedURL.Host)
+
 	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
 		return nil, err
@@ -90,25 +89,32 @@ func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.
 	if len(username) > 0 {
 		configurationMap["user"] = username
 	}
+
 	if isPasswordSet {
 		configurationMap["password"] = password
 	}
+
 	if len(host) > 0 {
 		configurationMap["host"] = host
 	}
+
 	if len(port) > 0 {
 		configurationMap["port"] = port
 	}
+
 	if len(path) > 1 {
 		dbname := strings.ReplaceAll(path, "/", "")
 		configurationMap["dbname"] = dbname
 	}
+
 	for key, value := range query {
 		configurationMap[key] = value[0]
 	}
+
 	if searchPath, ok := query["schema"]; ok {
 		configurationMap["search_path"] = searchPath[0]
 	}
+
 	configuration := ""
 	for key, value := range configurationMap {
 		configuration += fmt.Sprintf("%s=%s ", key, value)
@@ -118,13 +124,12 @@ func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.
 }
 
 func createMysqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
-
 	// Parse URL: https://pkg.go.dev/net/url#URL
-
 	username := parsedURL.User.Username()
 	password, isPasswordSet := parsedURL.User.Password()
 	path := parsedURL.Path
 	host, port, _ := net.SplitHostPort(parsedURL.Host)
+
 	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
 		return nil, err
@@ -139,15 +144,19 @@ func createMysqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 	if len(username) > 0 {
 		configuration.User = username
 	}
+
 	if isPasswordSet {
 		configuration.Passwd = password
 	}
+
 	if len(host) > 0 {
 		configuration.Addr = host
 	}
+
 	if len(port) > 0 {
 		configuration.Addr += fmt.Sprintf(":%s", port)
 	}
+
 	if len(path) > 1 {
 		dbname := strings.ReplaceAll(path, "/", "")
 		configuration.DBName = dbname
@@ -159,13 +168,12 @@ func createMysqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 }
 
 func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
-
 	// Parse URL: https://pkg.go.dev/net/url#URL
-
 	username := parsedURL.User.Username()
 	password, isPasswordSet := parsedURL.User.Password()
 	path := parsedURL.Path
 	host, port, _ := net.SplitHostPort(parsedURL.Host)
+
 	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
 		return nil, err
@@ -178,28 +186,35 @@ func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 	if len(username) > 0 {
 		configurationMap["user id"] = username
 	}
+
 	if isPasswordSet {
 		configurationMap["password"] = password
 	}
+
 	if len(host) > 0 {
 		configurationMap["server"] = host
 	}
+
 	if len(port) > 0 {
 		configurationMap["port"] = port
 	}
+
 	if len(path) > 1 {
 		dbname := strings.ReplaceAll(path, "/", "")
 		configurationMap["database"] = dbname
 	}
+
 	for key, value := range query {
 		configurationMap[key] = value[0]
 	}
+
 	value, ok := configurationMap["TrustServerCertificate"]
 	if ok {
 		if value == "yes" {
 			configurationMap["TrustServerCertificate"] = "true"
 		}
 	}
+
 	configuration := ""
 	for key, value := range configurationMap {
 		configuration += fmt.Sprintf("%s=%s;", key, value)
@@ -209,13 +224,12 @@ func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 }
 
 func createOciConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
-
 	// Parse URL: https://pkg.go.dev/net/url#URL
-
 	username := parsedURL.User.Username()
 	password, isPasswordSet := parsedURL.User.Password()
 	path := parsedURL.Path
 	host, port, _ := net.SplitHostPort(parsedURL.Host)
+
 	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
 		return nil, err
@@ -227,13 +241,16 @@ func createOciConnector(ctx context.Context, parsedURL *url.URL) (driver.Connect
 	if len(username) > 0 {
 		configurationMap["user"] = username
 	}
+
 	if isPasswordSet {
 		configurationMap["password"] = password
 	}
+
 	configurationMap["connectString"] = fmt.Sprintf("%s:%s%s", host, port, filepath.Clean(path))
 	for key, value := range query {
 		configurationMap[key] = value[0]
 	}
+
 	configuration := ""
 	for key, value := range configurationMap {
 		configuration += fmt.Sprintf("%s=%s ", key, value)

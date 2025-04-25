@@ -1,6 +1,6 @@
 //go:build linux
 
-package sqlexecutor
+package sqlexecutor_test
 
 import (
 	"bufio"
@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/senzing-garage/go-databasing/connector"
+	"github.com/senzing-garage/go-databasing/sqlexecutor"
 )
 
 // ----------------------------------------------------------------------------
@@ -23,7 +24,8 @@ func ExampleBasicSQLExecutor_ProcessFileName_mysql() {
 	sqlFilename := "../testdata/mysql/szcore-schema-mysql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
-	sqlExecutor := &BasicSQLExecutor{
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
@@ -39,7 +41,8 @@ func ExampleBasicSQLExecutor_ProcessFileName_oracle() {
 	sqlFilename := "../testdata/oracle/szcore-schema-oracle-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
-	sqlExecutor := &BasicSQLExecutor{
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
@@ -55,7 +58,8 @@ func ExampleBasicSQLExecutor_ProcessFileName_postgresql() {
 	sqlFilename := "../testdata/postgresql/szcore-schema-postgresql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
-	sqlExecutor := &BasicSQLExecutor{
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
@@ -71,7 +75,8 @@ func ExampleBasicSQLExecutor_ProcessFileName_mssql() {
 	sqlFilename := "../testdata/mssql/szcore-schema-mssql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
-	sqlExecutor := &BasicSQLExecutor{
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
@@ -89,7 +94,8 @@ func ExampleBasicSQLExecutor_ProcessFileName_sqlite() {
 	failOnError(err)
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
-	sqlExecutor := &BasicSQLExecutor{
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
@@ -105,7 +111,8 @@ func ExampleBasicSQLExecutor_ProcessFileName_sqlite_inmemory() {
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
-	sqlExecutor := &BasicSQLExecutor{
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
@@ -123,10 +130,13 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite() {
 	failOnError(err)
 	file, err := os.Open(sqlFilename)
 	failOnError(err)
+
 	defer file.Close()
+
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
-	sqlExecutor := &BasicSQLExecutor{
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessScanner(ctx, bufio.NewScanner(file))
@@ -142,10 +152,13 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite_inmemory() {
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
 	file, err := os.Open(sqlFilename)
 	failOnError(err)
+
 	defer file.Close()
+
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
-	sqlExecutor := &BasicSQLExecutor{
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
 	err = sqlExecutor.ProcessScanner(ctx, bufio.NewScanner(file))
@@ -159,6 +172,6 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite_inmemory() {
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }

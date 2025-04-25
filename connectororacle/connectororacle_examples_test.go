@@ -1,8 +1,10 @@
-package connectororacle
+package connectororacle_test
 
 import (
 	"context"
 	"fmt"
+
+	"github.com/senzing-garage/go-databasing/connectororacle"
 )
 
 // ----------------------------------------------------------------------------
@@ -14,8 +16,9 @@ func ExampleNewConnector() {
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/godror/godror
 	configuration := `user="sys" sysdba=true password="Passw0rd" connectString="localhost:1521/FREE"`
-	databaseConnector, err := NewConnector(ctx, configuration)
+	databaseConnector, err := connectororacle.NewConnector(ctx, configuration)
 	failOnError(err)
+
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
 }
@@ -28,6 +31,6 @@ func ExampleNewConnector_null() {} // Hack to format godoc documentation example
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }

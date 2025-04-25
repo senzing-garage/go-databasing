@@ -1,12 +1,13 @@
 //go:build linux
 
-package connectormysql
+package connectormysql_test
 
 import (
 	"context"
 	"fmt"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/senzing-garage/go-databasing/connectormysql"
 )
 
 // ----------------------------------------------------------------------------
@@ -25,8 +26,9 @@ func ExampleNewConnector() {
 		Collation: "utf8mb4_general_ci",
 		DBName:    "G2",
 	}
-	databaseConnector, err := NewConnector(ctx, configuration)
+	databaseConnector, err := connectormysql.NewConnector(ctx, configuration)
 	failOnError(err)
+
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
 }
@@ -39,6 +41,6 @@ func ExampleNewConnector_null() {} // Hack to format godoc documentation example
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }

@@ -38,21 +38,23 @@ var errPackage = errors.New("sqlexecutor")
 func main() {
 	databaseIDs := []int{Oracle, Mssql, Mysql, Sqlite, SqliteInMemory, Postgresql}
 	printStatementTemplate := "\n==== %11s ==========================\n\n"
+
 	for _, databaseID := range databaseIDs {
 		switch databaseID {
 		case Mssql:
-			fmt.Printf(printStatementTemplate, "Mssql")
+			outputf(printStatementTemplate, "Mssql")
 		case Mysql:
-			fmt.Printf(printStatementTemplate, "Mysql")
+			outputf(printStatementTemplate, "Mysql")
 		case Oracle:
-			fmt.Printf(printStatementTemplate, "Oracle")
+			outputf(printStatementTemplate, "Oracle")
 		case Postgresql:
-			fmt.Printf(printStatementTemplate, "Postgresql")
+			outputf(printStatementTemplate, "Postgresql")
 		case Sqlite:
-			fmt.Printf(printStatementTemplate, "Sqlite")
+			outputf(printStatementTemplate, "Sqlite")
 		case SqliteInMemory:
-			fmt.Printf(printStatementTemplate, "SqliteInMemory")
+			outputf(printStatementTemplate, "SqliteInMemory")
 		}
+
 		demonstrateDatabase(databaseID)
 	}
 }
@@ -63,7 +65,9 @@ func main() {
 
 func demonstrateDatabase(databaseID int) {
 	ctx := context.TODO()
+
 	var sqlFilename string
+
 	var databaseURL string
 
 	// Create a silent observer.
@@ -142,7 +146,6 @@ func demonstrateDatabase(databaseID int) {
 }
 
 func preparePostgresql(ctx context.Context, databaseConnector driver.Connector, observer observer.Observer) {
-
 	postgresClient := &postgresql.BasicPostgresql{
 		DatabaseConnector: databaseConnector,
 	}
@@ -155,12 +158,16 @@ func preparePostgresql(ctx context.Context, databaseConnector driver.Connector, 
 	oid, age, err := postgresClient.GetCurrentWatermark(ctx)
 	exitOnError(err)
 
-	fmt.Printf("Postgresql: oid=%s age=%d\n", oid, age)
+	outputf("Postgresql: oid=%s age=%d\n", oid, age)
 }
 
 func exitOnError(err error) {
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		outputf("Error: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+func outputf(format string, message ...any) {
+	fmt.Printf(format, message...) //nolint
 }

@@ -1,4 +1,4 @@
-package checker
+package checker_test
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/senzing-garage/go-databasing/checker"
 	"github.com/senzing-garage/go-databasing/connector"
 	"github.com/senzing-garage/go-databasing/sqlexecutor"
 	"github.com/senzing-garage/go-observing/observer"
@@ -33,6 +34,7 @@ func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 	require.NoError(test, err)
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	require.NoError(test, err)
+
 	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
@@ -42,6 +44,7 @@ func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 	// Perform test.
 
 	testObject := getTestObject(ctx, test)
+
 	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
 	if isSchemaInstalled {
 		require.NoError(test, err)
@@ -88,7 +91,7 @@ func TestBasicChecker_UnregisterObserver(test *testing.T) {
 	ctx := context.TODO()
 	testObject := getTestObject(ctx, test)
 
-	// TODO:  This needs to be removed.
+	// IMPROVE:  This needs to be removed.
 	err := testObject.RegisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
 
@@ -109,32 +112,41 @@ func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
 // Internal functions
 // ----------------------------------------------------------------------------
 
-func getBasicChecker(ctx context.Context, test *testing.T) *BasicChecker {
+func getBasicChecker(ctx context.Context, test *testing.T) *checker.BasicChecker {
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	require.NoError(test, err)
-	result := &BasicChecker{
+
+	result := &checker.BasicChecker{
 		DatabaseConnector: databaseConnector,
 	}
 	err = result.RegisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
 	err = result.SetLogLevel(ctx, "TRACE")
 	require.NoError(test, err)
+
 	return result
 }
 
-func getTestObject(ctx context.Context, test *testing.T) Checker {
+func getTestObject(ctx context.Context, test *testing.T) checker.Checker {
 	return getBasicChecker(ctx, test)
+}
+
+func outputf(format string, message ...any) {
+	fmt.Printf(format, message...) //nolint
 }
 
 func refreshSqliteDatabase(databaseFilename string) error {
 	err := os.Remove(databaseFilename)
 	if err != nil {
-		fmt.Printf("When removing %s got error: %v\n", databaseFilename, err)
+		outputf("When removing %s got error: %v\n", databaseFilename, err)
 	}
+
 	file, err := os.Create(databaseFilename)
 	if err != nil {
-		fmt.Printf("When creating %s got error: %v\n", databaseFilename, err)
+		outputf("When creating %s got error: %v\n", databaseFilename, err)
 	}
+
 	file.Close()
+
 	return nil
 }

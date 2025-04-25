@@ -1,8 +1,10 @@
-package connectormssql
+package connectormssql_test
 
 import (
 	"context"
 	"fmt"
+
+	"github.com/senzing-garage/go-databasing/connectormssql"
 )
 
 // ----------------------------------------------------------------------------
@@ -14,8 +16,9 @@ func ExampleNewConnector() {
 	ctx := context.TODO()
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
 	configuration := "user id=sa;password=Passw0rd;database=master;server=localhost"
-	databaseConnector, err := NewConnector(ctx, configuration)
+	databaseConnector, err := connectormssql.NewConnector(ctx, configuration)
 	failOnError(err)
+
 	_ = databaseConnector // Faux use of databaseConnector
 	// Output:
 }
@@ -28,6 +31,6 @@ func ExampleNewConnector_null() {} // Hack to format godoc documentation example
 
 func failOnError(err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //nolint
 	}
 }
