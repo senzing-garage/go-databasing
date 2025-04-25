@@ -1,7 +1,6 @@
 package connectororacle_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/senzing-garage/go-databasing/connectororacle"
@@ -14,7 +13,7 @@ import (
 
 func TestNewConnector(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	configuration := `user="sys" password="Passw0rd" sysdba=true noTimezoneCheck=true connectString="localhost:1521/FREE"`
 	databaseConnector, err := connectororacle.NewConnector(ctx, configuration)
 	require.NoError(test, err)

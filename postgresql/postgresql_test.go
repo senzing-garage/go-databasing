@@ -23,7 +23,7 @@ var (
 
 func TestBasicPostgresql_GetCurrentWatermark(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	_, _, err := testObject.GetCurrentWatermark(ctx)
 	require.NoError(test, err)
@@ -31,7 +31,7 @@ func TestBasicPostgresql_GetCurrentWatermark(test *testing.T) {
 
 func TestBasicPostgresql_RegisterObserver(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.RegisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
@@ -39,7 +39,7 @@ func TestBasicPostgresql_RegisterObserver(test *testing.T) {
 
 func TestBasicPostgresql_SetLogLevel(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "DEBUG")
 	require.NoError(test, err)
@@ -47,7 +47,7 @@ func TestBasicPostgresql_SetLogLevel(test *testing.T) {
 
 func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
 	require.Error(test, err)
@@ -55,14 +55,14 @@ func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 
 func TestBasicPostgresql_SetObserverOrigin(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	testObject.SetObserverOrigin(ctx, "Test observer origin")
 }
 
 func TestBasicPostgresql_UnregisterObserver(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 
 	// IMPROVE:  This needs to be removed.

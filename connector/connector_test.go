@@ -1,7 +1,6 @@
 package connector_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/senzing-garage/go-databasing/connector"
@@ -136,11 +135,12 @@ var testCasesConnect = []testCaseConnect{
 
 func TestNewConnector(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			test.Parallel()
+
 			_, err := connector.NewConnector(ctx, testCase.databaseURL)
 			if testCase.isBadDatabaseURL {
 				require.Error(test, err)
@@ -153,11 +153,12 @@ func TestNewConnector(test *testing.T) {
 
 func TestNewConnector_connect(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 
 	for _, testCase := range testCasesConnect {
 		test.Run(testCase.name, func(test *testing.T) {
 			test.Parallel()
+
 			databaseConnector, err := connector.NewConnector(ctx, testCase.databaseURL)
 			require.NoError(test, err)
 			_, err = databaseConnector.Connect(ctx)

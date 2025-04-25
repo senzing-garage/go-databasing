@@ -1,7 +1,6 @@
 package connectormysql_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
@@ -15,7 +14,7 @@ import (
 
 func TestNewConnector(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	configuration := &mysql.Config{
 		User:      "root",
 		Passwd:    "root",

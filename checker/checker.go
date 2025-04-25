@@ -79,7 +79,7 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 
 	err = database.PingContext(ctx)
 	if err != nil {
-		return false, err
+		return false, wraperror.Errorf(err, "checker.IsSchemaInstalled.database.PingContext error: %w", err)
 	}
 
 	// Get the Row.
@@ -88,7 +88,7 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 
 	err = row.Scan(&count)
 	if err != nil {
-		return false, err
+		return false, wraperror.Errorf(err, "checker.IsSchemaInstalled.row.Scan error: %w", err)
 	}
 
 	// Exit tasks.
@@ -102,7 +102,7 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 		}()
 	}
 
-	return true, err
+	return true, wraperror.Errorf(err, "checker.IsSchemaInstalled error: %w", err)
 }
 
 /*
@@ -139,7 +139,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 
 	err = database.PingContext(ctx)
 	if err != nil {
-		return 0, err
+		return 0, wraperror.Errorf(err, "checker.RecordCount.database.PingContext error: %w", err)
 	}
 
 	// Get the Row.
@@ -148,7 +148,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 
 	err = row.Scan(&count)
 	if err != nil {
-		return 0, err
+		return 0, wraperror.Errorf(err, "checker.RecordCount.row.Scan error: %w", err)
 	}
 
 	// Exit tasks.
@@ -162,7 +162,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 		}()
 	}
 
-	return count, err
+	return count, wraperror.Errorf(err, "checker.RecordCount error: %w", err)
 }
 
 /*
@@ -198,7 +198,7 @@ func (schemaChecker *BasicChecker) RegisterObserver(ctx context.Context, observe
 		}()
 	}
 
-	return err
+	return wraperror.Errorf(err, "checker.RegisterObserver error: %w", err)
 }
 
 /*
@@ -222,7 +222,7 @@ func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = schemaChecker.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
-			return err
+			return wraperror.Errorf(err, "checker.SetLogLevel.logging.IsValidLogLevelName error: %w", err)
 		}
 
 		schemaChecker.isTrace = (logLevelName == logging.LevelTraceName)
@@ -246,7 +246,7 @@ func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName
 		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
 	}
 
-	return err
+	return wraperror.Errorf(err, "checker.SetLogLevel error: %w", err)
 }
 
 /*
@@ -347,7 +347,7 @@ func (schemaChecker *BasicChecker) UnregisterObserver(ctx context.Context, obser
 		schemaChecker.observers = nil
 	}
 
-	return err
+	return wraperror.Errorf(err, "checker.UnregisterObserver error: %w", err)
 }
 
 // ----------------------------------------------------------------------------

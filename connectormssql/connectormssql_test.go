@@ -1,7 +1,6 @@
 package connectormssql_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/senzing-garage/go-databasing/connectormssql"
@@ -14,7 +13,7 @@ import (
 
 func TestNewConnector(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	configuration := "user id=sa;password=Passw0rd;database=master;server=localhost"
 	databaseConnector, err := connectormssql.NewConnector(ctx, configuration)
 	require.NoError(test, err)

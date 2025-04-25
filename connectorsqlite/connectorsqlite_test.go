@@ -1,7 +1,6 @@
 package connectorsqlite_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/senzing-garage/go-databasing/connectorsqlite"
@@ -14,7 +13,7 @@ import (
 
 func TestNewConnector(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	configuration := "/tmp/sqlite/G2C.db"
 	databaseConnector, err := connectorsqlite.NewConnector(ctx, configuration)
 	require.NoError(test, err)
@@ -24,7 +23,7 @@ func TestNewConnector(test *testing.T) {
 
 func TestNewConnectorInMemory(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	configuration := "/tmp/sqlite/G2C.db?mode=memory&cache=shared"
 	databaseConnector, err := connectorsqlite.NewConnector(ctx, configuration)
 	require.NoError(test, err)

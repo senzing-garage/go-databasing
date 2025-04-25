@@ -1,7 +1,6 @@
 package connectorpostgresql_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/senzing-garage/go-databasing/connectorpostgresql"
@@ -14,7 +13,7 @@ import (
 
 func TestNewConnector(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	configuration := "user=postgres password=postgres dbname=G2 host=localhost sslmode=disable"
 	databaseConnector, err := connectorpostgresql.NewConnector(ctx, configuration)
 	require.NoError(test, err)

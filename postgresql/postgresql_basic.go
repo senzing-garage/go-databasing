@@ -81,7 +81,7 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 
 	err = database.PingContext(ctx)
 	if err != nil {
-		return "", 0, err
+		return "", 0, wraperror.Errorf(err, "postgresql.GetCurrentWatermark.database.PingContext error: %w", err)
 	}
 
 	// Get the Row.
@@ -90,7 +90,7 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 
 	err = row.Scan(&oid, &age, &size)
 	if err != nil {
-		return "", 0, err
+		return "", 0, wraperror.Errorf(err, "postgresql.GetCurrentWatermark.row.Scan error: %w", err)
 	}
 
 	// Exit tasks.
@@ -105,7 +105,7 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 		}()
 	}
 
-	return oid, age, err
+	return oid, age, wraperror.Errorf(err, "postgresql.GetCurrentWatermark error: %w", err)
 }
 
 /*
@@ -141,7 +141,7 @@ func (sqlExecutor *BasicPostgresql) RegisterObserver(ctx context.Context, observ
 		}()
 	}
 
-	return err
+	return wraperror.Errorf(err, "postgresql.RegisterObserver error: %w", err)
 }
 
 /*
@@ -165,7 +165,7 @@ func (sqlExecutor *BasicPostgresql) SetLogLevel(ctx context.Context, logLevelNam
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = sqlExecutor.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
-			return err
+			return wraperror.Errorf(err, "postgresql.SetLogLevel error: %w", err)
 		}
 
 		sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
@@ -181,7 +181,7 @@ func (sqlExecutor *BasicPostgresql) SetLogLevel(ctx context.Context, logLevelNam
 		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
 	}
 
-	return err
+	return wraperror.Errorf(err, "postgresql.SetLogLevel error: %w", err)
 }
 
 /*
@@ -282,7 +282,7 @@ func (sqlExecutor *BasicPostgresql) UnregisterObserver(ctx context.Context, obse
 		sqlExecutor.observers = nil
 	}
 
-	return err
+	return wraperror.Errorf(err, "postgresql.UnregisterObserver error: %w", err)
 }
 
 // ----------------------------------------------------------------------------

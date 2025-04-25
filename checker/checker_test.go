@@ -26,13 +26,14 @@ var (
 
 func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 
 	// Make a fresh database and create Senzing schema.
 
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
-	err := refreshSqliteDatabase(sqliteDatabaseFilename)
-	require.NoError(test, err)
+
+	refreshSqliteDatabase(sqliteDatabaseFilename)
+
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	require.NoError(test, err)
 
@@ -61,7 +62,7 @@ func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 
 func TestBasicChecker_RegisterObserver(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.RegisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
@@ -69,7 +70,7 @@ func TestBasicChecker_RegisterObserver(test *testing.T) {
 
 func TestBasicChecker_SetLogLevel(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "DEBUG")
 	require.NoError(test, err)
@@ -77,7 +78,7 @@ func TestBasicChecker_SetLogLevel(test *testing.T) {
 
 func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
 	require.Error(test, err)
@@ -85,14 +86,14 @@ func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 
 func TestBasicChecker_SetObserverOrigin(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	testObject.SetObserverOrigin(ctx, "Test observer origin")
 }
 
 func TestBasicChecker_UnregisterObserver(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 
 	// IMPROVE:  This needs to be removed.
@@ -105,11 +106,12 @@ func TestBasicChecker_UnregisterObserver(test *testing.T) {
 
 func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
-	err := refreshSqliteDatabase(sqliteDatabaseFilename)
-	require.NoError(test, err)
+	ctx := test.Context()
+
+	refreshSqliteDatabase(sqliteDatabaseFilename)
+
 	testObject := getTestObject(ctx, test)
-	_, err = testObject.IsSchemaInstalled(ctx)
+	_, err := testObject.IsSchemaInstalled(ctx)
 	require.Error(test, err, "An error should have been returned")
 }
 
@@ -119,6 +121,7 @@ func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
 
 func getBasicChecker(ctx context.Context, t *testing.T) *checker.BasicChecker {
 	t.Helper()
+
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	require.NoError(t, err)
 
@@ -143,7 +146,7 @@ func outputf(format string, message ...any) {
 	fmt.Printf(format, message...) //nolint
 }
 
-func refreshSqliteDatabase(databaseFilename string) error {
+func refreshSqliteDatabase(databaseFilename string) {
 	err := os.Remove(databaseFilename)
 	if err != nil {
 		outputf("When removing %s got error: %v\n", databaseFilename, err)
@@ -155,6 +158,4 @@ func refreshSqliteDatabase(databaseFilename string) error {
 	}
 
 	file.Close()
-
-	return nil
 }

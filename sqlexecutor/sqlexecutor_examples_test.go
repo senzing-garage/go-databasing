@@ -90,8 +90,9 @@ func ExampleBasicSQLExecutor_ProcessFileName_sqlite() {
 	databaseFilename := "/tmp/sqlite/G2C.db"
 	databaseURL := "sqlite3://na:na@" + databaseFilename
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
-	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
-	failOnError(err)
+
+	refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
+
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
 
@@ -126,8 +127,9 @@ func ExampleBasicSQLExecutor_ProcessScanner_sqlite() {
 	databaseFilename := "/tmp/sqlite/G2C.db"
 	databaseURL := "sqlite3://na:na@" + databaseFilename
 	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
-	err := refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
-	failOnError(err)
+
+	refreshSqliteDatabase(databaseFilename) // Only needed for repeatable test cases.
+
 	file, err := os.Open(sqlFilename)
 	failOnError(err)
 

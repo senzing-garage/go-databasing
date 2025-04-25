@@ -23,16 +23,28 @@ func ExtractSqliteDatabaseFilename(databaseURL string) (string, error) {
 	var result = ""
 
 	if !strings.HasPrefix(databaseURL, "sqlite3:") {
-		return result, wraperror.Errorf(errPackage, "sqlite3 URL schema needed error: %w", errPackage)
+		return result, wraperror.Errorf(
+			errPackage,
+			"dbhelper.ExtractSqliteDatabaseFilename sqlite3 URL schema needed error: %w",
+			errPackage,
+		)
 	}
 
 	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
-		return result, err
+		return result, wraperror.Errorf(
+			errPackage,
+			"dbhelper.ExtractSqliteDatabaseFilename sqlite3 URL schema needed error: %w",
+			errPackage,
+		)
 	}
 
 	if parsedURL.Scheme != "sqlite3" {
-		return result, wraperror.Errorf(errPackage, "sqlite3 URL schema needed error: %w", errPackage)
+		return result, wraperror.Errorf(
+			errPackage,
+			"dbhelper.ExtractSqliteDatabaseFilename sqlite3 URL schema needed error: %w",
+			errPackage,
+		)
 	}
 
 	return extractSqliteDatabaseFilenameForOsArch(parsedURL)

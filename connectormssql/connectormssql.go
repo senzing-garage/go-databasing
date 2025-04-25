@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 
 	mssql "github.com/microsoft/go-mssqldb"
+	"github.com/senzing-garage/go-helpers/wraperror"
 )
 
 // ----------------------------------------------------------------------------
@@ -26,5 +27,7 @@ Output
 func NewConnector(ctx context.Context, dsn string) (driver.Connector, error) {
 	_ = ctx
 
-	return mssql.NewConnector(dsn)
+	result, err := mssql.NewConnector(dsn)
+
+	return result, wraperror.Errorf(err, "connectormssql.NewConnector error: %w", err)
 }

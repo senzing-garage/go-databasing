@@ -30,19 +30,21 @@ var (
 
 func TestBasicSQLExecutor_ProcessFileName(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
-	err := refreshSqliteDatabase(sqliteDatabaseFilename)
-	require.NoError(test, err)
+	ctx := test.Context()
+
+	refreshSqliteDatabase(sqliteDatabaseFilename)
+
 	testObject := getTestObject(ctx, test)
-	err = testObject.ProcessFileName(ctx, sqlFilename)
+	err := testObject.ProcessFileName(ctx, sqlFilename)
 	require.NoError(test, err)
 }
 
 func TestBasicSQLExecutor_ProcessScanner(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
-	err := refreshSqliteDatabase(sqliteDatabaseFilename)
-	require.NoError(test, err)
+	ctx := test.Context()
+
+	refreshSqliteDatabase(sqliteDatabaseFilename)
+
 	file, err := os.Open(sqlFilename)
 
 	defer func() {
@@ -59,7 +61,7 @@ func TestBasicSQLExecutor_ProcessScanner(test *testing.T) {
 
 func TestBasicSQLExecutor_RegisterObserver(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.RegisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
@@ -67,7 +69,7 @@ func TestBasicSQLExecutor_RegisterObserver(test *testing.T) {
 
 func TestBasicSQLExecutor_SetLogLevel(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "DEBUG")
 	require.NoError(test, err)
@@ -75,7 +77,7 @@ func TestBasicSQLExecutor_SetLogLevel(test *testing.T) {
 
 func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
 	require.Error(test, err)
@@ -83,14 +85,14 @@ func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 
 func TestBasicSQLExecutor_SetObserverOrigin(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	testObject.SetObserverOrigin(ctx, "Test observer origin")
 }
 
 func TestBasicSQLExecutor_UnregisterObserver(test *testing.T) {
 	test.Parallel()
-	ctx := context.TODO()
+	ctx := test.Context()
 	testObject := getTestObject(ctx, test)
 	err := testObject.UnregisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
@@ -102,6 +104,7 @@ func TestBasicSQLExecutor_UnregisterObserver(test *testing.T) {
 
 func getBasicSQLExecutor(ctx context.Context, t *testing.T) *sqlexecutor.BasicSQLExecutor {
 	t.Helper()
+
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	require.NoError(t, err)
 
@@ -126,7 +129,7 @@ func outputf(format string, message ...any) {
 	fmt.Printf(format, message...) //nolint
 }
 
-func refreshSqliteDatabase(databaseFilename string) error {
+func refreshSqliteDatabase(databaseFilename string) {
 	err := os.Remove(databaseFilename)
 	if err != nil {
 		outputf("When removing %s got error: %v\n", databaseFilename, err)
@@ -138,6 +141,4 @@ func refreshSqliteDatabase(databaseFilename string) error {
 	}
 
 	file.Close()
-
-	return nil
 }

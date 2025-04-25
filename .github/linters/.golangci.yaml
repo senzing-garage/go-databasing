@@ -97,15 +97,15 @@ linters:
     - thelper
     - tparallel
     - unconvert
-    # - unparam
+    - unparam
     - unused
     - usestdlibvars
-    # - usetesting
+    - usetesting
     - varnamelen
     - wastedassign
-    # - whitespace
-    # - wrapcheck
-    # - wsl
+    - whitespace
+    - wrapcheck
+    - wsl
     - zerologlint
   disable:
     - gochecknoglobals

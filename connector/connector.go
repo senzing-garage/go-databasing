@@ -36,7 +36,7 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 
 	parsedURL, err := url.Parse(databaseURL)
 	if err != nil {
-		return result, err
+		return result, wraperror.Errorf(err, "connector.NewConnector.urlParse error: %w", err)
 	}
 
 	scheme := parsedURL.Scheme
@@ -55,7 +55,7 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		err = wraperror.Errorf(errPackage, "unknown database scheme: %s error: %w", scheme, errPackage)
 	}
 
-	return result, err
+	return result, wraperror.Errorf(err, "connector.NewConnector error: %w", err)
 }
 
 // ----------------------------------------------------------------------------
@@ -68,7 +68,9 @@ func createSqlite3Connector(ctx context.Context, parsedURL *url.URL) (driver.Con
 		configuration = fmt.Sprintf("file:%s?%s", configuration[1:], parsedURL.Query().Encode())
 	}
 
-	return connectorsqlite.NewConnector(ctx, configuration)
+	result, err := connectorsqlite.NewConnector(ctx, configuration)
+
+	return result, wraperror.Errorf(err, "connector.createSqlite3Connector error: %w", err)
 }
 
 func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
@@ -80,7 +82,7 @@ func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.
 
 	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
-		return nil, err
+		return nil, wraperror.Errorf(err, "connector.createPostgresqlConnector.url.ParseQuery error: %w", err)
 	}
 
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
@@ -120,7 +122,9 @@ func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.
 		configuration += fmt.Sprintf("%s=%s ", key, value)
 	}
 
-	return connectorpostgresql.NewConnector(ctx, configuration)
+	result, err := connectorpostgresql.NewConnector(ctx, configuration)
+
+	return result, wraperror.Errorf(err, "connector.createPostgresqlConnector error: %w", err)
 }
 
 func createMysqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
@@ -132,7 +136,7 @@ func createMysqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 
 	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
-		return nil, err
+		return nil, wraperror.Errorf(err, "connector.createMysqlConnector.url.ParseQuery error: %w", err)
 	}
 
 	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Confi
@@ -164,7 +168,9 @@ func createMysqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 		configuration.DBName = schema[0]
 	}
 
-	return connectormysql.NewConnector(ctx, configuration)
+	result, err := connectormysql.NewConnector(ctx, configuration)
+
+	return result, wraperror.Errorf(err, "connector.createMysqlConnector error: %w", err)
 }
 
 func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
@@ -176,7 +182,7 @@ func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 
 	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
-		return nil, err
+		return nil, wraperror.Errorf(err, "connector.createMssqlConnector.url.ParseQuery error: %w", err)
 	}
 
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
@@ -220,7 +226,9 @@ func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 		configuration += fmt.Sprintf("%s=%s;", key, value)
 	}
 
-	return connectormssql.NewConnector(ctx, configuration)
+	result, err := connectormssql.NewConnector(ctx, configuration)
+
+	return result, wraperror.Errorf(err, "connector.createMssqlConnector error: %w", err)
 }
 
 func createOciConnector(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
@@ -232,7 +240,7 @@ func createOciConnector(ctx context.Context, parsedURL *url.URL) (driver.Connect
 
 	query, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
-		return nil, err
+		return nil, wraperror.Errorf(err, "connector.createOciConnector.url.ParseQuery error: %w", err)
 	}
 
 	// See https://pkg.go.dev/github.com/godror/godror
@@ -256,5 +264,7 @@ func createOciConnector(ctx context.Context, parsedURL *url.URL) (driver.Connect
 		configuration += fmt.Sprintf("%s=%s ", key, value)
 	}
 
-	return connectororacle.NewConnector(ctx, configuration)
+	result, err := connectororacle.NewConnector(ctx, configuration)
+
+	return result, wraperror.Errorf(err, "connector.createOciConnector error: %w", err)
 }
