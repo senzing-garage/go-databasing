@@ -193,7 +193,7 @@ update-pkg-cache:
 
 .PHONY: cspell
 cspell:
-	@cspell .
+	@cspell lint --dot .
 
 
 .PHONY: golangci-lint
