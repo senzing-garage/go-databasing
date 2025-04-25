@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"os"
 	"time"
@@ -51,6 +52,10 @@ func main() {
 		demonstrateDatabase(databaseID)
 	}
 }
+
+// ----------------------------------------------------------------------------
+// Private functions
+// ----------------------------------------------------------------------------
 
 func demonstrateDatabase(databaseID int) {
 	ctx := context.TODO()
@@ -124,24 +129,32 @@ func demonstrateDatabase(databaseID int) {
 	// PostgreSql only tests.
 
 	if databaseID == Postgresql {
-		postgresClient := &postgresql.BasicPostgresql{
-			DatabaseConnector: databaseConnector,
-		}
-		err = postgresClient.RegisterObserver(ctx, observer1)
-		exitOnError(err)
 
-		err = postgresClient.SetLogLevel(ctx, logging.LevelTraceName)
-		exitOnError(err)
+		preparePostgresql(ctx, databaseConnector, observer1)
 
-		oid, age, err := postgresClient.GetCurrentWatermark(ctx)
-		exitOnError(err)
-
-		fmt.Printf("Postgresql: oid=%s age=%d\n", oid, age)
 	}
 
 	// Let Observer finish.
 
 	time.Sleep(2 * time.Second)
+}
+
+func preparePostgresql(ctx context.Context, databaseConnector driver.Connector, observer observer.Observer) {
+
+	postgresClient := &postgresql.BasicPostgresql{
+		DatabaseConnector: databaseConnector,
+	}
+	err := postgresClient.RegisterObserver(ctx, observer)
+	exitOnError(err)
+
+	err = postgresClient.SetLogLevel(ctx, logging.LevelTraceName)
+	exitOnError(err)
+
+	oid, age, err := postgresClient.GetCurrentWatermark(ctx)
+	exitOnError(err)
+
+	fmt.Printf("Postgresql: oid=%s age=%d\n", oid, age)
+
 }
 
 func exitOnError(err error) {

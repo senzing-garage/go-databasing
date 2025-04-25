@@ -38,141 +38,205 @@ func NewConnector(ctx context.Context, databaseURL string) (driver.Connector, er
 		return result, err
 	}
 
-	// Parse URL: https://pkg.go.dev/net/url#URL
-
 	scheme := parsedURL.Scheme
-	username := parsedURL.User.Username()
-	password, isPasswordSet := parsedURL.User.Password()
-	path := parsedURL.Path
-	// fragment := parsedUrl.Fragment
-	host, port, _ := net.SplitHostPort(parsedURL.Host)
-	query, err := url.ParseQuery(parsedURL.RawQuery)
-	if err != nil {
-		return result, err
-	}
-
 	switch scheme {
 	case "sqlite3":
-		configuration := path
-		if len(parsedURL.RawQuery) > 0 {
-			configuration = fmt.Sprintf("file:%s?%s", configuration[1:], parsedURL.Query().Encode())
-		}
-		result, err = connectorsqlite.NewConnector(ctx, configuration)
-
+		return connectorSqlite3(ctx, parsedURL)
 	case "postgresql":
-		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
-		configurationMap := map[string]string{}
-		if len(username) > 0 {
-			configurationMap["user"] = username
-		}
-		if isPasswordSet {
-			configurationMap["password"] = password
-		}
-		if len(host) > 0 {
-			configurationMap["host"] = host
-		}
-		if len(port) > 0 {
-			configurationMap["port"] = port
-		}
-		if len(path) > 1 {
-			dbname := strings.ReplaceAll(path, "/", "")
-			configurationMap["dbname"] = dbname
-		}
-		for key, value := range query {
-			configurationMap[key] = value[0]
-		}
-		if searchPath, ok := query["schema"]; ok {
-			configurationMap["search_path"] = searchPath[0]
-		}
-		configuration := ""
-		for key, value := range configurationMap {
-			configuration += fmt.Sprintf("%s=%s ", key, value)
-		}
-		result, err = connectorpostgresql.NewConnector(ctx, configuration)
-
+		return connectorPostgresql(ctx, parsedURL)
 	case "mysql":
-		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Confi
-		configuration := &mysql.Config{
-			Net:       "tcp",
-			Collation: "utf8mb4_general_ci",
-		}
-		if len(username) > 0 {
-			configuration.User = username
-		}
-		if isPasswordSet {
-			configuration.Passwd = password
-		}
-		if len(host) > 0 {
-			configuration.Addr = host
-		}
-		if len(port) > 0 {
-			configuration.Addr += fmt.Sprintf(":%s", port)
-		}
-		if len(path) > 1 {
-			dbname := strings.ReplaceAll(path, "/", "")
-			configuration.DBName = dbname
-		} else if schema, ok := query["schema"]; ok {
-			configuration.DBName = schema[0]
-		}
-		result, err = connectormysql.NewConnector(ctx, configuration)
-
+		return connectorMysql(ctx, parsedURL)
 	case "mssql":
-		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-		// databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=master;server=localhost")
-		configurationMap := map[string]string{}
-		if len(username) > 0 {
-			configurationMap["user id"] = username
-		}
-		if isPasswordSet {
-			configurationMap["password"] = password
-		}
-		if len(host) > 0 {
-			configurationMap["server"] = host
-		}
-		if len(port) > 0 {
-			configurationMap["port"] = port
-		}
-		if len(path) > 1 {
-			dbname := strings.ReplaceAll(path, "/", "")
-			configurationMap["database"] = dbname
-		}
-		for key, value := range query {
-			configurationMap[key] = value[0]
-		}
-		value, ok := configurationMap["TrustServerCertificate"]
-		if ok {
-			if value == "yes" {
-				configurationMap["TrustServerCertificate"] = "true"
-			}
-		}
-		configuration := ""
-		for key, value := range configurationMap {
-			configuration += fmt.Sprintf("%s=%s;", key, value)
-		}
-		result, err = connectormssql.NewConnector(ctx, configuration)
-
+		return connectorMssql(ctx, parsedURL)
 	case "oci":
-		// See https://pkg.go.dev/github.com/godror/godror
-		configurationMap := map[string]string{}
-		if len(username) > 0 {
-			configurationMap["user"] = username
-		}
-		if isPasswordSet {
-			configurationMap["password"] = password
-		}
-		configurationMap["connectString"] = fmt.Sprintf("%s:%s%s", host, port, filepath.Clean(path))
-		for key, value := range query {
-			configurationMap[key] = value[0]
-		}
-		configuration := ""
-		for key, value := range configurationMap {
-			configuration += fmt.Sprintf("%s=%s ", key, value)
-		}
-		result, err = connectororacle.NewConnector(ctx, configuration)
-
+		return connectorOci(ctx, parsedURL)
 	default:
 		err = fmt.Errorf("unknown database scheme: %s", scheme)
 	}
 
 	return result, err
+}
+
+// ----------------------------------------------------------------------------
+// Private functions
+// ----------------------------------------------------------------------------
+
+func connectorSqlite3(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+	configuration := parsedURL.Path
+	if len(parsedURL.RawQuery) > 0 {
+		configuration = fmt.Sprintf("file:%s?%s", configuration[1:], parsedURL.Query().Encode())
+	}
+
+	return connectorsqlite.NewConnector(ctx, configuration)
+}
+
+func connectorPostgresql(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+
+	// Parse URL: https://pkg.go.dev/net/url#URL
+
+	username := parsedURL.User.Username()
+	password, isPasswordSet := parsedURL.User.Password()
+	path := parsedURL.Path
+	host, port, _ := net.SplitHostPort(parsedURL.Host)
+	query, err := url.ParseQuery(parsedURL.RawQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
+
+	configurationMap := map[string]string{}
+	if len(username) > 0 {
+		configurationMap["user"] = username
+	}
+	if isPasswordSet {
+		configurationMap["password"] = password
+	}
+	if len(host) > 0 {
+		configurationMap["host"] = host
+	}
+	if len(port) > 0 {
+		configurationMap["port"] = port
+	}
+	if len(path) > 1 {
+		dbname := strings.ReplaceAll(path, "/", "")
+		configurationMap["dbname"] = dbname
+	}
+	for key, value := range query {
+		configurationMap[key] = value[0]
+	}
+	if searchPath, ok := query["schema"]; ok {
+		configurationMap["search_path"] = searchPath[0]
+	}
+	configuration := ""
+	for key, value := range configurationMap {
+		configuration += fmt.Sprintf("%s=%s ", key, value)
+	}
+
+	return connectorpostgresql.NewConnector(ctx, configuration)
+}
+
+func connectorMysql(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+
+	// Parse URL: https://pkg.go.dev/net/url#URL
+
+	username := parsedURL.User.Username()
+	password, isPasswordSet := parsedURL.User.Password()
+	path := parsedURL.Path
+	host, port, _ := net.SplitHostPort(parsedURL.Host)
+	query, err := url.ParseQuery(parsedURL.RawQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Confi
+
+	configuration := &mysql.Config{
+		Net:       "tcp",
+		Collation: "utf8mb4_general_ci",
+	}
+	if len(username) > 0 {
+		configuration.User = username
+	}
+	if isPasswordSet {
+		configuration.Passwd = password
+	}
+	if len(host) > 0 {
+		configuration.Addr = host
+	}
+	if len(port) > 0 {
+		configuration.Addr += fmt.Sprintf(":%s", port)
+	}
+	if len(path) > 1 {
+		dbname := strings.ReplaceAll(path, "/", "")
+		configuration.DBName = dbname
+	} else if schema, ok := query["schema"]; ok {
+		configuration.DBName = schema[0]
+	}
+
+	return connectormysql.NewConnector(ctx, configuration)
+}
+
+func connectorMssql(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+
+	// Parse URL: https://pkg.go.dev/net/url#URL
+
+	username := parsedURL.User.Username()
+	password, isPasswordSet := parsedURL.User.Password()
+	path := parsedURL.Path
+	host, port, _ := net.SplitHostPort(parsedURL.Host)
+	query, err := url.ParseQuery(parsedURL.RawQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
+	// databaseConnector, err = connectormssql.NewConnector(ctx, "user id=sa;password=Passw0rd;database=master;server=localhost")
+
+	configurationMap := map[string]string{}
+	if len(username) > 0 {
+		configurationMap["user id"] = username
+	}
+	if isPasswordSet {
+		configurationMap["password"] = password
+	}
+	if len(host) > 0 {
+		configurationMap["server"] = host
+	}
+	if len(port) > 0 {
+		configurationMap["port"] = port
+	}
+	if len(path) > 1 {
+		dbname := strings.ReplaceAll(path, "/", "")
+		configurationMap["database"] = dbname
+	}
+	for key, value := range query {
+		configurationMap[key] = value[0]
+	}
+	value, ok := configurationMap["TrustServerCertificate"]
+	if ok {
+		if value == "yes" {
+			configurationMap["TrustServerCertificate"] = "true"
+		}
+	}
+	configuration := ""
+	for key, value := range configurationMap {
+		configuration += fmt.Sprintf("%s=%s;", key, value)
+	}
+
+	return connectormssql.NewConnector(ctx, configuration)
+}
+
+func connectorOci(ctx context.Context, parsedURL *url.URL) (driver.Connector, error) {
+
+	// Parse URL: https://pkg.go.dev/net/url#URL
+
+	username := parsedURL.User.Username()
+	password, isPasswordSet := parsedURL.User.Password()
+	path := parsedURL.Path
+	host, port, _ := net.SplitHostPort(parsedURL.Host)
+	query, err := url.ParseQuery(parsedURL.RawQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	// See https://pkg.go.dev/github.com/godror/godror
+
+	configurationMap := map[string]string{}
+	if len(username) > 0 {
+		configurationMap["user"] = username
+	}
+	if isPasswordSet {
+		configurationMap["password"] = password
+	}
+	configurationMap["connectString"] = fmt.Sprintf("%s:%s%s", host, port, filepath.Clean(path))
+	for key, value := range query {
+		configurationMap[key] = value[0]
+	}
+	configuration := ""
+	for key, value := range configurationMap {
+		configuration += fmt.Sprintf("%s=%s ", key, value)
+	}
+
+	return connectororacle.NewConnector(ctx, configuration)
 }
