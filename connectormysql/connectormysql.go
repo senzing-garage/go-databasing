@@ -29,5 +29,5 @@ func NewConnector(ctx context.Context, configuration *mysql.Config) (driver.Conn
 
 	result, err := mysql.NewConnector(configuration)
 
-	return result, wraperror.Errorf(err, "connectormysql.NewConnector error: %w", err)
+	return result, wraperror.Errorf(err, wraperror.NoMessage)
 }

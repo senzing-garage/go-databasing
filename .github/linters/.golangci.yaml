@@ -109,9 +109,7 @@ linters:
     - zerologlint
   disable:
     - gochecknoglobals
-    - goconst
     - lll
-    - mnd
   exclusions:
     generated: lax
     presets:
@@ -147,6 +145,8 @@ linters:
         - '.+/sqlite\.SQLiteDriver$'
         - '.+/sqlite3\.SQLiteDriver$'
         - '.+/subject\.SimpleSubject$'
+    goconst:
+      min-occurrences: 5
     ireturn:
       allow:
         - anon
@@ -158,7 +158,16 @@ linters:
         - postgresql.Postgresql
         - sqlexecutor.SQLExecutor
         - stdlib
-
+    mnd:
+      ignored-functions:
+        - '^logger\.Log$'
+        - '^notifier\.Notify$'
+        - '^schemaChecker\.log$'
+        - '^schemaChecker\.traceEntry$'
+        - '^schemaChecker\.traceExit$'
+        - '^sqlExecutor\.log$'
+        - '^sqlExecutor\.traceEntry$'
+        - '^sqlExecutor\.traceExit$'
 formatters:
   enable:
     - gci

@@ -32,16 +32,21 @@ type BasicSQLExecutor struct {
 	observers         subject.Subject
 }
 
+const (
+	callerSkip4 = 4
+	callerSkip5 = 5
+)
+
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
 var debugOptions = []interface{}{
-	&logging.OptionCallerSkip{Value: 5},
+	&logging.OptionCallerSkip{Value: callerSkip5},
 }
 
 var traceOptions = []interface{}{
-	&logging.OptionCallerSkip{Value: 5},
+	&logging.OptionCallerSkip{Value: callerSkip5},
 }
 
 // ----------------------------------------------------------------------------
@@ -74,7 +79,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessFileName(ctx context.Context, filena
 
 	file, err := os.Open(filename)
 	if err != nil {
-		return wraperror.Errorf(err, "sqlexecutor.ProcessFileName.os.Open error: %w", err)
+		return wraperror.Errorf(err, "os.Open could not open %s", filename)
 	}
 
 	defer func() {
@@ -99,7 +104,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessFileName(ctx context.Context, filena
 		}()
 	}
 
-	return wraperror.Errorf(err, "sqlexecutor.ProcessFileName error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -133,7 +138,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 
 	err = database.PingContext(ctx)
 	if err != nil {
-		return wraperror.Errorf(err, "sqlexecutor.ProcessFileName.database.PingContext error: %w", err)
+		return wraperror.Errorf(err, "database.PingContext")
 	}
 
 	// Process each scanned line.
@@ -162,7 +167,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessScanner(ctx context.Context, scanner
 
 	sqlExecutor.log(messageNumber, scanLine, scanFailure)
 
-	return wraperror.Errorf(err, "sqlexecutor.ProcessScanner error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -202,7 +207,7 @@ func (sqlExecutor *BasicSQLExecutor) RegisterObserver(ctx context.Context, obser
 
 	// Epilog.
 
-	return wraperror.Errorf(err, "sqlexecutor.RegisterObserver error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -226,7 +231,7 @@ func (sqlExecutor *BasicSQLExecutor) SetLogLevel(ctx context.Context, logLevelNa
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = sqlExecutor.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
-			return wraperror.Errorf(err, "sqlexecutor.SetLogLevel error: %w", err)
+			return wraperror.Errorf(err, "SetLogLevel: %s", logLevelName)
 		}
 
 		sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
@@ -239,10 +244,10 @@ func (sqlExecutor *BasicSQLExecutor) SetLogLevel(ctx context.Context, logLevelNa
 			}()
 		}
 	} else {
-		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
+		err = wraperror.Errorf(errPackage, "invalid error level: %s", logLevelName)
 	}
 
-	return wraperror.Errorf(err, "sqlexecutor.SetLogLevel error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -331,7 +336,7 @@ func (sqlExecutor *BasicSQLExecutor) UnregisterObserver(ctx context.Context, obs
 	if sqlExecutor.observers != nil {
 		err = sqlExecutor.observers.UnregisterObserver(ctx, observer)
 		if err != nil {
-			return wraperror.Errorf(err, "sqlexecutor.UnregisterObserver error: %w", err)
+			return wraperror.Errorf(err, "UnregisterObserver")
 		}
 
 		// Tricky code:
@@ -350,7 +355,7 @@ func (sqlExecutor *BasicSQLExecutor) UnregisterObserver(ctx context.Context, obs
 
 	// Epilog.
 
-	return wraperror.Errorf(err, "sqlexecutor.UnregisterObserver error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 // ----------------------------------------------------------------------------
@@ -365,7 +370,7 @@ func (sqlExecutor *BasicSQLExecutor) getLogger() logging.Logging {
 
 	if sqlExecutor.logger == nil {
 		options := []interface{}{
-			logging.OptionCallerSkip{Value: 4},
+			logging.OptionCallerSkip{Value: callerSkip4},
 			logging.OptionMessageFields{Value: []string{"id", "text"}},
 		}
 
