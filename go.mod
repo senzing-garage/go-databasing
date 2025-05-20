@@ -11,9 +11,9 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.28
 	github.com/microsoft/go-mssqldb v1.8.1
 	github.com/senzing-garage/go-helpers v0.6.12
-	github.com/senzing-garage/go-logging v1.5.2
+	github.com/senzing-garage/go-logging v1.5.3
 	github.com/senzing-garage/go-messaging v1.5.3
-	github.com/senzing-garage/go-observing v0.3.4
+	github.com/senzing-garage/go-observing v0.3.5
 	github.com/stretchr/testify v1.10.0
 )
 

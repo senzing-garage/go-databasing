@@ -77,7 +77,7 @@ func (sqlExecutor *BasicSQLExecutor) ProcessFileName(ctx context.Context, filena
 
 	filename = filepath.Clean(filename)
 
-	file, err := os.Open(filename)
+	file, err := os.Open(filepath.Clean(filename))
 	if err != nil {
 		return wraperror.Errorf(err, "os.Open could not open %s", filename)
 	}
