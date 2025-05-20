@@ -29,6 +29,10 @@ const (
 	SqliteInMemory
 )
 
+const (
+	sleepInSeconds = 2
+)
+
 var errPackage = errors.New("sqlexecutor")
 
 // ----------------------------------------------------------------------------
@@ -115,7 +119,7 @@ func demonstrateDatabase(databaseID int) {
 		databaseURL = sqliteDatabaseURL + "?mode=memory&cache=shared"
 		sqlFilename = gitRepositoryDir + "/testdata/sqlite/szcore-schema-sqlite-create.sql"
 	default:
-		exitOnError(wraperror.Errorf(errPackage, "unknown databaseNumber: %d error: %w", databaseID, errPackage))
+		exitOnError(wraperror.Errorf(errPackage, "unknown databaseNumber: %d", databaseID))
 	}
 
 	// Create database connector.
@@ -142,7 +146,7 @@ func demonstrateDatabase(databaseID int) {
 
 	// Let Observer finish.
 
-	time.Sleep(2 * time.Second)
+	time.Sleep(sleepInSeconds * time.Second)
 }
 
 func preparePostgresql(ctx context.Context, databaseConnector driver.Connector, observer observer.Observer) {

@@ -29,5 +29,5 @@ func NewConnector(ctx context.Context, dsn string) (driver.Connector, error) {
 	_ = ctx
 	params, err := godror.ParseDSN(dsn)
 
-	return godror.NewConnector(params), wraperror.Errorf(err, "connectororacle.NewConnector error: %w", err)
+	return godror.NewConnector(params), wraperror.Errorf(err, wraperror.NoMessage)
 }

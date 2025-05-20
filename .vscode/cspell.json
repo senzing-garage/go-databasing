@@ -81,13 +81,15 @@
     "wraperror"
   ],
   "ignorePaths": [
-    ".git",
+    ".dockerignore",
+    ".git/*",
     ".github/linters/.golangci.yaml",
     ".gitignore",
-    ".history",
+    ".history/*",
     "**/*.go",
     "**/*.mod",
     "**/*.sum",
+    "bearer.ignore",
     "docker-compose.test.yaml",
     "Makefile",
     "testdata/mssql/szcore-schema-mssql-create.sql",

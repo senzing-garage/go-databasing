@@ -29,7 +29,8 @@ type BasicChecker struct {
 }
 
 const (
-	baseCallerSkip = 4
+	callerSkip4 = 4
+	callerSkip5 = 5
 )
 
 // ----------------------------------------------------------------------------
@@ -37,11 +38,11 @@ const (
 // ----------------------------------------------------------------------------
 
 var debugOptions = []interface{}{
-	&logging.OptionCallerSkip{Value: 5},
+	&logging.OptionCallerSkip{Value: callerSkip5},
 }
 
 var traceOptions = []interface{}{
-	&logging.OptionCallerSkip{Value: 5},
+	&logging.OptionCallerSkip{Value: callerSkip5},
 }
 
 // ----------------------------------------------------------------------------
@@ -79,7 +80,7 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 
 	err = database.PingContext(ctx)
 	if err != nil {
-		return false, wraperror.Errorf(err, "checker.IsSchemaInstalled.database.PingContext error: %w", err)
+		return false, wraperror.Errorf(err, "database.PingContext")
 	}
 
 	// Get the Row.
@@ -88,7 +89,7 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 
 	err = row.Scan(&count)
 	if err != nil {
-		return false, wraperror.Errorf(err, "checker.IsSchemaInstalled.row.Scan error: %w", err)
+		return false, wraperror.Errorf(err, "row.Scan")
 	}
 
 	// Exit tasks.
@@ -102,7 +103,7 @@ func (schemaChecker *BasicChecker) IsSchemaInstalled(ctx context.Context) (bool,
 		}()
 	}
 
-	return true, wraperror.Errorf(err, "checker.IsSchemaInstalled error: %w", err)
+	return true, wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -139,7 +140,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 
 	err = database.PingContext(ctx)
 	if err != nil {
-		return 0, wraperror.Errorf(err, "checker.RecordCount.database.PingContext error: %w", err)
+		return 0, wraperror.Errorf(err, "database.PingContext")
 	}
 
 	// Get the Row.
@@ -148,7 +149,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 
 	err = row.Scan(&count)
 	if err != nil {
-		return 0, wraperror.Errorf(err, "checker.RecordCount.row.Scan error: %w", err)
+		return 0, wraperror.Errorf(err, "row.Scan")
 	}
 
 	// Exit tasks.
@@ -162,7 +163,7 @@ func (schemaChecker *BasicChecker) RecordCount(ctx context.Context) (int64, erro
 		}()
 	}
 
-	return count, wraperror.Errorf(err, "checker.RecordCount error: %w", err)
+	return count, wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -198,7 +199,7 @@ func (schemaChecker *BasicChecker) RegisterObserver(ctx context.Context, observe
 		}()
 	}
 
-	return wraperror.Errorf(err, "checker.RegisterObserver error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -222,7 +223,7 @@ func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = schemaChecker.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
-			return wraperror.Errorf(err, "checker.SetLogLevel.logging.IsValidLogLevelName error: %w", err)
+			return wraperror.Errorf(err, "SetLogLevel(%s)", logLevelName)
 		}
 
 		schemaChecker.isTrace = (logLevelName == logging.LevelTraceName)
@@ -243,10 +244,10 @@ func (schemaChecker *BasicChecker) SetLogLevel(ctx context.Context, logLevelName
 			}()
 		}
 	} else {
-		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
+		err = wraperror.Errorf(errPackage, "invalid error level: %s", logLevelName)
 	}
 
-	return wraperror.Errorf(err, "checker.SetLogLevel error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -347,7 +348,7 @@ func (schemaChecker *BasicChecker) UnregisterObserver(ctx context.Context, obser
 		schemaChecker.observers = nil
 	}
 
-	return wraperror.Errorf(err, "checker.UnregisterObserver error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 // ----------------------------------------------------------------------------
@@ -358,7 +359,7 @@ func (schemaChecker *BasicChecker) UnregisterObserver(ctx context.Context, obser
 func (schemaChecker *BasicChecker) getLogger() logging.Logging {
 	var err error
 	if schemaChecker.logger == nil {
-		schemaChecker.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, baseCallerSkip)
+		schemaChecker.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, callerSkip4)
 		if err != nil {
 			panic(err)
 		}

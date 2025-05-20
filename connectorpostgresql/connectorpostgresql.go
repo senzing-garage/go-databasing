@@ -29,5 +29,5 @@ func NewConnector(ctx context.Context, dsn string) (driver.Connector, error) {
 
 	result, err := pq.NewConnector(dsn)
 
-	return result, wraperror.Errorf(err, "connectorpostgresql.NewConnector error: %w", err)
+	return result, wraperror.Errorf(err, wraperror.NoMessage)
 }

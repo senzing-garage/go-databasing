@@ -36,7 +36,7 @@ Context is not used.
 func (connector *Sqlite) Connect(_ context.Context) (driver.Conn, error) {
 	result, err := connector.Driver().Open(connector.Filename)
 
-	return result, wraperror.Errorf(err, "connectorsqlite.Connect error: %w", err)
+	return result, wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*

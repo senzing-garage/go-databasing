@@ -28,16 +28,21 @@ type BasicPostgresql struct {
 	observers         subject.Subject
 }
 
+const (
+	callerSkip4 = 4
+	callerSkip5 = 5
+)
+
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
 var debugOptions = []interface{}{
-	&logging.OptionCallerSkip{Value: 5},
+	&logging.OptionCallerSkip{Value: callerSkip5},
 }
 
 var traceOptions = []interface{}{
-	&logging.OptionCallerSkip{Value: 5},
+	&logging.OptionCallerSkip{Value: callerSkip5},
 }
 
 // ----------------------------------------------------------------------------
@@ -81,7 +86,7 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 
 	err = database.PingContext(ctx)
 	if err != nil {
-		return "", 0, wraperror.Errorf(err, "postgresql.GetCurrentWatermark.database.PingContext error: %w", err)
+		return "", 0, wraperror.Errorf(err, "database.PingContext")
 	}
 
 	// Get the Row.
@@ -90,7 +95,7 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 
 	err = row.Scan(&oid, &age, &size)
 	if err != nil {
-		return "", 0, wraperror.Errorf(err, "postgresql.GetCurrentWatermark.row.Scan error: %w", err)
+		return "", 0, wraperror.Errorf(err, "row.Scan")
 	}
 
 	// Exit tasks.
@@ -105,7 +110,7 @@ func (sqlExecutor *BasicPostgresql) GetCurrentWatermark(ctx context.Context) (st
 		}()
 	}
 
-	return oid, age, wraperror.Errorf(err, "postgresql.GetCurrentWatermark error: %w", err)
+	return oid, age, wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -141,7 +146,7 @@ func (sqlExecutor *BasicPostgresql) RegisterObserver(ctx context.Context, observ
 		}()
 	}
 
-	return wraperror.Errorf(err, "postgresql.RegisterObserver error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -165,7 +170,7 @@ func (sqlExecutor *BasicPostgresql) SetLogLevel(ctx context.Context, logLevelNam
 	if logging.IsValidLogLevelName(logLevelName) {
 		err = sqlExecutor.getLogger().SetLogLevel(logLevelName)
 		if err != nil {
-			return wraperror.Errorf(err, "postgresql.SetLogLevel error: %w", err)
+			return wraperror.Errorf(err, "SetLogLevel: %s", logLevelName)
 		}
 
 		sqlExecutor.isTrace = (logLevelName == logging.LevelTraceName)
@@ -178,10 +183,10 @@ func (sqlExecutor *BasicPostgresql) SetLogLevel(ctx context.Context, logLevelNam
 			}()
 		}
 	} else {
-		err = wraperror.Errorf(errPackage, "invalid error level: %s error: %w", logLevelName, errPackage)
+		err = wraperror.Errorf(errPackage, "invalid error level: %s", logLevelName)
 	}
 
-	return wraperror.Errorf(err, "postgresql.SetLogLevel error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 /*
@@ -282,7 +287,7 @@ func (sqlExecutor *BasicPostgresql) UnregisterObserver(ctx context.Context, obse
 		sqlExecutor.observers = nil
 	}
 
-	return wraperror.Errorf(err, "postgresql.UnregisterObserver error: %w", err)
+	return wraperror.Errorf(err, wraperror.NoMessage)
 }
 
 // ----------------------------------------------------------------------------
@@ -295,7 +300,7 @@ func (sqlExecutor *BasicPostgresql) getLogger() logging.Logging {
 
 	if sqlExecutor.logger == nil {
 		options := []interface{}{
-			&logging.OptionCallerSkip{Value: 4},
+			&logging.OptionCallerSkip{Value: callerSkip4},
 		}
 
 		sqlExecutor.logger, err = logging.NewSenzingLogger(ComponentID, IDMessages, options...)
