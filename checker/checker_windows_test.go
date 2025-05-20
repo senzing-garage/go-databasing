@@ -2,5 +2,6 @@
 
 package checker_test
 
-var sqliteDatabaseFilename = `C:\Temp\sqlite\G2C.db`
-var sqliteDatabaseURL = `sqlite3://na:na@nowhere/C:\Temp\sqlite\G2C.db`
+func buildSqliteDatabaseURL(filename string) string {
+	return "sqlite3://na:na@nowhere/" + filename
+}

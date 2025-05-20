@@ -18,6 +18,8 @@ var observerSingleton = &observer.NullObserver{
 	IsSilent: true,
 }
 
+const sqliteFilename = "../testdata/sqlite/szcore-schema-sqlite-create.sql"
+
 // ----------------------------------------------------------------------------
 // Test interface functions
 // ----------------------------------------------------------------------------
@@ -25,25 +27,19 @@ var observerSingleton = &observer.NullObserver{
 func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 	test.Parallel()
 	ctx := test.Context()
-
-	// Make a fresh database and create Senzing schema.
-
-	sqlFilename := "../testdata/sqlite/szcore-schema-sqlite-create.sql"
-
-	refreshSqliteDatabase(sqliteDatabaseFilename)
-
+	sqliteDatabaseURL := getSqliteDatabaseURL(test)
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
 	require.NoError(test, err)
 
 	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
 		DatabaseConnector: databaseConnector,
 	}
-	err = sqlExecutor.ProcessFileName(ctx, sqlFilename)
+	err = sqlExecutor.ProcessFileName(ctx, sqliteFilename)
 	require.NoError(test, err)
 
 	// Perform test.
 
-	testObject := getTestObject(ctx, test)
+	testObject := getTestObject(ctx, test, sqliteDatabaseURL)
 
 	isSchemaInstalled, err := testObject.IsSchemaInstalled(ctx)
 	if isSchemaInstalled {
@@ -61,7 +57,7 @@ func TestBasicChecker_IsSchemaInstalled_True(test *testing.T) {
 func TestBasicChecker_RegisterObserver(test *testing.T) {
 	test.Parallel()
 	ctx := test.Context()
-	testObject := getTestObject(ctx, test)
+	testObject := getTestObject(ctx, test, getSqliteDatabaseURL(test))
 	err := testObject.RegisterObserver(ctx, observerSingleton)
 	require.NoError(test, err)
 }
@@ -69,7 +65,7 @@ func TestBasicChecker_RegisterObserver(test *testing.T) {
 func TestBasicChecker_SetLogLevel(test *testing.T) {
 	test.Parallel()
 	ctx := test.Context()
-	testObject := getTestObject(ctx, test)
+	testObject := getTestObject(ctx, test, getSqliteDatabaseURL(test))
 	err := testObject.SetLogLevel(ctx, "DEBUG")
 	require.NoError(test, err)
 }
@@ -77,7 +73,7 @@ func TestBasicChecker_SetLogLevel(test *testing.T) {
 func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 	test.Parallel()
 	ctx := test.Context()
-	testObject := getTestObject(ctx, test)
+	testObject := getTestObject(ctx, test, getSqliteDatabaseURL(test))
 	err := testObject.SetLogLevel(ctx, "BADLEVELNAME")
 	require.Error(test, err)
 }
@@ -85,14 +81,14 @@ func TestBasicChecker_SetLogLevel_badLevelName(test *testing.T) {
 func TestBasicChecker_SetObserverOrigin(test *testing.T) {
 	test.Parallel()
 	ctx := test.Context()
-	testObject := getTestObject(ctx, test)
+	testObject := getTestObject(ctx, test, getSqliteDatabaseURL(test))
 	testObject.SetObserverOrigin(ctx, "Test observer origin")
 }
 
 func TestBasicChecker_UnregisterObserver(test *testing.T) {
 	test.Parallel()
 	ctx := test.Context()
-	testObject := getTestObject(ctx, test)
+	testObject := getTestObject(ctx, test, getSqliteDatabaseURL(test))
 
 	// IMPROVE:  This needs to be removed.
 	err := testObject.RegisterObserver(ctx, observerSingleton)
@@ -105,10 +101,7 @@ func TestBasicChecker_UnregisterObserver(test *testing.T) {
 func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
 	test.Parallel()
 	ctx := test.Context()
-
-	refreshSqliteDatabase(sqliteDatabaseFilename)
-
-	testObject := getTestObject(ctx, test)
+	testObject := getTestObject(ctx, test, getSqliteDatabaseURL(test))
 	_, err := testObject.IsSchemaInstalled(ctx)
 	require.Error(test, err, "An error should have been returned")
 }
@@ -117,7 +110,7 @@ func TestBasicChecker_IsSchemaInstalled_False(test *testing.T) {
 // Internal functions
 // ----------------------------------------------------------------------------
 
-func getBasicChecker(ctx context.Context, t *testing.T) *checker.BasicChecker {
+func getBasicChecker(ctx context.Context, t *testing.T, sqliteDatabaseURL string) *checker.BasicChecker {
 	t.Helper()
 
 	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
@@ -134,26 +127,49 @@ func getBasicChecker(ctx context.Context, t *testing.T) *checker.BasicChecker {
 	return result
 }
 
-func getTestObject(ctx context.Context, t *testing.T) checker.Checker {
+func getDatabaseURL() string {
+	ctx := context.Background()
+
+	sqliteDatabaseFile, err := os.CreateTemp(os.TempDir(), "G2C.*.db")
+	if err != nil {
+		panic(err)
+	}
+
+	sqliteDatabaseURL := buildSqliteDatabaseURL(sqliteDatabaseFile.Name())
+
+	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	if err != nil {
+		panic(err)
+	}
+
+	sqlExecutor := &sqlexecutor.BasicSQLExecutor{
+		DatabaseConnector: databaseConnector,
+	}
+
+	err = sqlExecutor.ProcessFileName(ctx, sqliteFilename)
+	if err != nil {
+		panic(err)
+	}
+
+	return buildSqliteDatabaseURL(sqliteDatabaseFile.Name())
+}
+
+func getSqliteDatabaseURL(t *testing.T) string {
+	t.Helper()
+	sqliteDatabaseFile, err := os.CreateTemp(t.TempDir(), "G2C.*.db")
+	require.NoError(t, err)
+
+	return buildSqliteDatabaseURL(sqliteDatabaseFile.Name())
+}
+
+func getTestObject(ctx context.Context, t *testing.T, sqliteDatabaseURL string) checker.Checker {
 	t.Helper()
 
-	return getBasicChecker(ctx, t)
+	return getBasicChecker(ctx, t, sqliteDatabaseURL)
 }
 
-func outputf(format string, message ...any) {
-	fmt.Printf(format, message...) //nolint
-}
-
-func refreshSqliteDatabase(databaseFilename string) {
-	err := os.Remove(databaseFilename)
+func failOnError(message string, err error) {
 	if err != nil {
-		outputf("When removing %s got error: %v\n", databaseFilename, err)
+		fmt.Printf("%s error: %s", message, err.Error()) //nolint
 	}
-
-	file, err := os.Create(databaseFilename)
-	if err != nil {
-		outputf("When creating %s got error: %v\n", databaseFilename, err)
-	}
-
-	file.Close()
 }

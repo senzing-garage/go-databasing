@@ -11,13 +11,13 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-// Examples for godoc documentation
+// Examples
 // ----------------------------------------------------------------------------
 
 func ExampleBasicChecker_IsSchemaInstalled() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/checker/checker_examples_test.go
 	ctx := context.TODO()
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	databaseConnector, err := connector.NewConnector(ctx, getDatabaseURL())
 	failOnError("connector.NewConnector", err)
 
 	myChecker := &checker.BasicChecker{
@@ -32,8 +32,7 @@ func ExampleBasicChecker_RecordCount() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/checker/checker_examples_test.go
 	ctx := context.TODO()
 
-	// err := refreshSqliteDatabase(sqliteDatabaseFilename)
-	databaseConnector, err := connector.NewConnector(ctx, sqliteDatabaseURL)
+	databaseConnector, err := connector.NewConnector(ctx, getDatabaseURL())
 	failOnError("connector.NewConnector", err)
 
 	myChecker := &checker.BasicChecker{
@@ -45,14 +44,4 @@ func ExampleBasicChecker_RecordCount() {
 	_ = recordCount // Faux use of recordCount
 
 	// Output:
-}
-
-// ----------------------------------------------------------------------------
-// Internal methods
-// ----------------------------------------------------------------------------
-
-func failOnError(message string, err error) {
-	if err != nil {
-		fmt.Printf("%s error: %s", message, err.Error()) //nolint
-	}
 }
