@@ -9,7 +9,7 @@ require (
 	github.com/godror/godror v0.48.3
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.28
-	github.com/microsoft/go-mssqldb v1.8.2
+	github.com/microsoft/go-mssqldb v1.9.1
 	github.com/senzing-garage/go-helpers v0.6.13
 	github.com/senzing-garage/go-logging v1.5.3
 	github.com/senzing-garage/go-messaging v1.5.3
