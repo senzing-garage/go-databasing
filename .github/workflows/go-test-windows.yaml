@@ -24,6 +24,7 @@ jobs:
     name: "Go test with OS: windows-latest; Go: ${{ matrix.go }}"
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         go: ["1.24"]
 

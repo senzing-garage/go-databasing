@@ -51,6 +51,7 @@ func TestBasicSQLExecutor_ProcessScanner(test *testing.T) {
 			panic(err)
 		}
 	}()
+
 	require.NoError(test, err)
 	testObject := getTestObject(ctx, test)
 	err = testObject.ProcessScanner(ctx, bufio.NewScanner(file))
