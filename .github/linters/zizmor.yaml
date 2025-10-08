@@ -3,3 +3,7 @@ rules:
     config:
       policies:
         "*": ref-pin
+  unpinned-images:
+    config:
+      policies:
+        "*": ref-pin
