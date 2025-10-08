@@ -6,14 +6,15 @@ env:
   LD_LIBRARY_PATH: /opt/senzing/er/lib:/opt/oracle/instantclient_23_5
   SENZING_TOOLS_DATABASE_URL: sqlite3://na:na@nowhere/tmp/sqlite/G2C.db
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   go-test-linux:
     name: "Go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
     outputs:
       status: ${{ job.status }}
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -25,7 +26,7 @@ jobs:
       oracle:
         env:
           ORACLE_PWD: Passw0rd
-        image: container-registry.oracle.com/database/free
+        image: container-registry.oracle.com/database/free:23.9.0.0
         ports:
           - 1521:1521
 
@@ -34,7 +35,7 @@ jobs:
           ACCEPT_EULA: Y
           MSSQL_PID: Developer
           MSSQL_SA_PASSWORD: Passw0rd
-        image: mcr.microsoft.com/mssql/server
+        image: mcr.microsoft.com/mssql/server:2025-latest
         ports:
           - 1433:1433
 
@@ -44,7 +45,7 @@ jobs:
           MYSQL_PASSWORD: mysql
           MYSQL_ROOT_PASSWORD: root
           MYSQL_USER: mysql
-        image: bitnami/mysql
+        image: mysql:9.4.0
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
@@ -53,7 +54,7 @@ jobs:
         env:
           POSTGRES_DB: G2
           POSTGRES_PASSWORD: postgres
-        image: postgres
+        image: postgres:18
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -65,6 +66,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - name: Setup go ${{ matrix.go }}
         uses: actions/setup-go@v6
@@ -110,7 +113,9 @@ jobs:
   coverage:
     name: Coverage
     needs: go-test-linux
-    uses: senzing-factory/build-resources/.github/workflows/go-coverage.yaml@v2
+    permissions:
+      contents: read
+    uses: senzing-factory/build-resources/.github/workflows/go-coverage.yaml@v3
     with:
       coverage-config: ./.github/coverage/testcoverage.yaml
 
@@ -119,6 +124,6 @@ jobs:
     if: ${{ always() && contains(fromJSON('["failure", "cancelled"]'), needs.go-test-linux.outputs.status ) && github.ref_name == github.event.repository.default_branch }}
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-    uses: senzing-factory/build-resources/.github/workflows/build-failure-slack-notification.yaml@v2
+    uses: senzing-factory/build-resources/.github/workflows/build-failure-slack-notification.yaml@v3
     with:
       job-status: ${{ needs.go-test-linux.outputs.status }}
