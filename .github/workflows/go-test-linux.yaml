@@ -26,7 +26,7 @@ jobs:
       oracle:
         env:
           ORACLE_PWD: Passw0rd
-        image: container-registry.oracle.com/database/free
+        image: container-registry.oracle.com/database/free:23.9.0.0
         ports:
           - 1521:1521
 
@@ -35,7 +35,7 @@ jobs:
           ACCEPT_EULA: Y
           MSSQL_PID: Developer
           MSSQL_SA_PASSWORD: Passw0rd
-        image: mcr.microsoft.com/mssql/server
+        image: mcr.microsoft.com/mssql/server:2025-latest
         ports:
           - 1433:1433
 
@@ -45,7 +45,7 @@ jobs:
           MYSQL_PASSWORD: mysql
           MYSQL_ROOT_PASSWORD: root
           MYSQL_USER: mysql
-        image: bitnami/mysql
+        image: bitnamilegacy/mysql:9.4.0
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
@@ -53,7 +53,7 @@ jobs:
       postgres:
         env:
           POSTGRES_DB: G2
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: postgres:18
         image: postgres
         options: >-
           --health-cmd pg_isready
