@@ -53,8 +53,8 @@ jobs:
       postgres:
         env:
           POSTGRES_DB: G2
-          POSTGRES_PASSWORD: postgres:18
-        image: postgres
+          POSTGRES_PASSWORD: postgres
+        image: postgres:18
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
