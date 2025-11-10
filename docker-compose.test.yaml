@@ -105,7 +105,7 @@ services:
     container_name: senzing-mssql-create-database
     depends_on:
       - mssql
-    image: mcr.microsoft.com/mssql/server:${SENZING_DOCKER_IMAGE_VERSION_MSSQL_SERVER:-latest}
+    image: mcr.microsoft.com/mssql/server:${SENZING_DOCKER_IMAGE_VERSION_MSSQL_SERVER:-2025-latest}
     networks:
       - senzing
     restart: on-failure

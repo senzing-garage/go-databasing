@@ -225,7 +225,7 @@ func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 
 	var configurationBuilder strings.Builder
 	for key, value := range configurationMap {
-		configurationBuilder.WriteString(fmt.Sprintf("%s=%s ", key, value))
+		configurationBuilder.WriteString(fmt.Sprintf("%s=%s;", key, value))
 	}
 
 	configuration := configurationBuilder.String()
