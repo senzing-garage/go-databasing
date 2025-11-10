@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   # makefile makes a metadata file for pgadmin.
 
@@ -85,7 +83,7 @@ services:
       ACCEPT_EULA: Y
       MSSQL_PID: Developer
       MSSQL_SA_PASSWORD: Passw0rd
-    image: mcr.microsoft.com/mssql/server:${SENZING_DOCKER_IMAGE_VERSION_MSSQL_SERVER:-latest}
+    image: mcr.microsoft.com/mssql/server:${SENZING_DOCKER_IMAGE_VERSION_MSSQL_SERVER:-2025-latest}
     networks:
       - senzing
     ports:
