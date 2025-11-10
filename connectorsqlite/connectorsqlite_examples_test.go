@@ -18,7 +18,10 @@ func ExampleNewConnector() {
 	databaseConnector, err := connectorsqlite.NewConnector(ctx, configuration)
 	failOnError(err)
 
-	_ = databaseConnector // Faux use of databaseConnector
+	connection, err := databaseConnector.Connect(ctx)
+	failOnError(err)
+
+	_ = connection // Faux use of database connection.
 	// Output:
 }
 
@@ -29,7 +32,10 @@ func ExampleNewConnector_inmemory() {
 	databaseConnector, err := connectorsqlite.NewConnector(ctx, configuration)
 	failOnError(err)
 
-	_ = databaseConnector // Faux use of databaseConnector
+	connection, err := databaseConnector.Connect(ctx)
+	failOnError(err)
+
+	_ = connection // Faux use of database connection.
 	// Output:
 }
 

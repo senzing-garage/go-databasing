@@ -117,10 +117,12 @@ func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.
 		configurationMap["search_path"] = searchPath[0]
 	}
 
-	configuration := ""
+	var configurationBuilder strings.Builder
 	for key, value := range configurationMap {
-		configuration += fmt.Sprintf("%s=%s ", key, value)
+		configurationBuilder.WriteString(fmt.Sprintf("%s=%s ", key, value))
 	}
+
+	configuration := configurationBuilder.String()
 
 	result, err := connectorpostgresql.NewConnector(ctx, configuration)
 
@@ -221,10 +223,12 @@ func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 		}
 	}
 
-	configuration := ""
+	var configurationBuilder strings.Builder
 	for key, value := range configurationMap {
-		configuration += fmt.Sprintf("%s=%s;", key, value)
+		configurationBuilder.WriteString(fmt.Sprintf("%s=%s;", key, value))
 	}
+
+	configuration := configurationBuilder.String()
 
 	result, err := connectormssql.NewConnector(ctx, configuration)
 
@@ -259,10 +263,12 @@ func createOciConnector(ctx context.Context, parsedURL *url.URL) (driver.Connect
 		configurationMap[key] = value[0]
 	}
 
-	configuration := ""
+	var configurationBuilder strings.Builder
 	for key, value := range configurationMap {
-		configuration += fmt.Sprintf("%s=%s ", key, value)
+		configurationBuilder.WriteString(fmt.Sprintf("%s=%s ", key, value))
 	}
+
+	configuration := configurationBuilder.String()
 
 	result, err := connectororacle.NewConnector(ctx, configuration)
 

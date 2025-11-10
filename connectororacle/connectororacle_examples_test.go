@@ -19,7 +19,10 @@ func ExampleNewConnector() {
 	databaseConnector, err := connectororacle.NewConnector(ctx, configuration)
 	failOnError(err)
 
-	_ = databaseConnector // Faux use of databaseConnector
+	connection, err := databaseConnector.Connect(ctx)
+	failOnError(err)
+
+	_ = connection // Faux use of database connection.
 	// Output:
 }
 
