@@ -185,7 +185,7 @@ Example:
         --name phpMyAdmin \
         --publish 9173:8080 \
         --rm \
-        bitnami/phpmyadmin:latest
+        phpmyadmin:latest
 
     ```
 
@@ -277,42 +277,6 @@ Example:
     ```
 
 ## Alternatives
-
-1. Create an empty **PostgreSQL** database.
-   See [bitnami/postgresql](https://hub.docker.com/r/bitnami/postgresql).
-   Example:
-
-    ```console
-    docker run \
-        --env POSTGRESQL_DATABASE=G2 \
-        --env POSTGRESQL_PASSWORD=senzing \
-        --env POSTGRESQL_POSTGRES_PASSWORD=postgres \
-        --env POSTGRESQL_USERNAME=senzing \
-        --name postgresql \
-        --publish 5432:5432 \
-        --rm \
-        bitnami/postgresql
-
-    ```
-
-1. Create an empty **MySQL** database.
-   See [bitnami/mysql](https://hub.docker.com/r/bitnami/mysql).
-   Example:
-
-    ```console
-    docker run \
-        --env MYSQL_DATABASE=G2 \
-        --env MYSQL_PASSWORD=mysql \
-        --env MYSQL_ROOT_PASSWORD=root \
-        --env MYSQL_USER=mysql \
-        --interactive \
-        --name mysql \
-        --publish 3306:3306 \
-        --rm \
-        --tty \
-        bitnami/mysql
-
-    ```
 
 1. Create an empty **MsSQL** database.
    See [Configure SQL Server settings with environment variables on Linux](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables).
