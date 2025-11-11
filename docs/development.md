@@ -19,7 +19,7 @@ These are "one-time tasks" which may already have been completed.
 
 ## Install Git repository
 
-1. Identify git repository.
+1. Identify Git repository.
 
     ```console
     export GIT_ACCOUNT=senzing-garage
