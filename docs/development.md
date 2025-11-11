@@ -11,9 +11,9 @@ It has not been tested on Windows.
 These are "one-time tasks" which may already have been completed.
 
 1. The following software programs need to be installed:
-    1. [git]
+    1. [Git]
     1. [make]
-    1. [docker]
+    1. [Docker]
     1. [go]
     1. [Oracle instant client]
 
@@ -65,7 +65,7 @@ These are "one-time tasks" which may already have been completed.
 
 ## Test
 
-To run the tests successfully, Sqlite, PostgreSQL, MySQL, and MsSQL databases need to be accessible.
+To run the tests successfully, SQLite, PostgreSQL, MySQL, and MsSQL databases need to be accessible.
 
 1. :thinking: Add to `LD_LIBRARY_PATH` for Oracle database.
    Example:
@@ -152,7 +152,7 @@ Example:
     docker run \
         --env SQLITE_DATABASE=G2C.db \
         --interactive \
-        --name SqliteWeb \
+        --name SQLiteWeb \
         --publish 9174:8080 \
         --rm \
         --tty \
@@ -173,7 +173,7 @@ Example:
 
 ### View MySQL
 
-1. View the MySql database.
+1. View the MySQL database.
    _Caveat:_ The setting of `DATABASE_HOST` may not work in all cases.
    Example:
 
@@ -298,8 +298,8 @@ Example:
 ## References
 
 [clone-repository]: https://github.com/senzing-garage/knowledge-base/blob/main/HOWTO/clone-repository.md
-[docker]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/docker.md
-[git]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/git.md
+[Docker]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/docker.md
+[Git]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/git.md
 [Go Reference Badge]: https://pkg.go.dev/badge/github.com/senzing-garage/template-go.svg
 [Go Reference]: https://pkg.go.dev/github.com/senzing-garage/template-go
 [go]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/go.md
