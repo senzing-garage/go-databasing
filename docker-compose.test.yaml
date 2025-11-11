@@ -161,7 +161,7 @@ services:
     networks:
       - senzing
     ports:
-      - 9173:8080
+      - 9173:80
     restart: always
 
   adminer:
