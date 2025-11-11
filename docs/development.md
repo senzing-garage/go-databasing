@@ -104,31 +104,31 @@ Create a code coverage map.
 ## Documentation
 
 1. View documentation.
-    Example:
+   Example:
 
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make clean documentation
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make clean documentation
 
-    ```
+   ```
 
 1. If a web page doesn't appear, visit [localhost:6060].
 1. Senzing documentation will be in the "Third party" section.
-    `github.com` > `senzing-garage` > `go-databasing`
+   `github.com` > `senzing-garage` > `go-databasing`
 
 1. When a versioned release is published with a `v0.0.0` format tag,
-    the reference can be found by clicking on the following badge at the top of the README.md page.
-    Example:
+   the reference can be found by clicking on the following badge at the top of the README.md page.
+   Example:
 
-        [![Go Reference Badge]][Go Reference]
+   [![Go Reference Badge]][Go Reference]
 
 1. To stop the `godoc` server, run
 
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make clean
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make clean
 
-    ```
+   ```
 
 ## Clean
 
