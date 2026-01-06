@@ -10,10 +10,10 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.33
 	github.com/microsoft/go-mssqldb v1.9.5
-	github.com/senzing-garage/go-helpers v0.6.13
-	github.com/senzing-garage/go-logging v1.5.3
+	github.com/senzing-garage/go-helpers v0.6.14
+	github.com/senzing-garage/go-logging v1.5.4
 	github.com/senzing-garage/go-messaging v1.5.3
-	github.com/senzing-garage/go-observing v0.3.6
+	github.com/senzing-garage/go-observing v0.3.7
 	github.com/stretchr/testify v1.11.1
 )
 
@@ -31,12 +31,12 @@ require (
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	golang.org/x/crypto v0.46.0 // indirect
-	golang.org/x/exp v0.0.0-20251209150349-8475f28825e9 // indirect
+	golang.org/x/exp v0.0.0-20251219203646-944ab1f22d93 // indirect
 	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/sys v0.39.0 // indirect
 	golang.org/x/text v0.32.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20251213004720-97cd9d5aeac2 // indirect
-	google.golang.org/grpc v1.77.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20251222181119-0a764e51fe1b // indirect
+	google.golang.org/grpc v1.78.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
