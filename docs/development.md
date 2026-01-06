@@ -11,15 +11,15 @@ It has not been tested on Windows.
 These are "one-time tasks" which may already have been completed.
 
 1. The following software programs need to be installed:
-   1. [Git]
+   1. [git]
    1. [make]
-   1. [Docker]
+   1. [docker]
    1. [go]
    1. [Oracle instant client]
 
 ## Install Git repository
 
-1. Identify Git repository.
+1. Identify git repository.
 
    ```console
    export GIT_ACCOUNT=senzing-garage
@@ -298,8 +298,8 @@ Create a code coverage map.
 ## References
 
 [clone-repository]: https://github.com/senzing-garage/knowledge-base/blob/main/HOWTO/clone-repository.md
-[Docker]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/docker.md
-[Git]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/git.md
+[docker]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/docker.md
+[git]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/git.md
 [go]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/go.md
 [localhost:6060]: http://localhost:6060/pkg/github.com/senzing-garage/template-go/
 [make]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/make.md
