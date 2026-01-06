@@ -2,6 +2,10 @@ name: Go test linux
 
 on: [push, workflow_dispatch]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 env:
   LD_LIBRARY_PATH: /opt/senzing/er/lib:/opt/oracle/instantclient_23_5
   SENZING_TOOLS_DATABASE_URL: sqlite3://na:na@nowhere/tmp/sqlite/G2C.db
@@ -21,6 +25,7 @@ jobs:
       matrix:
         go: ["1.24"]
         os: [ubuntu-latest]
+    timeout-minutes: 30
 
     services:
       oracle:
