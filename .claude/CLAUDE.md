@@ -46,6 +46,7 @@ make clean
 ```
 
 Run a single test:
+
 ```bash
 go test -v -run TestFunctionName ./path/to/package
 ```
@@ -86,7 +87,7 @@ The project uses an extensive golangci-lint configuration (`.github/linters/.gol
 
 ### Database URL Schemes
 
-```
+```console
 sqlite3://na:na@nowhere/path/to/db.db
 postgresql://user:pass@host:5432/database
 mysql://user:pass@host:3306/database
@@ -109,6 +110,7 @@ oci://user:pass@host:1521/service
 ## Test Database Access (via Docker)
 
 When running `make setup`:
+
 - PostgreSQL: localhost:5432 (pgAdmin at localhost:9171)
 - MySQL: localhost:3306 (phpMyAdmin at localhost:9173)
 - MS SQL: localhost:1433 (Adminer at localhost:9177)
