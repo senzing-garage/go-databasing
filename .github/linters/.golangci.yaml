@@ -110,6 +110,7 @@ linters:
   disable:
     - gochecknoglobals
     - lll
+    - prealloc
   exclusions:
     generated: lax
     presets:
