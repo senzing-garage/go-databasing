@@ -10,7 +10,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.33
 	github.com/microsoft/go-mssqldb v1.9.5
-	github.com/senzing-garage/go-helpers v0.6.14
+	github.com/senzing-garage/go-helpers v0.6.15
 	github.com/senzing-garage/go-logging v1.5.4
 	github.com/senzing-garage/go-messaging v1.5.3
 	github.com/senzing-garage/go-observing v0.3.7
