@@ -98,7 +98,7 @@ func demonstrateDatabase(databaseID int) {
 	switch databaseID {
 	case Mssql:
 		// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-		databaseURL = "mssql://sa:Passw0rd@localhost/master"
+		databaseURL = "mssql://sa:Passw0rd@localhost/master" // #nosec G101
 		sqlFilename = gitRepositoryDir + "/testdata/mssql/szcore-schema-mssql-create.sql"
 	case Mysql:
 		// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
@@ -106,11 +106,11 @@ func demonstrateDatabase(databaseID int) {
 		sqlFilename = gitRepositoryDir + "/testdata/mysql/szcore-schema-mysql-create.sql"
 	case Oracle:
 		// See https://pkg.go.dev/github.com/godror/godror#pkg-overview
-		databaseURL = "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
+		databaseURL = "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true" // #nosec G101
 		sqlFilename = gitRepositoryDir + "/testdata/oracle/szcore-schema-oracle-create.sql"
 	case Postgresql:
 		// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
-		databaseURL = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
+		databaseURL = "postgresql://postgres:postgres@localhost/G2/?sslmode=disable" // #nosec G101
 		sqlFilename = gitRepositoryDir + "/testdata/postgresql/szcore-schema-postgresql-create.sql"
 	case Sqlite:
 		databaseURL = sqliteDatabaseURL
