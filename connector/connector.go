@@ -119,7 +119,7 @@ func createPostgresqlConnector(ctx context.Context, parsedURL *url.URL) (driver.
 
 	var configurationBuilder strings.Builder
 	for key, value := range configurationMap {
-		configurationBuilder.WriteString(fmt.Sprintf("%s=%s ", key, value))
+		fmt.Fprintf(&configurationBuilder, "%s=%s ", key, value)
 	}
 
 	configuration := configurationBuilder.String()
@@ -225,7 +225,7 @@ func createMssqlConnector(ctx context.Context, parsedURL *url.URL) (driver.Conne
 
 	var configurationBuilder strings.Builder
 	for key, value := range configurationMap {
-		configurationBuilder.WriteString(fmt.Sprintf("%s=%s;", key, value))
+		fmt.Fprintf(&configurationBuilder, "%s=%s;", key, value)
 	}
 
 	configuration := configurationBuilder.String()
@@ -265,7 +265,7 @@ func createOciConnector(ctx context.Context, parsedURL *url.URL) (driver.Connect
 
 	var configurationBuilder strings.Builder
 	for key, value := range configurationMap {
-		configurationBuilder.WriteString(fmt.Sprintf("%s=%s ", key, value))
+		fmt.Fprintf(&configurationBuilder, "%s=%s ", key, value)
 	}
 
 	configuration := configurationBuilder.String()

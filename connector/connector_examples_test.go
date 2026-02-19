@@ -27,7 +27,7 @@ func ExampleNewConnector_sqlite() {
 func ExampleNewConnector_postgresql() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/connector/connector_examples_test.go
 	ctx := context.TODO()
-	databaseURL := "postgresql://postgres:postgres@localhost/G2/?sslmode=disable"
+	databaseURL := "postgresql://postgres:postgres@localhost/G2/?sslmode=disable" //nolint:gosec
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
 

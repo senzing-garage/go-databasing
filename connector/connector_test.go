@@ -14,15 +14,15 @@ type testCaseMetadata struct {
 }
 
 var testCases = []testCaseMetadata{
-	{
+	{ //nolint:gosec
 		name:        "mssql-001",
 		databaseURL: "mssql://username:password@hostname:1433/G2",
 	},
-	{
+	{ //nolint:gosec
 		name:        "mssql-002",
 		databaseURL: "mssql://username:password@hostname:1433/G2/?driver=mssqldriver",
 	},
-	{
+	{ //nolint:gosec
 		name:        "mssql-003",
 		databaseURL: "mssql://username:password@G2",
 	},
@@ -47,27 +47,27 @@ var testCases = []testCaseMetadata{
 		name:        "mysql-004",
 		databaseURL: "mysql://username:password@hostname:3306/?schema=G2",
 	},
-	{
+	{ //nolint:gosec
 		name:        "oci-001",
 		databaseURL: "oci://username:password@hostname:1521/G2",
 	},
-	{
+	{ //nolint:gosec
 		name:        "oci-002",
 		databaseURL: "oci://sys:Passw0rd@localhost:1521/FREE/?noTimezoneCheck=true&sysdba=true",
 	},
-	{
+	{ //nolint:gosec
 		name:        "oci-003",
 		databaseURL: "oci://username:password@G2",
 	},
-	{
+	{ //nolint:gosec
 		name:        "postgresql-001",
 		databaseURL: "postgresql://username:password@hostname:5432/G2",
 	},
-	{
+	{ //nolint:gosec
 		name:        "postgresql-002",
 		databaseURL: "postgresql://username:password@hostname:5432/G2/?schema=schemaname",
 	},
-	{
+	{ //nolint:gosec
 		name:        "postgresql-003",
 		databaseURL: "postgresql://username:password@hostname:5432/database/?schema=schemaname",
 	},
@@ -103,19 +103,19 @@ type testCaseConnect struct {
 }
 
 var testCasesConnect = []testCaseConnect{
-	{
+	{ //nolint:gosec
 		name:        "mssql-001",
 		databaseURL: "mssql://sa:Passw0rd@localhost/master",
 	},
-	{
+	{ //nolint:gosec
 		name:        "mysql-001",
 		databaseURL: "mysql://root:root@localhost/G2",
 	},
-	{
+	{ //nolint:gosec
 		name:        "oci-001",
 		databaseURL: "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true",
 	},
-	{
+	{ //nolint:gosec
 		name:        "postgresql-001",
 		databaseURL: "postgresql://postgres:postgres@localhost/G2/?sslmode=disable",
 	},

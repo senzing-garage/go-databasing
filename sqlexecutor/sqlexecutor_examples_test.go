@@ -37,7 +37,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_oracle() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/go-sql-driver/mysql#Config
-	databaseURL := "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true"
+	databaseURL := "oci://sys:Passw0rd@localhost:1521/FREE/?sysdba=true&noTimezoneCheck=true" //nolint:gosec
 	sqlFilename := "../testdata/oracle/szcore-schema-oracle-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
@@ -54,7 +54,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_postgresql() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	// See https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
-	databaseURL := "postgresql://postgres:postgres@localhost:5432/G2/?sslmode=disable"
+	databaseURL := "postgresql://postgres:postgres@localhost:5432/G2/?sslmode=disable" //nolint:gosec
 	sqlFilename := "../testdata/postgresql/szcore-schema-postgresql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)
@@ -71,7 +71,7 @@ func ExampleBasicSQLExecutor_ProcessFileName_mssql() {
 	// For more information, visit https://github.com/senzing-garage/go-databasing/blob/main/sqlexecutor/sqlexecutor_examples_test.go
 	ctx := context.TODO()
 	// See https://github.com/microsoft/go-mssqldb#connection-parameters-and-dsn
-	databaseURL := "mssql://sa:Passw0rd@localhost:1433/master"
+	databaseURL := "mssql://sa:Passw0rd@localhost:1433/master" //nolint:gosec
 	sqlFilename := "../testdata/mssql/szcore-schema-mssql-create.sql"
 	databaseConnector, err := connector.NewConnector(ctx, databaseURL)
 	failOnError(err)

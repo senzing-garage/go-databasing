@@ -27,12 +27,12 @@ var testCasesForMultiPlatform = []testCaseMetadata{
 		databaseURL: "db2://username:password@hostname:50000/G2/?schema=schemaname",
 		succeeds:    false,
 	},
-	{
+	{ //nolint:gosec
 		name:        "oci-001",
 		databaseURL: "oci://username:password@hostname:1521/G2",
 		succeeds:    false,
 	},
-	{
+	{ //nolint:gosec
 		name:        "mssql-001",
 		databaseURL: "mssql://username:password@hostname:1433/G2",
 		succeeds:    false,
@@ -42,22 +42,22 @@ var testCasesForMultiPlatform = []testCaseMetadata{
 		databaseURL: "mysql://username:password@hostname:3306/G2",
 		succeeds:    false,
 	},
-	{
+	{ //nolint:gosec
 		name:        "oci-001",
 		databaseURL: "oci://username:password@hostname:1521/G2",
 		succeeds:    false,
 	},
-	{
+	{ //nolint:gosec
 		name:        "postgresql-001",
 		databaseURL: "postgresql://username:password@hostname:5432/G2",
 		succeeds:    false,
 	},
-	{
+	{ //nolint:gosec
 		name:        "postgresql-002",
 		databaseURL: "postgresql://username:password@hostname:5432/G2/?schema=schemaname",
 		succeeds:    false,
 	},
-	{
+	{ //nolint:gosec
 		name:             "postgresql-003",
 		databaseURL:      "postgresql://username:password@hostname:5432:G2/?schema=schemaname",
 		fixedDatabaseURL: "postgresql://username:password@hostname:5432/G2/?schema=schemaname",
