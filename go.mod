@@ -1,6 +1,6 @@
 module github.com/senzing-garage/go-databasing
 
-go 1.25.0
+go 1.26.0
 
 godebug x509negativeserial=1
 
@@ -9,7 +9,7 @@ require (
 	github.com/godror/godror v0.50.0
 	github.com/lib/pq v1.11.2
 	github.com/mattn/go-sqlite3 v1.14.34
-	github.com/microsoft/go-mssqldb v1.9.6
+	github.com/microsoft/go-mssqldb v1.9.8
 	github.com/senzing-garage/go-helpers v0.6.15
 	github.com/senzing-garage/go-logging v1.5.4
 	github.com/senzing-garage/go-messaging v1.5.3
@@ -32,11 +32,11 @@ require (
 	github.com/shopspring/decimal v1.4.0 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
 	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
-	golang.org/x/net v0.50.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/net v0.51.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260217215200-42d3e9bedb6d // indirect
-	google.golang.org/grpc v1.79.1 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 // indirect
+	google.golang.org/grpc v1.79.2 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
