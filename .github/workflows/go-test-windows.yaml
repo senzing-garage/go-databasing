@@ -55,7 +55,7 @@ jobs:
       #   timeout-minutes: 12
 
       - name: Install Docker
-        uses: crazy-max/ghaction-setup-docker@v4
+        uses: crazy-max/ghaction-setup-docker@v5
 
       - name: Install PostgreSQL
         uses: ikalnytskyi/action-setup-postgres@v8
