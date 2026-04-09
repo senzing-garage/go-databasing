@@ -7,7 +7,7 @@ godebug x509negativeserial=1
 require (
 	github.com/go-sql-driver/mysql v1.9.3
 	github.com/godror/godror v0.50.0
-	github.com/lib/pq v1.11.2
+	github.com/lib/pq v1.12.0
 	github.com/mattn/go-sqlite3 v1.14.37
 	github.com/microsoft/go-mssqldb v1.9.8
 	github.com/senzing-garage/go-helpers v0.6.15
