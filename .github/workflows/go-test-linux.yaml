@@ -25,48 +25,18 @@ jobs:
         os: [ubuntu-latest]
     timeout-minutes: 30
 
-    services:
-      oracle:
-        env:
-          ORACLE_PWD: Passw0rd
-        image: container-registry.oracle.com/database/free:23.9.0.0
-        ports:
-          - 1521:1521
-
-      mssql:
-        env:
-          ACCEPT_EULA: Y
-          MSSQL_PID: Developer
-          MSSQL_SA_PASSWORD: Passw0rd
-        image: mcr.microsoft.com/mssql/server:2025-latest
-        ports:
-          - 1433:1433
-
-      mysql:
-        env:
-          MYSQL_DATABASE: G2
-          MYSQL_PASSWORD: mysql
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: mysql
-        image: mysql:9.4.0
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
-
-      postgres:
-        env:
-          POSTGRES_DB: G2
-          POSTGRES_PASSWORD: postgres
-        image: postgres:18
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
     steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: true
+
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
@@ -81,6 +51,48 @@ jobs:
         uses: gotesttools/gotestfmt-action@v2.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Oracle service
+        run: |
+          docker run --detach \
+            --env ORACLE_PWD=Passw0rd \
+            --publish 1521:1521 \
+            container-registry.oracle.com/database/free:23.9.0.0
+
+      - name: MsSQL service
+        run: |
+          docker run --detach \
+            --env ACCEPT_EULA=Y \
+            --env MSSQL_PID=Developer \
+            --env MSSQL_SA_PASSWORD=Passw0rd \
+            --publish 1433:1433 \
+            mcr.microsoft.com/mssql/server:2025-latest
+
+      - name: MySQL service
+        run: |
+          docker run --detach \
+            --env MYSQL_DATABASE=G2 \
+            --env MYSQL_PASSWORD=mysql \
+            --env MYSQL_ROOT_PASSWORD=root \
+            --env MYSQL_USER=mysql \
+            --health-cmd="mysqladmin ping" \
+            --health-interval=10s \
+            --health-timeout=5s \
+            --health-retries=5 \
+            --publish 3306:3306 \
+            mysql:9.4.0
+
+      - name: PostgreSQL service
+        run: |
+          docker run --detach \
+            --env POSTGRES_DB=G2 \
+            --env POSTGRES_PASSWORD=postgres \
+            --health-cmd=pg_isready \
+            --health-interval=10s \
+            --health-timeout=5s \
+            --health-retries=5 \
+            --publish 5432:5432 \
+            postgres:18
 
       - name: Make empty G2C.db
         run: |
