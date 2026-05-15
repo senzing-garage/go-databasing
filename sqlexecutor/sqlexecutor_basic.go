@@ -409,7 +409,7 @@ func (sqlExecutor *BasicSQLExecutor) processScanner(
 		sqlText := scanner.Text()
 		sqlText = strings.TrimSuffix(sqlText, ";")
 
-		result, err := database.ExecContext(ctx, sqlText) //nolint:gosec
+		result, err := database.ExecContext(ctx, sqlText)
 		if err != nil {
 			scanFailure++
 			sqlExecutor.log(3001, scanFailure, scanLine, result, err)
