@@ -1,0 +1,7 @@
+# Trivy vulnerability suppressions.
+#
+# GO-2026-5932: golang.org/x/crypto/openpgp is unmaintained and unsafe by design.
+# It is pulled in only as an indirect dependency and the openpgp package is not
+# used by this module (confirmed by govulncheck, which reports no reachable
+# vulnerability). There is no fixed version available. Suppress the finding.
+GO-2026-5932
