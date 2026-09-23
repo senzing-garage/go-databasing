@@ -5,7 +5,7 @@ go 1.26.0
 godebug x509negativeserial=1
 
 require (
-	github.com/go-sql-driver/mysql v1.10.0
+	github.com/go-sql-driver/mysql v1.10.1
 	github.com/godror/godror v0.51.4
 	github.com/lib/pq v1.12.3
 	github.com/mattn/go-sqlite3 v1.14.50
