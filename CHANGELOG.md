@@ -9,6 +9,19 @@ This project adheres to [Semantic Versioning].
 
 -
 
+## [0.6.0] - 2026-10-08
+
+### Changed in 0.6.0
+
+- Update to Go 1.27.1
+- Sync repository setup files with [template-go] `v0.5.0`
+- Pin GitHub Actions to commit SHAs and golangci-lint to a fixed version
+- Update dependencies
+  - github.com/senzing-garage/go-helpers v0.7.0
+  - github.com/senzing-garage/go-logging v1.6.0
+  - github.com/senzing-garage/go-messaging v1.6.0
+  - github.com/senzing-garage/go-observing v0.4.0
+
 ## [0.5.9] - 2026-01-06
 
 ### Changed in 0.5.9
@@ -210,4 +223,5 @@ This project adheres to [Semantic Versioning].
 
 [CommonMark]: https://commonmark.org/
 [Keep a Changelog]: https://keepachangelog.com/
+[template-go]: https://github.com/senzing-garage/template-go/tree/v0.5.0
 [Semantic Versioning]: https://semver.org/
