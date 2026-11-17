@@ -61,7 +61,7 @@ jobs:
         uses: crazy-max/ghaction-setup-docker@7ec28a010822b4626af4874f9448a4b05ac6f3e5 # v5.6.0
 
       - name: Install PostgreSQL
-        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee # v8
+        uses: ikalnytskyi/action-setup-postgres@325155bfd7807b2a21ac9c2c7bb9b9a6eacc44df # v9
         with:
           username: senzing
           password: senzing
